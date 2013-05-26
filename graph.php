@@ -5,7 +5,7 @@ require_once ('jpgraph/jpgraph_line.php');
 $datay1 = array(20,15,23,15);
 
 
-// Setup the graph
+// Setup the graph 1 example
 $graph = new Graph(300,250);
 $graph->SetScale("textlin");
 
