@@ -9,7 +9,7 @@
 //   Datenbank   //
 $db['host'] = 'localhost';
 $db['username'] = 'root';
-$db['password'] = 'FeelingFree2007';
+$db['password'] = 'password';
 $db['db'] = 'cd_home_automation';
 
 $connect = mysql_connect( $db['host'], $db['username'], $db['password'] );
