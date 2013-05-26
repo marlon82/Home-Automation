@@ -8,7 +8,7 @@
 
  use Time::HiRes qw( usleep ualarm nanosleep);
 	
-    #IP Address of TV
+    #IP Address of Samsung TV
     my $tvip = "192.168.1.135";
 
     print "Content-type: text/html\n\n";
