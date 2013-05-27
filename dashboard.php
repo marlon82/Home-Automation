@@ -131,7 +131,7 @@ include("config.php");
 		
     </div>
 
-<?
+<?php
 //#########################Sensoren auslesen und ausgeben
 
 $sql = query( "SELECT name,hcType,room,value FROM sensoren" );	
@@ -140,7 +140,8 @@ $initial = true;
 			
 while( $row = fetch( $sql ) )
 {
-	if($initial){
+	if($initial)
+	{
 		$initial = false;	
 		?>
 
@@ -149,9 +150,7 @@ while( $row = fetch( $sql ) )
     		<li data-role="list-divider">Aktuelle Sensor Werte</li>
     <?php
     }
-    ?>
-	<?php
-	$sqlRoomName = query( "SELECT name FROM rooms WHERE id = '" . $row['room'] . "' ORDER BY name ASC" );
+	$sqlRoomName = query( "SELECT name FROM rooms WHERE id = '" . $row['room'] . "'" );
 	$RoomName = fetch( $sqlRoomName );
 		
 	if($row['hcType'] == "temperatur"){
