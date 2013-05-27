@@ -22,7 +22,11 @@ Start a Browser and navigate to your web server url. GoTo settings and change th
 
 ### 5.
 
-Now your done.
+Configure your crontab...
+add the following lines to your crontab with the command 'crontab -e'
+0 * * * * wget -q -O /dev/null localhost/test/skripte/cronjop.php?func=1h
+* * * * * wget -q -O /dev/null localhost/test/skripte/cronjop.php?func=1min
+
 
 ## Database structure
 
