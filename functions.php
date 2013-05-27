@@ -336,16 +336,21 @@ function rechneVerbrauchHeute( $id, $zeitHeute )
 	
 }
 
+function ping($host, $timeout = 1) {
 
+    $online=exec("ping $host -c 1 -w 2", $output, $error); 
+    if ($error == 0)
+        return 1;
+    else
+        return 0; 
+        
+}
 
 function setAktor($id, $value, $funktion )
 {	
 	global $XS1, $zeitAus, $verbrauch, $zeitDelta;
 
 	$zeitDelta = intval( $zeitDelta );
-echo "id: $id\n";
-echo "value: $value\n";
-echo "func: $funktion\n";
 
 	// URL zum Aktor setzen zusammenbauen 
 	if( $funktion == false )
@@ -353,7 +358,7 @@ echo "func: $funktion\n";
 		//print $XS1['ip'] . 'preset?switch='.$id.'&value='.$value;
 	else 
 		$url = $XS1['ip'] . 'control?callback=cname&cmd=set_state_actuator&number='.$id.'&function='.$funktion;
-		echo $XS1['ip'] . 'control?callback=cname&cmd=set_state_actuator&number='.$id.'&function='.$funktion;
+		//echo $XS1['ip'] . 'control?callback=cname&cmd=set_state_actuator&number='.$id.'&function='.$funktion;
 	$filesize= 10000;
 	setUrl($url);
 	//$handle = fopen($url, "r");
