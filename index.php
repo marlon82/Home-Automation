@@ -45,6 +45,10 @@ switch( $_GET['page'] )
 		include('settings.php');
 		break;
 
+		case 'multimedia':
+		include('multimedia.php');
+		break;	
+		
 		case 'room':
 		include('room.php');
 		break;	

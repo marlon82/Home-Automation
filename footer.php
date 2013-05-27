@@ -8,7 +8,7 @@ $active = $_GET['page']
 	<div data-role="navbar" class="nav-glyphish-example">
 		<ul>
 			<li><a href="?page=dashboard" <?php if($active == 'dashboard') { ?> class="ui-btn-active ui-state-persist" <?php } ?> id="dashboard1" data-icon="custom" rel="external">Dashboard</a></li>
-			<li><a href="?page=tv" <?php if($active == 'tv') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="tv" data-icon="custom" rel="external">Multimedia</a></li>
+			<li><a href="?page=multimedia" <?php if($active == 'multimedia') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="tv" data-icon="custom" rel="external">Multimedia</a></li>
 			<li><a href="?page=dreambox&id=start" <?php if($active == 'dreambox') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="tv" data-icon="custom" rel="external">Dreambox</a></li>
 			<li><a href="?page=room&room=1" <?php if($active == 'room') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="haus" data-icon="custom" rel="external">Räume</a></li>
 
