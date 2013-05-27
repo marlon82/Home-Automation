@@ -51,7 +51,7 @@ include('functions.php');
 ?>
 
 <div class="samsung">
-<img width="200" height="120" src="samsung.png" alt="samsung">
+<img width="200" height="120" src="./icons/samsung.png" alt="samsung">
 
 <table border="1">
   <tr>
@@ -82,7 +82,7 @@ include('functions.php');
 </div>
         
 <div class="samsung">
-<img width="200" height="120" src="dream.jpg" alt="samsung">
+<img width="200" height="120" src="./icons/dream.jpg" alt="samsung">
 
 <table border="0">
   <tr>
@@ -112,7 +112,7 @@ include('functions.php');
 </div>
 
 <div class="samsung">
-<img width="200" height="120" src="samsung.png" alt="samsung">
+<img width="200" height="120" src="./icons/samsung.png" alt="samsung">
 
 <table border="0">
   <tr>
