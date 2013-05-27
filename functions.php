@@ -338,7 +338,9 @@ function rechneVerbrauchHeute( $id, $zeitHeute )
 
 function ping($host, $timeout = 1) {
 
-    $online=exec("ping $host -c 1 -w 2", $output, $error); 
+    $online=exec("ping -c 1 $host", $output, $error); 
+    //var_dump($output);
+    //var_dump($online);
     if ($error == 0)
         return 1;
     else
