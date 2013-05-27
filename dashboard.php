@@ -2,12 +2,81 @@
 include("functions.php");
 include("config.php");
 ?>
+<style type="text/css">
+
+li{
+list-style-type:none;
+}
+ .hours{
+float:left;
+}
+.sec{
+float:left;
+}
+
+.min{
+float:left;
+}
+
+.point{
+float:left;
+}
+
+#container{
+position:absolute;
+float:right;
+right:10px;
+top:15px;
+height:20px;
+
+
+}
+
+</style>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+
+setInterval( function() {
+	// Create a newDate() object and extract the seconds of the current time on the visitor's
+	var seconds = new Date().getSeconds();
+	// Add a leading zero to seconds value
+	$(".sec").html(( seconds < 10 ? "0" : "" ) + seconds);
+	},1000);
+	
+setInterval( function() {
+	// Create a newDate() object and extract the minutes of the current time on the visitor's
+	var minutes = new Date().getMinutes();
+	// Add a leading zero to the minutes value
+	$(".min").html(( minutes < 10 ? "0" : "" ) + minutes);
+    },1000);
+	
+setInterval( function() {
+	// Create a newDate() object and extract the hours of the current time on the visitor's
+	var hours = new Date().getHours();
+	// Add a leading zero to the hours value
+	$(".hours").html(( hours < 10 ? "0" : "" ) + hours);
+    }, 1000);	
+});
+
+</script>
 
 <div data-role="page" id="dashboard">
 
 <div data-role="header" data-position="fixed" data-theme="b">
 	<a href="#dashboard" data-icon="home">Home</a>
+	<div id="container">
+		<li class="hours"></li>
+		<li class="point">:</li>
+		<li class="min"></li>
+		<li class="point">:</li>
+		<li class="sec"></li>
+	</div>
 	<h1>Dashboard</h1>
+	
+
 </div><!-- /header -->
 
 <div data-role="panel" id="aktorpanel" data-theme="b">
