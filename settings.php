@@ -1,7 +1,7 @@
 <div data-role="page" id="dashboard">
 
 <div data-role="header" data-position="fixed" data-theme="b">
-	<a href="index.php?page=dashboard" data-icon="home">Home</a>
+	<a href="index.php?page=dashboard" data-icon="home" rel="external">Home</a>
 	<h1>Settings</h1>
 </div><!-- /header -->
 
