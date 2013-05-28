@@ -1012,7 +1012,7 @@ for( $i = 0; $i <= 64; $i++ )
 		$sql1 = query( "INSERT INTO config VALUES( '', 'XS1Pass', '" . $_POST['XS1Pass'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'DreamBoxavail', '" . $_POST['flipDreamBox'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'DreamBoxIP', '" . $_POST['DreamBoxIP'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'SamsungTelAvail', '" . $_POST['flipSamsungTel'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'Multimedia', '" . $_POST['flipMultimedia'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'SamsungIP', '" . $_POST['SamsungIP'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'WetterWidget', '" . str_replace("'","\"",$_POST['WetterWidget']) . "')");
 		
@@ -1074,7 +1074,7 @@ for( $i = 0; $i <= 64; $i++ )
 					</li>
 					 <li data-role="fieldcontain">
 							<?
-							$sql = query( "SELECT value FROM config WHERE options='SamsungTelAvail'");
+							$sql = query( "SELECT value FROM config WHERE options='Multimedia'");
 							$config = fetch( $sql);
 							$YesNo = $config['value'];
 							if ($YesNo == 'Yes'){
@@ -1085,8 +1085,8 @@ for( $i = 0; $i <= 64; $i++ )
 								$ValueNo = "selected=\"selected\"";
 							}
 							?>
-							<label for="flipSamsungTel">Samsung Television available:</label>
-							<select name="flipSamsungTel" id="flip2" data-role="slider">
+							<label for="flipMultimedia">Multimedia:</label>
+							<select name="flipMultimedia" id="flip2" data-role="slider">
 								<option value="No" <? echo $ValueNo; ?>>No</option>
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
 							</select>							
