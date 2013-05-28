@@ -338,7 +338,14 @@ function rechneVerbrauchHeute( $id, $zeitHeute )
 
 function ping($host, $timeout = 1) {
 
-    $online=exec("ping -c 1 $host", $output, $error); 
+
+	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		//echo 'This is a server using Windows!';
+		$online=exec("ping -n 1 $host", $output, $error); 
+	} else {
+		//echo 'This is a server not using Windows!';
+		$online=exec("ping -c 1 $host", $output, $error); 
+	}
     //var_dump($output);
     //var_dump($online);
     if ($error == 0)
