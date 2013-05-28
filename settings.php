@@ -958,7 +958,7 @@ for( $i = 0; $i <= 64; $i++ )
 			if( $_POST['submit'] ){
 			$id = $_GET['id'];
 			list($hour, $minute) = explode(':', $_POST['time']);
-			$sql = query( "UPDATE timer SET name = '" . $_POST['devicename'] . "', aktor = '" . $_POST['aktor'] . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "' WHERE id = '" . $id . "'" );
+			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $_POST['aktor'] . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "' WHERE id = '" . $id . "'" );
 			?>
 			<div id="cont1">
 			<p>Der Timer wurde geändert</p>
