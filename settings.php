@@ -926,7 +926,7 @@ for( $i = 0; $i <= 64; $i++ )
 							?>
 							
 							<label for="flipAktiv">Timer enabled:</label>
-							<select name="flipAktiv" id="flip2" data-role="slider">
+							<select name="flipAktiv" id="flipAktiv" data-role="slider">
 								<option value="No" <?php echo $ValueNo; ?>>No</option>
 								<option value="Yes" <?php echo $Valueyes; ?>>Yes</option>
 							</select>
@@ -1057,8 +1057,8 @@ for( $i = 0; $i <= 64; $i++ )
 								$ValueNo = "selected=\"selected\"";
 							}
 							?>
-							<label>DreamBox available:</label>
-							<select name="flipDreamBox" id="flip2" data-role="slider">
+							<label for="flipDreamBox">DreamBox available:</label>
+							<select name="flipDreamBox" id="flipDreamBox" data-role="slider">
 								<option value="No" <? echo $ValueNo; ?>>No</option>
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
 							</select>	
@@ -1086,7 +1086,7 @@ for( $i = 0; $i <= 64; $i++ )
 							}
 							?>
 							<label for="flipMultimedia">Multimedia:</label>
-							<select name="flipMultimedia" id="flip2" data-role="slider">
+							<select name="flipMultimedia" id="flipMultimedia" data-role="slider">
 								<option value="No" <? echo $ValueNo; ?>>No</option>
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
 							</select>							
@@ -1241,7 +1241,7 @@ for( $i = 0; $i <= 64; $i++ )
      					<input data-clear-btn="true" name="timername" id="timername" value="" type="text">
 							
 						<label for="aktor" class="select">Aktor:</label>
-						<select name="aktor" id="typ" data-native-menu="false">
+						<select name="aktor" id="aktor" data-native-menu="false">
     						<option>Aktor:</option>
 								<?php
     							$sql2 = query( "SELECT id,name,type,room FROM aktor");					
@@ -1265,7 +1265,7 @@ for( $i = 0; $i <= 64; $i++ )
      					<input data-clear-btn="true" name="time" id="time" value="" type="time">
 										
 						<label for="flipAktiv">Timer enabled:</label>
-						<select name="flipAktiv" id="flip2" data-role="slider">
+						<select name="flipAktiv" id="flipAktiv" data-role="slider">
 							<option value="No">No</option>
 							<option value="Yes" selected="selected">Yes</option>
 						</select>	
