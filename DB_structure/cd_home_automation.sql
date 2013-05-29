@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.11.1deb1
+-- version 3.5.2.2
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Erstellungszeit: 26. Mai 2013 um 16:53
--- Server Version: 5.5.28
--- PHP-Version: 5.4.4-14
+-- Host: 127.0.0.1
+-- Generation Time: May 29, 2013 at 04:28 PM
+-- Server version: 5.5.27
+-- PHP Version: 5.4.7
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Datenbank: `cd_home_automation`
+-- Database: `cd_home_automation`
 --
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `aktor`
+-- Table structure for table `aktor`
 --
 
 CREATE TABLE IF NOT EXISTS `aktor` (
@@ -44,21 +44,20 @@ CREATE TABLE IF NOT EXISTS `aktor` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `config`
+-- Table structure for table `config`
 --
 
 CREATE TABLE IF NOT EXISTS `config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `options` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
   `value` varchar(4000) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `devices`
+-- Table structure for table `devices`
 --
 
 CREATE TABLE IF NOT EXISTS `devices` (
@@ -75,15 +74,15 @@ CREATE TABLE IF NOT EXISTS `devices` (
   `zeitHeute` int(11) NOT NULL,
   `verbrauchWatt` decimal(5,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `deviceTypes`
+-- Table structure for table `devicetypes`
 --
 
-CREATE TABLE IF NOT EXISTS `deviceTypes` (
+CREATE TABLE IF NOT EXISTS `devicetypes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `device` varchar(255) DEFAULT NULL,
   `devtype` varchar(255) DEFAULT NULL,
@@ -94,7 +93,35 @@ CREATE TABLE IF NOT EXISTS `deviceTypes` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `logsensoren`
+-- Table structure for table `group`
+--
+
+CREATE TABLE IF NOT EXISTS `group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `aktiv` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `groupaktor`
+--
+
+CREATE TABLE IF NOT EXISTS `groupaktor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `aktorID` int(11) DEFAULT NULL,
+  `deviceID` int(11) DEFAULT NULL,
+  `groupID` int(11) DEFAULT NULL,
+  `aktorValue` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `logsensoren`
 --
 
 CREATE TABLE IF NOT EXISTS `logsensoren` (
@@ -103,12 +130,12 @@ CREATE TABLE IF NOT EXISTS `logsensoren` (
   `value` varchar(20) NOT NULL,
   `zeit` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1435 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1467 ;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `rooms`
+-- Table structure for table `rooms`
 --
 
 CREATE TABLE IF NOT EXISTS `rooms` (
@@ -121,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `rooms` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `sensoren`
+-- Table structure for table `sensoren`
 --
 
 CREATE TABLE IF NOT EXISTS `sensoren` (
@@ -136,6 +163,31 @@ CREATE TABLE IF NOT EXISTS `sensoren` (
   `zeit` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `timer`
+--
+
+CREATE TABLE IF NOT EXISTS `timer` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `aktor` varchar(255) DEFAULT NULL,
+  `value` int(255) DEFAULT NULL,
+  `time` time DEFAULT NULL,
+  `hour` int(2) DEFAULT NULL,
+  `minute` int(2) DEFAULT NULL,
+  `enabled` varchar(255) DEFAULT NULL,
+  `Monday` varchar(255) DEFAULT NULL,
+  `Tuesday` varchar(255) DEFAULT NULL,
+  `Wednesday` varchar(255) DEFAULT NULL,
+  `Thursday` varchar(255) DEFAULT NULL,
+  `Friday` varchar(255) DEFAULT NULL,
+  `Saturday` varchar(255) DEFAULT NULL,
+  `Sunday` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

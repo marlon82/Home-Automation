@@ -20,6 +20,10 @@
     #zap .ui-icon { background:  url(glyphish-icons/64-zap.png) 50% 50% no-repeat}
     #coffee .ui-icon { background:  url(glyphish-icons/100-coffee.png) 50% 50% no-repeat;  background-size: 20px 24px; }
     #skull .ui-icon { background:  url(glyphish-icons/21-skull.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+    #watch .ui-icon { background:  url(glyphish-icons/78-stopwatch.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+    #music .ui-icon { background:  url(glyphish-icons/65-note.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+    #weather .ui-icon { background:  url(glyphish-icons/25-weather.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+    #raspberry .ui-icon { background:  url(glyphish-icons/raspberrypi.png) 50% 50% no-repeat;  background-size: 22px 24px; }
     #settings .ui-icon { background:  url(glyphish-icons/19-gear.png) 50% 50% no-repeat; }
     
 
@@ -55,6 +59,14 @@ switch( $_GET['page'] )
 		
 		case 'dreambox':
 		include('dreambox.php');
+		break;	
+		
+		case 'timer':
+		include('timer.php');
+		break;	
+		
+		case 'raspberry':
+		include('raspberry.php');
 		break;			
 	
 		default:
