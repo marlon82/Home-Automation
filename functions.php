@@ -341,17 +341,23 @@ function ping($host, $timeout = 1) {
 
   if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
     //echo 'This is a server using Windows!';
-    $online=exec("ping -n 1 192.168.1.1", $output, $error); 
+    $online=exec("ping -n 1 $host", $output, $error); 
   } else {
     //echo 'This is a server not using Windows!';
     $online=exec("ping -c 1 $host", $output, $error); 
   }
+  //echo $online;
  if(stristr($online, 'Mittelwert') === FALSE) {   
      if(stristr($online, 'min/avg/max') === FALSE) {
         if(stristr($online, 'Average') === FALSE) { 
-          return 0;
-          }
-        }
+          //echo $online;
+		  return 0;
+		  }else{
+      return 1;
+   } 
+        }else{
+      return 1;
+   } 
    }else{
       return 1;
    } 
