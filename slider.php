@@ -17,7 +17,7 @@
     <p>
       Review content
     </p>
-
+	<? echo "test"; ?>
     <div data-role="content" data-theme="a">
       <form>
         <label for="first_slider">First:</label>
