@@ -17,7 +17,7 @@
     <p>
       Review content
     </p>
-
+	<? echo "test"; ?>
     <div data-role="content" data-theme="a">
       <form>
         <label for="first_slider">First:</label>
@@ -60,7 +60,7 @@
       $('#first_count').text('' + first_count);
       $('#second_count').text('' + second_count);
       $.mobile.changePage('#front');
-      return false;
+	  return false;
     });
   </script>
 </body>

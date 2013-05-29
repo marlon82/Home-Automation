@@ -109,7 +109,7 @@ setInterval( function() {
 				<?php
 				$XS1Online = ping('192.168.1.242');
 				//echo $XS1Online;
-				if (!$XS1Online){
+				if ($XS1Online){
 				for( $i = 0; $i <= 64; $i++ ){
 					extract(ReadXS1(actuator, $i));
 						//compact('number', 'value', 'name', 'type', 'unit', 'utime', 'newvalue')
@@ -126,7 +126,7 @@ setInterval( function() {
 					{
 						if( $value > 1 ){
 							?>
-							<li><a href="index.php?page=room?room=<?php echo $room['id']; ?>" rel="external"><?php echo $room['name'] . " - " . $row['name'] . " (" . $devtype['devtypename'] . ")"; ?></a></li>
+							<li><a href="index.php?page=room&room=<?php echo $room['id']; ?>" rel="external"><?php echo $room['name'] . " - " . $row['name'] . " (" . $devtype['devtypename'] . ")"; ?></a></li>
 							<?php
 							$count = $count + 1;
 						}

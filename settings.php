@@ -1,7 +1,85 @@
 <div data-role="page" id="dashboard">
 
+<style type="text/css">
+li{
+list-style-type:none;
+}
+ .hours{
+float:left;
+}
+.sec{
+float:left;
+}
+
+.min{
+float:left;
+}
+
+.point{
+float:left;
+}
+
+#container{
+position:absolute;
+float:right;
+right:10px;
+top:15px;
+height:20px;
+
+ }
+ div#left-sidebar{
+  float: left;
+  
+  width:20%;
+
+ }
+ 
+ div#cont{
+ float: left;
+margin-top:15px;
+   width:70%; 
+   
+
+</style>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+
+setInterval( function() {
+	// Create a newDate() object and extract the seconds of the current time on the visitor's
+	var seconds = new Date().getSeconds();
+	// Add a leading zero to seconds value
+	$(".sec").html(( seconds < 10 ? "0" : "" ) + seconds);
+	},1000);
+	
+setInterval( function() {
+	// Create a newDate() object and extract the minutes of the current time on the visitor's
+	var minutes = new Date().getMinutes();
+	// Add a leading zero to the minutes value
+	$(".min").html(( minutes < 10 ? "0" : "" ) + minutes);
+    },1000);
+	
+setInterval( function() {
+	// Create a newDate() object and extract the hours of the current time on the visitor's
+	var hours = new Date().getHours();
+	// Add a leading zero to the hours value
+	$(".hours").html(( hours < 10 ? "0" : "" ) + hours);
+    }, 1000);	
+});
+
+</script>
+
 <div data-role="header" data-position="fixed" data-theme="b">
 	<a href="index.php?page=dashboard" data-icon="home" rel="external">Home</a>
+		<div id="container">
+		<li class="hours"></li>
+		<li class="point">:</li>
+		<li class="min"></li>
+		<li class="point">:</li>
+		<li class="sec"></li>
+	</div>
 	<h1>Settings</h1>
 </div><!-- /header -->
 
@@ -15,22 +93,6 @@
 </div>
 
 
-<style type="text/css">
-
- div#left-sidebar{
-  float: left;
-  
-  width:20%;
-
- }
- 
- div#cont{
- float: left;
-margin-top:15px;
-   width:70%; 
-
- }
-</style>
 
 
 
@@ -73,6 +135,14 @@ margin-top:15px;
     	<ul data-role="listview">
         	<li <?php if($_GET['aktion'] == 'addDevice') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addDevice">hinzufügen</a></li>
         	<li <?php if($_GET['aktion'] == 'editDevice') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editDevice" selected="selected">bearbeiten</a></li>
+    	</ul>
+
+	</div> 
+	<div data-role="collapsible"  data-theme="d" data-content-theme="d">
+    	<h2>Timer</h2>
+    	<ul data-role="listview">
+        	<li <?php if($_GET['aktion'] == 'addTimer') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addTimer">hinzufügen</a></li>
+        	<li <?php if($_GET['aktion'] == 'editTimer') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editTimer" selected="selected">bearbeiten</a></li>
     	</ul>
 
 	</div>  
@@ -774,6 +844,130 @@ for( $i = 0; $i <= 64; $i++ )
 		}
 									
 		break;	
+		
+			
+		
+		//EDIT Timer
+		case 'editTimer':
+		if(!$_GET['step']){
+		?>
+		<div id="cont">
+		<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+  		<ul data-role="listview" data-inset="true" data-theme="d">
+    		<li data-role="list-divider">Timer</li>
+    	<?php
+		$sql = query( "SELECT id,name,enabled,aktor,time FROM timer");
+															
+			while( $row = fetch( $sql ) )
+			{
+				$sql1 = query( "SELECT  name,type FROM aktor WHERE id = '" . $row['aktor'] . "'" );
+				$row1 = fetch( $sql1 )
+				?>																						
+				<li><a href="?page=settings&aktion=editTimer&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(enabled=" . $row['enabled'] . " / " . $row['time'] . " / " . $row1['name'] . " / " . $row1['type'] . ")"; ?></span></a></li>																			
+				<?php
+			}
+			?>
+			</ul>
+		</div>
+   
+		<?php
+		}
+		if($_GET['step'] == 2){
+		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value FROM timer WHERE id = '" . $_GET['id'] . "'" );
+		$row = fetch( $sql );
+		?>
+		<div id="cont">
+			<form action="index.php?page=settings&aktion=editTimer&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+				<fieldset>
+					<div data-role="fieldcontain">
+					
+						    <label for="timername">Timer Name:</label>
+     						<input data-clear-btn="true" name="timername" id="timername" value="<?php echo $row['name']; ?>" type="text">
+     						
+     						<label for="aktor" class="select">Aktor:</label>
+							<select name="aktor" id="aktor" data-native-menu="false">
+    							<option>Aktor:</option>
+    							<?php
+    							$sql2 = query( "SELECT id,name FROM aktor");	
+								$aktorID = $row['aktor'];
+								while( $row2 = fetch( $sql2 ) )
+									{
+										if($aktorID == $row2['id']){
+										?>
+											<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['name'] ?></option>
+										<?php
+										}else{
+										?>
+											<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
+										<?php
+										}
+    								}
+    							?>
+
+							</select>
+							
+							<label for="slider-value">Value:</label>
+							<input name="slider-value" id="slider-value" data-highlight="true" min="0" max="100" value="<?php echo $row['value'] ?>" type="range">		
+												
+							<label for="time">Time:</label>
+							<input data-clear-btn="true" name="time" id="time" value="<?php echo $row['time'] ?>" type="time">
+							
+
+							<?
+							
+							$YesNo = $row['enabled'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							
+							<label for="flipAktiv">Timer enabled:</label>
+							<select name="flipAktiv" id="flipAktiv" data-role="slider">
+								<option value="No" <?php echo $ValueNo; ?>>No</option>
+								<option value="Yes" <?php echo $Valueyes; ?>>Yes</option>
+							</select>
+							
+
+						
+					</div>
+				<div class="ui-body ui-body-c">
+				<fieldset class="ui-grid-a">
+					<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
+					<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
+	    		</fieldset>
+				</div>
+			</fieldset>
+			</form>
+		</div>		
+		<?php
+		
+		}
+		if($_GET['step'] == 3){
+			if( $_POST['delete'] ){
+			?>
+			<div id="cont1">
+			<p>Der Timer wurde gelöscht</p>
+			</div>
+			<?php
+			$sql = query( "DELETE FROM timer WHERE id = '" . $_GET['id'] . "'" );	
+			}
+			if( $_POST['submit'] ){
+			$id = $_GET['id'];
+			list($hour, $minute) = explode(':', $_POST['time']);
+			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $_POST['aktor'] . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "' WHERE id = '" . $id . "'" );
+			?>
+			<div id="cont1">
+			<p>Der Timer wurde geändert</p>
+			</div>
+			<?php	
+			}
+		}
+									
+		break;	
 	
 		case 'addRoom':
 		
@@ -809,34 +1003,128 @@ for( $i = 0; $i <= 64; $i++ )
 			<p class="center">Konfiguration wurde geändert</p>
 		</div>
 																									
-		<?php	
-		$sql1 = query( "UPDATE config SET value = '" . $_POST['XS1IP'] . "' WHERE id=1");
-		$sql1 = query( "UPDATE config SET value = '" . $_POST['XS1User'] . "' WHERE id=2");
-		$sql1 = query( "UPDATE config SET value = '" . $_POST['XS1Pass'] . "' WHERE id=3");
-		$sql1 = query( "UPDATE config SET value = '" . $_POST['DBIP'] . "' WHERE id=4");
-		$sql1 = query( "UPDATE config SET value = '" . $_POST['SamsungIP'] . "' WHERE id=5");
-		$sql1 = query( "UPDATE config SET value = '" . $_POST['TelevisionIP'] . "' WHERE id=6");
-		$sql1 = query( "UPDATE config SET value = '" . str_replace("'","\"",$_POST['WetterWidget']) . "' WHERE id=7");
+		<?php
+		//clear config table
+		$sql1 = query( "TRUNCATE TABLE config");
+		//insert config values
+		$sql1 = query( "INSERT INTO config VALUES( '', 'XS1IP', '" . $_POST['XS1IP'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'XS1User', '" . $_POST['XS1User'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'XS1Pass', '" . $_POST['XS1Pass'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'DreamBoxavail', '" . $_POST['flipDreamBox'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'DreamBoxIP', '" . $_POST['DreamBoxIP'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'Multimedia', '" . $_POST['flipMultimedia'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'SamsungIP', '" . $_POST['SamsungIP'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'WetterWidget', '" . str_replace("'","\"",$_POST['WetterWidget']) . "')");
+		
 		}else{		
 		?>
 		<div id="cont">
 			<form action="index.php?page=settings&aktion=editConfig" method="post" class="ui-body ui-body-c ui-corner-all">
-				<fieldset>
-					<div data-role="fieldcontain">
-					<?php
-						$sql = query( "SELECT options,name,value FROM config");
-						while( $settings = fetch( $sql ) )
-							{
+				<ul data-role="listview" data-inset="true">
+					 <li data-role="fieldcontain">
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='XS1IP'");
+							$config = fetch( $sql);
+							?>					
+							<label for="XS1IP">XS1 IP Adresse:</label>
+     						<input data-clear-btn="true" name="XS1IP" id="XS1IP" value="<? echo $config['value']; ?>" type="text">
+							
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='XS1User'");
+							$config = fetch( $sql);
 							?>
-								<label for="<?php echo $settings['options']; ?>"><?php echo $settings['name']; ?>:</label>
-								<input data-clear-btn="true" name="<?php echo $settings['options']; ?>" id="<?php echo $settings['options']; ?>" value="<?php echo str_replace("\"","'",$settings['value']); ?>" type="text">
-							<?php
-    						}
-					?>		
-						
-					</div>
-					<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
-				</fieldset>
+							<label for="XS1User">XS1 Username:</label>
+     						<input data-clear-btn="true" name="XS1User" id="XS1User" value="<? echo $config['value']; ?>" type="text">
+							
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='XS1Pass'");
+							$config = fetch( $sql);
+							?>
+							<label for="XS1Pass">XS1 Password:</label>
+     						<input data-clear-btn="true" name="XS1Pass" id="XS1Pass" value="<? echo $config['value']; ?>" type="password">
+									
+					</li>
+					 <li data-role="fieldcontain">
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='DreamBoxavail'");
+							$config = fetch( $sql);
+							$YesNo = $config['value'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							<label for="flipDreamBox">DreamBox available:</label>
+							<select name="flipDreamBox" id="flipDreamBox" data-role="slider">
+								<option value="No" <? echo $ValueNo; ?>>No</option>
+								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
+							</select>	
+							
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='DreamBoxIP'");
+							$config = fetch( $sql);
+							?>
+					</li>
+					 <li data-role="fieldcontain">
+							<label for="DreamBoxIP">DreamBox IP:</label>
+     						<input data-clear-btn="true" name="DreamBoxIP" id="DreamBoxIP" value="<? echo $config['value']; ?>" type="text">							
+					</li>
+					 <li data-role="fieldcontain">
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='Multimedia'");
+							$config = fetch( $sql);
+							$YesNo = $config['value'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							<label for="flipMultimedia">Multimedia:</label>
+							<select name="flipMultimedia" id="flipMultimedia" data-role="slider">
+								<option value="No" <? echo $ValueNo; ?>>No</option>
+								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
+							</select>							
+					</li>
+					
+					 <li data-role="fieldcontain">								
+									
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='SamsungIP'");
+							$config = fetch( $sql);
+							?>					
+							<label for="SamsungIP">Samsung IP:</label>
+     						<input data-clear-btn="true" name="SamsungIP" id="SamsungIP" value="<? echo $config['value']; ?>" type="text">
+							
+								
+					</li>
+					 <li data-role="fieldcontain">		
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='WetterWidget'");
+							$config = fetch( $sql);
+							?>
+							<label for="WetterWidget">Wetter Widget URL:</label>
+     						<input data-clear-btn="true" name="WetterWidget" id="WetterWidget" value="<? echo str_replace("\"","'",$config['value']); ?>" type="text">
+							
+					
+					</li>
+					 <li data-role="fieldcontain">								
+									
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='TelevisionIP'");
+							$config = fetch( $sql);
+							?>
+							<label for="TelevisionIP">Television IP:</label>
+     						<input data-clear-btn="true" name="TelevisionIP" id="TelevisionIP" value="<? echo $config['value']; ?>" type="text">
+								
+					</li>
+				</ul>
+				<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
 			</form>
 		</div>
 		<?php
@@ -924,6 +1212,73 @@ for( $i = 0; $i <= 64; $i++ )
 		<?php
 		}
 		break;
+		
+		case 'addTimer':
+		
+		if( $_POST['submit'] ){
+		?>
+		<div class="boxWhite">
+			<p class="center">Timer wurde hinzugefügt</p>
+		</div>
+																									
+		<?php	
+		list($hour, $minute) = explode(':', $_POST['time']);
+		$sql = query( "INSERT INTO timer VALUES( '', '" . $_POST['timername'] . "',
+													 '" . $_POST['aktor']  . "',
+													 '" . $_POST['slider-value']  . "',
+													 '" . $_POST['time'] . "',
+													 '" . $hour . "',
+													 '" . $minute . "',	
+													 '" . $_POST['flipAktiv'] . "')" );		
+		}else{
+		?>
+		<div id="cont">
+			<form action="index.php?page=settings&aktion=addTimer" method="post" class="ui-body ui-body-c ui-corner-all">
+				<fieldset>
+					<div data-role="fieldcontain">
+					
+						<label for="timername">Timer Name:</label>
+     					<input data-clear-btn="true" name="timername" id="timername" value="" type="text">
+							
+						<label for="aktor" class="select">Aktor:</label>
+						<select name="aktor" id="aktor" data-native-menu="false">
+    						<option>Aktor:</option>
+								<?php
+    							$sql2 = query( "SELECT id,name,type,room FROM aktor");					
+								while( $row2 = fetch( $sql2 ) )
+									{
+									$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+									$RoomName = fetch($sql);
+									$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
+									?>
+											<option value="<?php echo $row2['id'] ?>"><?php echo $RowName; ?></option>
+    								<?php
+    								}
+    							?>	
+    							
+						</select>
+						
+						<label for="slider-value">Value:</label>
+						<input name="slider-value" id="slider-value" data-highlight="true" min="0" max="100" value="0" type="range">		
+												
+     					<label for="time">Time:</label>
+     					<input data-clear-btn="true" name="time" id="time" value="" type="time">
+										
+						<label for="flipAktiv">Timer enabled:</label>
+						<select name="flipAktiv" id="flipAktiv" data-role="slider">
+							<option value="No">No</option>
+							<option value="Yes" selected="selected">Yes</option>
+						</select>	
+						
+					</div>
+					<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
+				</fieldset>
+			</form>
+		</div>
+		<?php
+		}
+		break;
+	
 	
 		default:
 		//include('dashboard.php');
