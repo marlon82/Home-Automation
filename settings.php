@@ -44,6 +44,10 @@ margin-top:15px;
 
 <script type="text/javascript">
 
+
+
+
+
 $(document).ready(function() {
 
 
@@ -147,6 +151,14 @@ setInterval( function() {
 
 	</div>  
 
+	<div data-role="collapsible"  data-theme="d" data-content-theme="d">
+    	<h2>Gruppen</h2>
+    	<ul data-role="listview">
+        	<li <?php if($_GET['aktion'] == 'addGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addGroup">hinzufügen</a></li>
+        	<li <?php if($_GET['aktion'] == 'editGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editGroup" selected="selected">bearbeiten</a></li>
+    	</ul>
+
+	</div> 
 
 </div>
 </div>
@@ -1410,7 +1422,78 @@ for( $i = 0; $i <= 64; $i++ )
 		<?php
 		}
 		break;
+
+
+		case 'addGroup':
+		
+		if( $_POST['submit'] ){
+		?>
+		<div class="boxWhite">
+			<p class="center">Gruppe wurde hinzugefügt</p>
+		</div>
+
+
+
+
+
+																						
+		<?php
+		$aktoren = $_POST['multiAktoren'];	
+		//list($hour, $minute) = explode(':', $_POST['time']);
+		$sql = query( "INSERT INTO groups VALUES( '', '" . $_POST['groupname'] . "', '" . $_POST['flipAktiv'] . "')" );
+		var_dump($aktoren);			
+		}else{
+		?>
+		<div id="cont">
+			<form action="index.php?page=settings&aktion=addGroup" method="post" class="ui-body ui-body-c ui-corner-all">
+				<fieldset>
+					<div data-role="fieldcontain">
+					
+					<li data-role="fieldcontain">
+						<label for="groupname">Gruppen Name:</label>
+     					<input data-clear-btn="true" name="groupname" id="groupname" value="" type="text">
+					</li>
+					
+
+
 	
+					
+					<li data-role="fieldcontain">					
+						<label for="multiAktoren" class="select">Aktoren:</label>
+						<select name="multiAktoren[]" id="multiAktoren" multiple="multiple" data-native-menu="false">
+    						<option>Aktoren:</option>
+								<?php
+    							$sql2 = query( "SELECT id,name,type,room FROM aktor");					
+								while( $row2 = fetch( $sql2 ) )
+									{
+									$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+									$RoomName = fetch($sql);
+									$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
+									?>
+											<option id="<?php echo $row2['id'] ?>" value="<?php echo $row2['id'] ?>"><?php echo $RowName; ?></option>
+    								<?php
+    								}
+    							?>	
+    							
+						</select>
+					</li>
+						
+
+					<li data-role="fieldcontain">	
+						<label for="flipAktiv">Gruppe enabled:</label>
+						<select name="flipAktiv" id="flipAktiv" data-role="slider">
+							<option value="No">No</option>
+							<option value="Yes" selected="selected">Yes</option>
+						</select>	
+					</li>	
+					</div>
+					<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
+				</fieldset>
+			</form>
+		</div>
+		<?php
+		}
+		break;	
 	
 		default:
 		//include('dashboard.php');
