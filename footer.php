@@ -39,6 +39,25 @@ $active = $_GET['page']
 			}
 			?>
 			
+			<?
+			$sql = query( "SELECT value FROM config WHERE options='TimerFooter'");
+			$config = fetch( $sql);
+			if ($config['value'] == 'Yes'){
+				?>
+				<li><a href="?page=timer" <?php if($active == 'timer') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="watch" data-icon="custom" rel="external">Timer</a></li>
+				<?
+			}
+			?>
+			
+			<?
+			$sql = query( "SELECT value FROM config WHERE options='RaspberryFooter'");
+			$config = fetch( $sql);
+			if ($config['value'] == 'Yes'){
+				?>
+				<li><a href="?page=raspberry" <?php if($active == 'raspberry') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="raspberry" data-icon="custom" rel="external">Raspberry</a></li>
+				<?
+			}
+			?>
 			<li><a href="?page=settings" <?php if($active == 'settings') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="settings" data-icon="custom" rel="external">Einstellungen</a></li>
 		</ul>
 	</div><!-- /navbar -->

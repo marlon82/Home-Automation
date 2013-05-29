@@ -79,7 +79,6 @@ setInterval( function() {
 	
 
 </div><!-- /header -->
-
 <div data-role="panel" id="aktorpanel" data-theme="b">
 	<div class="panel-content" data-theme="b">
 		<h3>Aktor Panel</h3>

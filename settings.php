@@ -79,7 +79,7 @@ setInterval( function() {
 		<li class="min"></li>
 		<li class="point">:</li>
 		<li class="sec"></li>
-	</div>
+		</div>
 	<h1>Settings</h1>
 </div><!-- /header -->
 
@@ -873,20 +873,21 @@ for( $i = 0; $i <= 64; $i++ )
 		<?php
 		}
 		if($_GET['step'] == 2){
-		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value FROM timer WHERE id = '" . $_GET['id'] . "'" );
+		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday FROM timer WHERE id = '" . $_GET['id'] . "'" );
 		$row = fetch( $sql );
 		?>
 		<div id="cont">
 			<form action="index.php?page=settings&aktion=editTimer&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
 				<fieldset>
 					<div data-role="fieldcontain">
-					
+						<li data-role="fieldcontain">	
 						    <label for="timername">Timer Name:</label>
      						<input data-clear-btn="true" name="timername" id="timername" value="<?php echo $row['name']; ?>" type="text">
-     						
+     					</li>
+						<li data-role="fieldcontain">		
      						<label for="aktor" class="select">Aktor:</label>
 							<select name="aktor" id="aktor" data-native-menu="false">
-    							<option>Aktor:</option>
+    							<option>Aktor</option>
     							<?php
     							$sql2 = query( "SELECT id,name FROM aktor");	
 								$aktorID = $row['aktor'];
@@ -903,16 +904,66 @@ for( $i = 0; $i <= 64; $i++ )
 										}
     								}
     							?>
-
-							</select>
-							
+								<option>Gruppe</option>
+    						</select>
+						</li>
+						<li data-role="fieldcontain">		
 							<label for="slider-value">Value:</label>
 							<input name="slider-value" id="slider-value" data-highlight="true" min="0" max="100" value="<?php echo $row['value'] ?>" type="range">		
-												
+						</li>
+						<li data-role="fieldcontain">							
 							<label for="time">Time:</label>
 							<input data-clear-btn="true" name="time" id="time" value="<?php echo $row['time'] ?>" type="time">
+						</li>
+						<li data-role="fieldcontain">	
+							<?
+							if ($row['Monday'] == 'Yes'){
+								$ValueMonday = "checked=\"checked\"";
+							}
+							if ($row['Tuesday'] == 'Yes'){
+								$ValueTuesday = "checked=\"checked\"";
+							}
+							if ($row['Wednesday'] == 'Yes'){
+								$ValueWednesday = "checked=\"checked\"";
+							}
+							if ($row['Thursday'] == 'Yes'){
+								$ValueThursday = "checked=\"checked\"";
+							}
+							if ($row['Friday'] == 'Yes'){
+								$ValueFriday = "checked=\"checked\"";
+							}
+							if ($row['Saturday'] == 'Yes'){
+								$ValueSaturday = "checked=\"checked\"";
+							}
+							if ($row['Sunday'] == 'Yes'){
+								$ValueSunday = "checked=\"checked\"";
+							}
+							?>
+							<fieldset data-role="controlgroup" data-type="horizontal">
+								<legend>Wochentage:</legend>
+								<label for="checkbox-h-Montag">Montag</label>
+								<input type="checkbox" name="checkbox-h-Montag" id="checkbox-h-Montag" value="Yes" <? echo $ValueMonday; ?>>
 							
-
+								<label for="checkbox-h-Dienstag">Dienstag</label>
+								<input type="checkbox" name="checkbox-h-Dienstag" id="checkbox-h-Dienstag" value="Yes" <? echo $ValueTuesday; ?>>
+							
+								<label for="checkbox-h-Mittwoch">Mittwoch</label>
+								<input type="checkbox" name="checkbox-h-Mittwoch" id="checkbox-h-Mittwoch" value="Yes" <? echo $ValueWednesday; ?>>
+							
+								<label for="checkbox-h-Donnerstag">Donnerstag</label>
+								<input type="checkbox" name="checkbox-h-Donnerstag" id="checkbox-h-Donnerstag" value="Yes" <? echo $ValueThursday; ?>>
+							
+								<label for="checkbox-h-Freitag">Freitag</label>
+								<input type="checkbox" name="checkbox-h-Freitag" id="checkbox-h-Freitag" value="Yes" <? echo $ValueFriday; ?>>
+							
+								<label for="checkbox-h-Samstag">Samstag</label>
+								<input type="checkbox" name="checkbox-h-Samstag" id="checkbox-h-Samstag" value="Yes" <? echo $ValueSaturday; ?>>
+							
+								<label for="checkbox-h-Sonntag">Sonntag</label>
+								<input type="checkbox" name="checkbox-h-Sonntag" id="checkbox-h-Sonntag" value="Yes" <? echo $ValueSunday; ?>>
+							</fieldset>
+						</li>
+						<li data-role="fieldcontain">	
 							<?
 							
 							$YesNo = $row['enabled'];
@@ -928,10 +979,10 @@ for( $i = 0; $i <= 64; $i++ )
 							<label for="flipAktiv">Timer enabled:</label>
 							<select name="flipAktiv" id="flipAktiv" data-role="slider">
 								<option value="No" <?php echo $ValueNo; ?>>No</option>
-								<option value="Yes" <?php echo $Valueyes; ?>>Yes</option>
+								<option value="Yes" <?php echo $ValueYes; ?>>Yes</option>
 							</select>
 							
-
+						</li>
 						
 					</div>
 				<div class="ui-body ui-body-c">
@@ -958,7 +1009,7 @@ for( $i = 0; $i <= 64; $i++ )
 			if( $_POST['submit'] ){
 			$id = $_GET['id'];
 			list($hour, $minute) = explode(':', $_POST['time']);
-			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $_POST['aktor'] . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "' WHERE id = '" . $id . "'" );
+			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $_POST['aktor'] . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "', Monday = '" . $_POST['checkbox-h-Montag'] . "', Tuesday = '" . $_POST['checkbox-h-Dienstag'] . "', Wednesday = '" . $_POST['checkbox-h-Mittwoch'] . "', Thursday = '" . $_POST['checkbox-h-Donnerstag'] . "', Friday = '" . $_POST['checkbox-h-Freitag'] . "', Saturday = '" . $_POST['checkbox-h-Samstag'] . "', Sunday = '" . $_POST['checkbox-h-Sonntag'] . "' WHERE id = '" . $id . "'" );
 			?>
 			<div id="cont1">
 			<p>Der Timer wurde geändert</p>
@@ -1015,6 +1066,8 @@ for( $i = 0; $i <= 64; $i++ )
 		$sql1 = query( "INSERT INTO config VALUES( '', 'Multimedia', '" . $_POST['flipMultimedia'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'SamsungIP', '" . $_POST['SamsungIP'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'WetterWidget', '" . str_replace("'","\"",$_POST['WetterWidget']) . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'TimerFooter', '" . $_POST['flipTimerFooter'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'RaspberryFooter', '" . $_POST['flipRaspberryFooter'] . "')");
 		
 		}else{		
 		?>
@@ -1028,14 +1081,16 @@ for( $i = 0; $i <= 64; $i++ )
 							?>					
 							<label for="XS1IP">XS1 IP Adresse:</label>
      						<input data-clear-btn="true" name="XS1IP" id="XS1IP" value="<? echo $config['value']; ?>" type="text">
-							
+					</li>
+					<li data-role="fieldcontain">			
 							<?
 							$sql = query( "SELECT value FROM config WHERE options='XS1User'");
 							$config = fetch( $sql);
 							?>
 							<label for="XS1User">XS1 Username:</label>
      						<input data-clear-btn="true" name="XS1User" id="XS1User" value="<? echo $config['value']; ?>" type="text">
-							
+					</li>
+					<li data-role="fieldcontain">			
 							<?
 							$sql = query( "SELECT value FROM config WHERE options='XS1Pass'");
 							$config = fetch( $sql);
@@ -1072,7 +1127,7 @@ for( $i = 0; $i <= 64; $i++ )
 							<label for="DreamBoxIP">DreamBox IP:</label>
      						<input data-clear-btn="true" name="DreamBoxIP" id="DreamBoxIP" value="<? echo $config['value']; ?>" type="text">							
 					</li>
-					 <li data-role="fieldcontain">
+					<li data-role="fieldcontain">
 							<?
 							$sql = query( "SELECT value FROM config WHERE options='Multimedia'");
 							$config = fetch( $sql);
@@ -1103,7 +1158,45 @@ for( $i = 0; $i <= 64; $i++ )
 							
 								
 					</li>
-					 <li data-role="fieldcontain">		
+					<li data-role="fieldcontain">
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='TimerFooter'");
+							$config = fetch( $sql);
+							$YesNo = $config['value'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							<label for="flipTimerFooter">Timer in footer:</label>
+							<select name="flipTimerFooter" id="flipTimerFooter" data-role="slider">
+								<option value="No" <? echo $ValueNo; ?>>No</option>
+								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
+							</select>							
+					</li>
+					<li data-role="fieldcontain">
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='RaspberryFooter'");
+							$config = fetch( $sql);
+							$YesNo = $config['value'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							<label for="flipRaspberryFooter">RaspberryPi in footer:</label>
+							<select name="flipRaspberryFooter" id="flipRaspberryFooter" data-role="slider">
+								<option value="No" <? echo $ValueNo; ?>>No</option>
+								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
+							</select>							
+					</li>
+					<li data-role="fieldcontain">		
 							<?
 							$sql = query( "SELECT value FROM config WHERE options='WetterWidget'");
 							$config = fetch( $sql);
@@ -1158,13 +1251,14 @@ for( $i = 0; $i <= 64; $i++ )
 			<form action="index.php?page=settings&aktion=addDevice" method="post" class="ui-body ui-body-c ui-corner-all">
 				<fieldset>
 					<div data-role="fieldcontain">
-					
-						<label for="devicename">Geräte Name:</label>
-     					<input data-clear-btn="true" name="devicename" id="devicename" value="" type="text">
-							
-						<label for="typ" class="select">Typ:</label>
-						<select name="typ" id="typ" data-native-menu="false">
-    						<option>Typ:</option>
+						<li data-role="fieldcontain">	
+							<label for="devicename">Geräte Name:</label>
+							<input data-clear-btn="true" name="devicename" id="devicename" value="" type="text">
+						</li>
+						<li data-role="fieldcontain">		
+							<label for="typ" class="select">Typ:</label>
+								<select name="typ" id="typ" data-native-menu="false">
+								<option>Typ:</option>
 								<?php
     							$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes");					
 								while( $row2 = fetch( $sql2 ) )
@@ -1177,11 +1271,12 @@ for( $i = 0; $i <= 64; $i++ )
     								}
     							?>	
     							
-						</select>
-						
-						<label for="room" class="select">Räume:</label>
-						<select name="room" id="room" data-native-menu="false">
-    						<option>Räume:</option>
+							</select>
+						</li>
+						<li data-role="fieldcontain">	
+							<label for="room" class="select">Räume:</label>
+							<select name="room" id="room" data-native-menu="false">
+								<option>Räume:</option>
     						<?php
     						$sql2 = query( "SELECT id,name FROM rooms");					
 							while( $row2 = fetch( $sql2 ) )
@@ -1191,19 +1286,18 @@ for( $i = 0; $i <= 64; $i++ )
     							<?php
     							}
     						?>
-						</select>
+							</select>
 								
 						
-						
-     					<label for="verbrauchWatt">Verbrauch (W):</label>
-     					<input data-clear-btn="true" name="verbrauchWatt" id="verbrauchWatt" value="" type="text">
-												
-     					<label for="ip">IP Adresse:</label>
-     					<input data-clear-btn="true" name="ip" id="ip" value="" type="text">
-						
-						
-						
-						
+						</li>
+						<li data-role="fieldcontain">	
+							<label for="verbrauchWatt">Verbrauch (W):</label>
+							<input data-clear-btn="true" name="verbrauchWatt" id="verbrauchWatt" value="" type="text">
+						</li>
+						<li data-role="fieldcontain">							
+							<label for="ip">IP Adresse:</label>
+							<input data-clear-btn="true" name="ip" id="ip" value="" type="text">
+
 					</div>
 					<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
 				</fieldset>
@@ -1229,7 +1323,14 @@ for( $i = 0; $i <= 64; $i++ )
 													 '" . $_POST['time'] . "',
 													 '" . $hour . "',
 													 '" . $minute . "',	
-													 '" . $_POST['flipAktiv'] . "')" );		
+													 '" . $_POST['flipAktiv'] . "',
+													 '" . $_POST['checkbox-h-Montag'] . "',
+													 '" . $_POST['checkbox-h-Dienstag'] . "',
+													 '" . $_POST['checkbox-h-Mittwoch'] . "',
+													 '" . $_POST['checkbox-h-Donnerstag'] . "',
+													 '" . $_POST['checkbox-h-Freitag'] . "',
+													 '" . $_POST['checkbox-h-Samstag'] . "',
+													 '" . $_POST['checkbox-h-Sonntag'] . "')" );			
 		}else{
 		?>
 		<div id="cont">
@@ -1237,9 +1338,11 @@ for( $i = 0; $i <= 64; $i++ )
 				<fieldset>
 					<div data-role="fieldcontain">
 					
+					<li data-role="fieldcontain">
 						<label for="timername">Timer Name:</label>
      					<input data-clear-btn="true" name="timername" id="timername" value="" type="text">
-							
+					</li>
+					<li data-role="fieldcontain">					
 						<label for="aktor" class="select">Aktor:</label>
 						<select name="aktor" id="aktor" data-native-menu="false">
     						<option>Aktor:</option>
@@ -1257,19 +1360,48 @@ for( $i = 0; $i <= 64; $i++ )
     							?>	
     							
 						</select>
-						
+					</li>
+					<li data-role="fieldcontain">	
 						<label for="slider-value">Value:</label>
 						<input name="slider-value" id="slider-value" data-highlight="true" min="0" max="100" value="0" type="range">		
-												
+					</li>
+					<li data-role="fieldcontain">								
      					<label for="time">Time:</label>
      					<input data-clear-btn="true" name="time" id="time" value="" type="time">
-										
+					</li>
+					<li data-role="fieldcontain">	
+					
+					<fieldset data-role="controlgroup" data-type="horizontal">
+						<legend>Wochentage:</legend>
+							<label for="checkbox-h-Montag">Montag</label>
+							<input type="checkbox" name="checkbox-h-Montag" id="checkbox-h-Montag" value="Yes">
+							
+							<label for="checkbox-h-Dienstag">Dienstag</label>
+							<input type="checkbox" name="checkbox-h-Dienstag" id="checkbox-h-Dienstag" value="Yes">
+							
+							<label for="checkbox-h-Mittwoch">Mittwoch</label>
+							<input type="checkbox" name="checkbox-h-Mittwoch" id="checkbox-h-Mittwoch" value="Yes">
+							
+							<label for="checkbox-h-Donnerstag">Donnerstag</label>
+							<input type="checkbox" name="checkbox-h-Donnerstag" id="checkbox-h-Donnerstag" value="Yes">
+							
+							<label for="checkbox-h-Freitag">Freitag</label>
+							<input type="checkbox" name="checkbox-h-Freitag" id="checkbox-h-Freitag" value="Yes">
+							
+							<label for="checkbox-h-Samstag">Samstag</label>
+							<input type="checkbox" name="checkbox-h-Samstag" id="checkbox-h-Samstag" value="Yes">
+							
+							<label for="checkbox-h-Sonntag">Sonntag</label>
+							<input type="checkbox" name="checkbox-h-Sonntag" id="checkbox-h-Sonntag" value="Yes">
+					</fieldset>
+					</li>
+					<li data-role="fieldcontain">	
 						<label for="flipAktiv">Timer enabled:</label>
 						<select name="flipAktiv" id="flipAktiv" data-role="slider">
 							<option value="No">No</option>
 							<option value="Yes" selected="selected">Yes</option>
 						</select>	
-						
+					</li>	
 					</div>
 					<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
 				</fieldset>
