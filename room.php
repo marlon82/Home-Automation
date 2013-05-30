@@ -253,8 +253,9 @@ echo "$(document).ready( function () {\n";
 
 
 
-
-$typ = "dimmer"; 
+$sqld = query( "SELECT id,devtypename FROM deviceTypes WHERE devtype = 'dimmer'" );
+$devtype = fetch( $sqld );
+$typ = $devtype['id']; 
 $sql = query( "SELECT name,iName,iid FROM aktor WHERE room = '" . $roomid . "' AND type = '" . $typ . "'" );
 
 for ($i=1; $holen =  fetch($sql); $i++) {
@@ -273,7 +274,9 @@ echo "});\n";
 }
 	
 
-$typ = "schalter"; 
+$sqld = query( "SELECT id,devtypename FROM deviceTypes WHERE devtype = 'schalter'" );
+$devtype = fetch( $sqld );
+$typ = $devtype['id']; 
 $sql = query( "SELECT name,iName,iid FROM aktor WHERE room = '" . $roomid . "' AND type = '" . $typ . "'" );
 
 for ($i=1; $holen =  fetch($sql); $i++) {
@@ -301,7 +304,9 @@ for ($i=1; $holen =  fetch($sql); $i++) {
 	
 }	
 
-$typ = "rolladen"; 
+$sqld = query( "SELECT id,devtypename FROM deviceTypes WHERE devtype = 'rolladen'" );
+$devtype = fetch( $sqld );
+$typ = $devtype['id']; 
 $sql = query( "SELECT name,iName,iid FROM aktor WHERE room = '" . $roomid . "' AND type = '" . $typ . "'" );
 
 for ($i=1; $holen =  fetch($sql); $i++) {
@@ -343,8 +348,10 @@ switch( $_GET['action'] ){
 			
 			$sql = query( "SELECT type FROM aktor WHERE iid = '" . $_GET['id'] . "'" );
 			$row = fetch( $sql );
+			$sqld = query( "SELECT id,devtypename FROM deviceTypes WHERE devtype = '" . $row['type'] ."'" );
+			$devtype = fetch( $sqld );
 			
-			if( $row['type'] == 'taster' )
+			if( $devtype == 'taster' )
 				$funktion = true;
 			else
 				$funktion = false;
@@ -380,8 +387,10 @@ while( $row = fetch( $sql ) )
 <?php
 
 
-//#####################Aktoren auslesen und ausgeben
-$typ = "dimmer";  //Nur Dimmer auslesen und anzeigen
+//#####################Aktoren auslesen und ausgeben 
+$sqld = query( "SELECT id,devtypename FROM deviceTypes WHERE devtype = 'dimmer'" );
+$devtype = fetch( $sqld );
+$typ = $devtype['id']; //Nur Dimmer auslesen und anzeigen
 $sql = query( "SELECT name,iName,iid FROM aktor WHERE room = '" . $roomid . "' AND type = '" . $typ . "'" );	
 
 
@@ -417,7 +426,9 @@ if(!$initial){
 
 
 //#########################Aktoren auslesen und ausgeben
-$typ = "schalter";  //Nur schalter auslesen und anzeigen
+$sqld = query( "SELECT id,devtypename FROM deviceTypes WHERE devtype = 'schalter'" );
+$devtype = fetch( $sqld );
+$typ = $devtype['id']; //Nur schalter auslesen und anzeigen
 $sql = query( "SELECT name,iName,iid FROM aktor WHERE room = '" . $roomid . "' AND type = '" . $typ . "'" );	
 
 
@@ -457,7 +468,9 @@ if(!$initial){
 
 
 //#########################Aktoren auslesen und ausgeben
-$typ = "rolladen";  //Nur rolladen auslesen und anzeigen
+$sqld = query( "SELECT id,devtypename FROM deviceTypes WHERE devtype = 'rolladen'" );
+$devtype = fetch( $sqld );
+$typ = $devtype['id']; //Nur rolladen auslesen und anzeigen
 $sql = query( "SELECT name,iName,iid FROM aktor WHERE room = '" . $roomid . "' AND type = '" . $typ . "'" );	
 
 
@@ -496,7 +509,7 @@ if(!$initial){
 
 
 //#########################Sensoren auslesen und ausgeben
-//$typ = "schalter";  //Nur schalter auslesen und anzeigen
+//$typ = "schalter";  //Nur sensoren auslesen und anzeigen
 $sql = query( "SELECT iname,name,value,iid,hcType FROM sensoren WHERE room = '" . $roomid . "'" );	
 
 

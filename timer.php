@@ -88,12 +88,10 @@ setInterval( function() {
 <?php
 
 include('functions.php');
-$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday FROM timer" );
+$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup FROM timer" );
 
 while( $timer = fetch( $sql ) )
 {
-	$sqla = query( "SELECT id, name, type FROM aktor WHERE id='" . $timer['aktor'] ."'" );
-	$aktor = fetch( $sqla );
 	
 	if ($timer['Monday'] == 'Yes') { $Wochentage =  $Wochentage . ' Mo /';}
 	if ($timer['Tuesday'] == 'Yes') { $Wochentage = $Wochentage . ' Di /';}
@@ -110,7 +108,26 @@ while( $timer = fetch( $sql ) )
 	<div style="float: left; border-radius:10px; height:250px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider"><? echo $timer['name']?></li>
-			<li>Aktor<span style="float:right"><? echo $aktor['name'] . " (" . $aktor['type'] . ")"; ?></span></li> 
+			<?
+			if ( $timer['isGroup'] == 'Yes') {
+				$sqlg = query( "SELECT id, name FROM groups WHERE id='" . $timer['aktor'] ."'" );
+				$group = fetch( $sqlg );
+			?>
+				<li>Gruppe<span style="float:right"><? echo $group['name']; ?></span></li> 
+			<?
+			}else {
+				$sqla = query( "SELECT id, name, room, type FROM aktor WHERE id='" . $timer['aktor'] ."'" );
+				$aktor = fetch( $sqla );
+				$sqlr = query( "SELECT id, name, type FROM aktor WHERE id='" . $aktor['room'] ."'" );
+				$room = fetch( $sqlr );
+				$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $aktor['type']. "'" );
+				$devtype = fetch( $sqldt );
+			?>
+				<li>Aktor<span style="float:right"><? echo $aktor['name'] . " (" . $room['name'] ."/" . $devtype['devtypename'] . ")"; ?></span></li> 
+			<?
+			}
+			?>
+					
 			<li>Value<span style="float:right"><? echo $timer['value']; ?></span></li> 
 			<li>Zeit<span style="float:right"><? echo $timer['time']; ?></span></li> 
 			<li>Wochentage<span style="float:right"><? echo $Wochentage; ?></span></li>

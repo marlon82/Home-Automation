@@ -118,7 +118,7 @@ setInterval( function() {
 					$sql1 = query( "SELECT id,name FROM rooms WHERE id = '" . $row['room']. "' ORDER BY name ASC" );
 					$room = fetch( $sql1 );
 					
-					$sql2 = query( "SELECT devtypename FROM deviceTypes WHERE devtype = '" . $row['type']. "' ORDER BY devtypename ASC" );
+					$sql2 = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row['type']. "' ORDER BY devtypename ASC" );
 					$devtype = fetch( $sql2 );
 					
 					if( $row['id']  && $name && $type != 'disabled' )

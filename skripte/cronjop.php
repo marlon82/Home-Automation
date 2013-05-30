@@ -40,6 +40,69 @@ while($row = fetch( $sql )){
     
 }
 
+
+function timer(){
+
+	$sql = query( "SELECT id,name,aktor,value,hour,minute,enabled,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,isGroup FROM timer ORDER BY  `timer`.`id` ASC ");
+																			
+	while( $timer = fetch( $sql ) )
+	{	//nur wenn timer aktiv
+		if ($timer['enabled'] == 'Yes') {
+			$today = getdate();
+			switch ($today['weekday']) {
+				case 'Monday':
+					if ($timer['Monday'] == 'Yes') { $start = True; }
+					break;
+				case 'Tuesday':
+					if ($timer['Tuesday'] == 'Yes') { $start = True; }
+					break;
+				case 'Wednesday':
+					if ($timer['Wednesday'] == 'Yes') { $start = True; }
+					break;
+				case 'Thursday':
+					if ($timer['Thursday'] == 'Yes') { $start = True; }
+					break;
+				case 'Friday':
+					if ($timer['Friday'] == 'Yes') { $start = True; }
+					break;
+				case 'Saturday':
+					if ($timer['Saturday'] == 'Yes') { $start = True; }
+					break;
+				case 'Sunday':
+					if ($timer['Sunday'] == 'Yes') { $start = True; }
+					break;
+			}
+			if ($timer['isGroup'] == 'Yes') {
+			//Gruppen
+				$sqlg = query( "SELECT id,aktorID,deviceID,groupID,aktorValue FROM groupaktor WHERE groupID = '" . $timer['aktor'] . "'");
+				while( $group = fetch( $sqg ) )
+					{				
+					//echo $start . $today['weekday'];
+					if (($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) {
+						$sqla = query( "SELECT iid,name FROM aktor WHERE id = '" . $group['aktorID'] . "'" );
+						$aktor = fetch( $sqla );
+						//echo "start   iid:" . $aktor['iid'];
+						setAktor($aktor['iid'], $group['aktorValue'], false);
+					}else {
+						//echo 'stop';
+					}
+				}
+			}else{
+			//Aktoren
+				//echo $start . $today['weekday'];
+				if (($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) {
+					$sqla = query( "SELECT iid,name FROM aktor WHERE id = '" . $timer['aktor'] . "'" );
+					$aktor = fetch( $sqla );
+					//echo "start   iid:" . $aktor['iid'];
+					setAktor($aktor['iid'], $timer['value'], false);
+				}else {
+					//echo 'stop';
+				}
+			}
+		}	
+	}
+}
+
 function update_sensoren(){
 
 	$sql = query( "SELECT id, iid FROM sensoren");
@@ -134,6 +197,11 @@ switch( $_GET['func'] ){
 	
 	case '1min':
 	update_sensoren_min();
+	timer();
+	break;
+	
+	case 'timer':
+	timer();
 	break;
 
 	case '1h':

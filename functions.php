@@ -5,6 +5,29 @@
  * To change the template for this generated file go to
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
+ 
+function temp(){
+ 
+$sqlc = query( "SELECT value,options FROM config" );
+
+while( $timer = fetch( $sql ) )
+{
+	switch($config['options']) {
+		case 'DreamBoxIP':
+			$dreamIP = $config['value'];
+			break;
+		case 'XS1IP':	
+			$XS1['ip'] = 'http://' . $config['value'] . '/';
+			break;
+		case 'XS1User':
+			$XS1['user'] = $config['value'];
+			break;
+		case 'XS1Pass':
+			$XS1['pw'] = $config['value'];
+			break;
+	}
+}
+}
 $dreamIP = '192.168.1.22';
 $XS1 = array();
 $XS1['ip'] = 'http://192.168.1.242/';
@@ -369,11 +392,11 @@ function setAktor($id, $value, $funktion )
 	global $XS1, $zeitAus, $verbrauch, $zeitDelta;
 
 	$zeitDelta = intval( $zeitDelta );
-
+	//echo "xs1:" . $XS1['ip'] . "  id:" . $id . "  val:" . $value;
 	// URL zum Aktor setzen zusammenbauen 
 	if( $funktion == false )
 		$url = $XS1['ip'] . 'preset?switch='.$id.'&value='.$value;
-		//print $XS1['ip'] . 'preset?switch='.$id.'&value='.$value;
+		//echo $XS1['ip'] . 'preset?switch='.$id.'&value='.$value;
 	else 
 		$url = $XS1['ip'] . 'control?callback=cname&cmd=set_state_actuator&number='.$id.'&function='.$funktion;
 		//echo $XS1['ip'] . 'control?callback=cname&cmd=set_state_actuator&number='.$id.'&function='.$funktion;

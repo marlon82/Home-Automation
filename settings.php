@@ -359,12 +359,12 @@ for( $i = 0; $i <= 64; $i++ )
 							<select name="typ" id="typ" data-native-menu="false">
     							<option>Typ:</option>
     							<?php
-    							$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes");					
+    							$sql2 = query( "SELECT id,device,devtype,devtypename FROM deviceTypes");					
 								while( $row2 = fetch( $sql2 ) )
 									{
 									if( $row2['device'] == 'aktor'){
 									?>
-											<option value="<?php echo $row2['devtype'] ?>"><?php echo $row2['devtypename'] ?></option>
+											<option value="<?php echo $row2['id'] ?>"><?php echo $row2['devtypename'] ?></option>
     								<?php
 										}
     								}
@@ -418,9 +418,11 @@ for( $i = 0; $i <= 64; $i++ )
 									while( $row = fetch( $sql ) )
 									{
 										$sql1 = query( "SELECT  name FROM rooms WHERE id = '" . $row['room'] . "'" );
-										$row1 = fetch( $sql1 )
+										$row1 = fetch( $sql1 );
+										$sql2 = query( "SELECT id,device,devtype,devtypename FROM deviceTypes WHERE id = '" . $row['type'] . "'" );
+										$devType = fetch( $sql2 );
 										?>																						
-										<li><a href="?page=settings&aktion=editAktor&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $row['type'] . ")"; ?></span></a></li>																			
+										<li><a href="?page=settings&aktion=editAktor&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $devType['devtypename'] . ")"; ?></span></a></li>																			
 										<?php
 									}
 									?>
@@ -473,18 +475,18 @@ for( $i = 0; $i <= 64; $i++ )
 							<select name="typ" id="typ" data-native-menu="false">
     							<option>Typ:</option>
 								<?php
-    							$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes");	
+    							$sql2 = query( "SELECT id,device,devtype,devtypename FROM deviceTypes");	
 								$devtypeID = $row['type'];
 								while( $row2 = fetch( $sql2 ) )
 									{
 										if($row2['device'] == 'aktor'){
-											if($devtypeID == $row2['devtype']){
+											if($devtypeID == $row2['id']){
 											?>
-												<option value="<?php echo $row2['devtype'] ?>" selected="selected"><?php echo $row2['devtypename'] ?></option>
+												<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['devtypename'] ?></option>
 											<?php
 											}else{
 											?>
-												<option value="<?php echo $row2['devtype'] ?>"><?php echo $row2['devtypename'] ?></option>
+												<option value="<?php echo $row2['id'] ?>"><?php echo $row2['devtypename'] ?></option>
 											<?php
 											}
 										}
@@ -683,7 +685,7 @@ for( $i = 0; $i <= 64; $i++ )
 					
 						    <label for="roomname">Raum Name:</label>
      						<input data-clear-btn="true" name="roomname" id="roomname" value="<?php echo $row['name']; ?>" type="text">
-     										
+     													
 					</div>
 				<div class="ui-body ui-body-c">
 				<fieldset class="ui-grid-a">
@@ -856,15 +858,31 @@ for( $i = 0; $i <= 64; $i++ )
   		<ul data-role="listview" data-inset="true" data-theme="d">
     		<li data-role="list-divider">Timer</li>
     	<?php
-		$sql = query( "SELECT id,name,enabled,aktor,time FROM timer");
+		$sql = query( "SELECT id,name,enabled,aktor,time,isGroup FROM timer");
 															
 			while( $row = fetch( $sql ) )
 			{
-				$sql1 = query( "SELECT  name,type FROM aktor WHERE id = '" . $row['aktor'] . "'" );
-				$row1 = fetch( $sql1 )
+				if ($row['isGroup'] == 'Yes'){
+					$sql1 = query( "SELECT  name FROM groups WHERE id = '" . $row['aktor'] . "'" );
+					$row1 = fetch( $sql1 );
+					$name = $row1['name'];
+				} else {
+					$sql1 = query( "SELECT  name,type FROM aktor WHERE id = '" . $row['aktor'] . "'" );
+					$row1 = fetch( $sql1 );
+					$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row1['type']. "'" );
+					$devtype = fetch( $sqldt );
+					$name = $row1['name'] . " / " . $devtype['devtypename'];
+				}
+				if ($row['enabled'] == 'Yes'){
 				?>																						
-				<li><a href="?page=settings&aktion=editTimer&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(enabled=" . $row['enabled'] . " / " . $row['time'] . " / " . $row1['name'] . " / " . $row1['type'] . ")"; ?></span></a></li>																			
+					<li><a href="?page=settings&aktion=editTimer&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"><FONT COLOR="#01DF01"> <? echo "(" . $row['time'] . " / " . $name . ")"; ?></FONT></span></a></li>																			
 				<?php
+				}else {
+				?>																						
+					<li><a href="?page=settings&aktion=editTimer&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"><FONT COLOR="#FF0000"> <? echo "(" . $row['time'] . " / " . $name . ")"; ?></FONT></span></a></li>																			
+				<?php
+				}
+				
 			}
 			?>
 			</ul>
@@ -873,7 +891,7 @@ for( $i = 0; $i <= 64; $i++ )
 		<?php
 		}
 		if($_GET['step'] == 2){
-		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday FROM timer WHERE id = '" . $_GET['id'] . "'" );
+		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup FROM timer WHERE id = '" . $_GET['id'] . "'" );
 		$row = fetch( $sql );
 		?>
 		<div id="cont">
@@ -885,26 +903,54 @@ for( $i = 0; $i <= 64; $i++ )
      						<input data-clear-btn="true" name="timername" id="timername" value="<?php echo $row['name']; ?>" type="text">
      					</li>
 						<li data-role="fieldcontain">		
-     						<label for="aktor" class="select">Aktor:</label>
+     						<label for="aktor" class="select">Aktor/Gruppe:</label>
 							<select name="aktor" id="aktor" data-native-menu="false">
-    							<option>Aktor</option>
-    							<?php
-    							$sql2 = query( "SELECT id,name FROM aktor");	
-								$aktorID = $row['aktor'];
+								<?php
+								$AktorGroupID = $row['aktor'];
+								?>
+								<option>Bitte wählen. ..</option>
+								<optgroup label="Aktoren">
+								<?php
+    							$sql2 = query( "SELECT id,name,type,room FROM aktor");					
 								while( $row2 = fetch( $sql2 ) )
-									{
-										if($aktorID == $row2['id']){
-										?>
-											<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['name'] ?></option>
-										<?php
-										}else{
-										?>
-											<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
-										<?php
-										}
-    								}
-    							?>
-								<option>Gruppe</option>
+								{
+									$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+									$RoomName = fetch($sql);
+									$AktorID = $row2['id'];
+									$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row2['type'] . "'" );
+									$devtype = fetch( $sqldt );
+									$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $devtype['devtypename'] .")";
+									if (($AktorGroupID == $AktorID) && ($row['isGroup'] != 'Yes')){
+									?>
+											<option value="<?php echo "aktor." . $row2['id']; ?>" selected="selected"><?php echo $RowName; ?></option>
+    								<?php
+									}else {
+									?>
+											<option value="<?php echo "aktor." . $row2['id']; ?>"><?php echo $RowName; ?></option>
+    								<?php
+									}
+									
+    							}
+    							?>	
+    							
+								<optgroup label="Gruppen">
+								<?php
+    							$sqlGroup = query( "SELECT id,name,aktiv FROM groups");					
+								while( $Groupvalue = fetch( $sqlGroup ) )
+								{
+									$GroupID = $Groupvalue['id'];
+									if (($AktorGroupID == $GroupID) && ($row['isGroup'] == 'Yes')){
+									?>
+											<option value="<?php echo "group." . $Groupvalue['id']; ?>" selected="selected"><?php echo $Groupvalue['name']; ?></option>
+    								<?php
+									}else {
+									?>
+											<option value="<?php echo "group." . $Groupvalue['id']; ?>"><?php echo $Groupvalue['name']; ?></option>
+    								<?php
+									}
+									
+								}
+    							?>	
     						</select>
 						</li>
 						<li data-role="fieldcontain">		
@@ -1009,7 +1055,11 @@ for( $i = 0; $i <= 64; $i++ )
 			if( $_POST['submit'] ){
 			$id = $_GET['id'];
 			list($hour, $minute) = explode(':', $_POST['time']);
-			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $_POST['aktor'] . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "', Monday = '" . $_POST['checkbox-h-Montag'] . "', Tuesday = '" . $_POST['checkbox-h-Dienstag'] . "', Wednesday = '" . $_POST['checkbox-h-Mittwoch'] . "', Thursday = '" . $_POST['checkbox-h-Donnerstag'] . "', Friday = '" . $_POST['checkbox-h-Freitag'] . "', Saturday = '" . $_POST['checkbox-h-Samstag'] . "', Sunday = '" . $_POST['checkbox-h-Sonntag'] . "' WHERE id = '" . $id . "'" );
+			list($type, $typeID) = explode('.', $_POST['aktor']);
+			if ($type == 'group' ) {
+				$isGroup = 'Yes';
+			}	
+			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $typeID . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "', Monday = '" . $_POST['checkbox-h-Montag'] . "', Tuesday = '" . $_POST['checkbox-h-Dienstag'] . "', Wednesday = '" . $_POST['checkbox-h-Mittwoch'] . "', Thursday = '" . $_POST['checkbox-h-Donnerstag'] . "', Friday = '" . $_POST['checkbox-h-Freitag'] . "', Saturday = '" . $_POST['checkbox-h-Samstag'] . "', Sunday = '" . $_POST['checkbox-h-Sonntag'] . "' isGroup = '" . $isGroup . "' WHERE id = '" . $id . "'" );
 			?>
 			<div id="cont1">
 			<p>Der Timer wurde geändert</p>
@@ -1317,8 +1367,12 @@ for( $i = 0; $i <= 64; $i++ )
 																									
 		<?php	
 		list($hour, $minute) = explode(':', $_POST['time']);
+		list($type, $typeID) = explode('.', $_POST['aktor']);
+		if ($type == 'group' ) {
+			$isGroup = 'Yes';
+		}				
 		$sql = query( "INSERT INTO timer VALUES( '', '" . $_POST['timername'] . "',
-													 '" . $_POST['aktor']  . "',
+													 '" . $typeID  . "',
 													 '" . $_POST['slider-value']  . "',
 													 '" . $_POST['time'] . "',
 													 '" . $hour . "',
@@ -1330,7 +1384,8 @@ for( $i = 0; $i <= 64; $i++ )
 													 '" . $_POST['checkbox-h-Donnerstag'] . "',
 													 '" . $_POST['checkbox-h-Freitag'] . "',
 													 '" . $_POST['checkbox-h-Samstag'] . "',
-													 '" . $_POST['checkbox-h-Sonntag'] . "')" );			
+													 '" . $_POST['checkbox-h-Sonntag'] . "',			
+													 '" . $isGroup . "')" );			
 		}else{
 		?>
 		<div id="cont">
@@ -1343,18 +1398,32 @@ for( $i = 0; $i <= 64; $i++ )
      					<input data-clear-btn="true" name="timername" id="timername" value="" type="text">
 					</li>
 					<li data-role="fieldcontain">					
-						<label for="aktor" class="select">Aktor:</label>
+						<label for="aktor" class="select">Aktor/Gruppe:</label>
 						<select name="aktor" id="aktor" data-native-menu="false">
-    						<option>Aktor:</option>
+							<option>Bitte wählen. ..</option>
+    						<optgroup label="Aktoren">
 								<?php
     							$sql2 = query( "SELECT id,name,type,room FROM aktor");					
 								while( $row2 = fetch( $sql2 ) )
 									{
 									$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
 									$RoomName = fetch($sql);
-									$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
+									$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row2['type']. "'" );
+									$devtype = fetch( $sqldt );
+									$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $devtype['devtypename'] .")";
 									?>
-											<option value="<?php echo $row2['id'] ?>"><?php echo $RowName; ?></option>
+											<option value="<?php echo "aktor." . $row2['id']; ?>"><?php echo $RowName; ?></option>
+    								<?php
+    								}
+    							?>	
+    							
+								<optgroup label="Gruppen">
+								<?php
+    							$sqlGroup = query( "SELECT id,name,aktiv FROM groups");					
+								while( $Groupvalue = fetch( $sqlGroup ) )
+									{
+									?>
+											<option value="<?php echo "group." . $Groupvalue['id']; ?>"><?php echo $Groupvalue['name']; ?></option>
     								<?php
     								}
     							?>	

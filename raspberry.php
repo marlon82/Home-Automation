@@ -199,41 +199,62 @@ setInterval( function() {
 
 include('functions.php');
 ?>
+<div data-role="content" >	
+    <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+  		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider">Generelle Informationen</li>
+			<li>Hostname<span style="float:right"><? echo $host; ?></span></li>
+			<li>System Time<span style="float:right"><? echo $current_time; ?></span></li>
+			<li>Kernel<span style="float:right"><?echo $system . " " . $kernel; ?></span></li>
+			<li>Uptime<span style="float:right"><? echo $uptime; ?></span></li>
+		</ul>		
+    </div>	
+    <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+  		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider">CPU Informationen</li>
+			<li>CPU Type<span style="float:right"><? echo $processor; ?></span></li>
+			<li>CPU Frequency<span style="float:right"><? echo $frequency . " Mhz"; ?></span></li>
+			<li>CPU Load<span style="float:right"><? echo $cpuload . "%"; ?></span></li>
+			<li>CPU Temperatur<span style="float:right"><? echo $cpu_temperature . " °C"; ?></span></li>
+		</ul>		
+    </div>
+    <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+  		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider">Memory</li>
+			<li>Total<span style="float:right"><? echo $total_mem; ?> kB</span></li>
+			<li>Used (<? echo $percent_used; ?>%)<span style="float:right"><? echo $used_mem; ?> kB</span></li>
+			<li>Free (<? echo $percent_free; ?>%)<span style="float:right"><? echo $free_mem; ?> kB</span></li>
+			<li>Buffered (<? echo $percent_buff; ?>%)<span style="float:right"><? echo $buffer_mem; ?> kB</span></li>
+			<li>Cached (<? echo $percent_cach; ?>%)<span style="float:right"><? echo $cache_mem; ?> kB</span></li>
+		</ul>		
+    </div>	
+    <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+  		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider">Swap</li>
+			<li>Total<span style="float:right"><? echo $total_swap; ?> kB</span></li>
+			<li>Used (<? echo $percent_swap; ?>%)<span style="float:right"><? echo $used_swap; ?> kB</span></li>
+			<li>Free (<? echo $percent_swap_free; ?>%)<span style="float:right"><? echo $free_swap; ?> kB</span></li>
+		</ul>		
+    </div>	
+	<?
+	for ($i = 1; $i < $count; $i++)
+	{
+		$total = NumberWithCommas(intval(preg_replace("/[^0-9]/", "", trim($size[$i])))) . " MB";
+		$usedspace = NumberWithCommas(intval(preg_replace("/[^0-9]/", "", trim($used[$i])))) . " MB";
+		$freespace = NumberWithCommas(intval(preg_replace("/[^0-9]/", "", trim($avail[$i])))) . " MB";
 
-<ul data-role="listview" data-inset="true">
-    <li data-role="list-divider">Generelle Informationen</li>
-    <li>
-        <h2>Hostname</h2>
-        <p class="ui-li-aside"><strong><?php echo $host; ?></strong></p>
-    </a></li>
-    <li>
-        <h2>System Time</h2>
-        <p class="ui-li-aside"><strong><?php echo $time; ?></strong></p>
-    </a></li>
-    <li>
-        <h2>Kernel</h2>
-        <p class="ui-li-aside"><strong><?php echo $system . ' ' . $kernel; ?></strong></p>
-    </a></li>
-    <li>
-        <h2>CPU Type</h2>
-        <p class="ui-li-aside"><strong><?php echo $processor; ?></strong></p>
-    </a></li>
-    <li>
-        <h2>CPU Frequency</h2>
-        <p class="ui-li-aside"><strong><?php echo $freq. " MHz"; ?></strong></p>
-    </a></li>
-    <li>
-        <h2>CPU Load</h2>
-        <p class="ui-li-aside"><strong><?php echo $cpuload . "%"; ?></strong></p>
-    </a></li>
-    <li>
-        <h2>CPU Temperatur</h2>
-        <p class="ui-li-aside"><strong><?php echo $cputemp2 . " °C."; ?></strong></p>
-    </a></li>
-    <li>
-        <h2>Uptime</h2>
-        <p class="ui-li-aside"><strong><?php echo $uptime; ?></strong></p>
-    </a></li>
-</ul>
+	?>
+		<div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+			<ul data-role="listview" data-inset="true">
+				<li data-role="list-divider">Disk Usage <? echo $mount[$i] . " (" . $typex[$i] . ")"; ?> </li>
+				<li>Total Size<span style="float:right"><? echo $total; ?></span></li>
+				<li>Used (<? echo $percent[$i]; ?>)<span style="float:right"><? echo $usedspace; ?></span></li>
+				<li>Available (<? echo (100-(floatval($percent_part[$i]))); ?>%)<span style="float:right"><? echo $freespace; ?></span></li>
+			</ul>		
+		</div>
+	<?
+	}
+	?>
+</div>
 
 
