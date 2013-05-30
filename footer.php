@@ -8,6 +8,7 @@ $active = $_GET['page']
 	<div data-role="navbar" class="nav-glyphish-example">
 		<ul>
 			<li><a href="?page=dashboard" <?php if($active == 'dashboard') { ?> class="ui-btn-active ui-state-persist" <?php } ?> id="dashboard1" data-icon="custom" rel="external">Dashboard</a></li>
+			<li><a href="?page=group" <?php if($active == 'group') { ?> class="ui-btn-active ui-state-persist" <?php } ?> id="group" data-icon="custom" rel="external">Gruppen</a></li>
 			<?
 			$sql = query( "SELECT value FROM config WHERE options='Multimedia'");
 			$config = fetch( $sql);
