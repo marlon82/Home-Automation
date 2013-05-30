@@ -180,7 +180,7 @@ while( $row = fetch( $sqlRooms )){
 	
 	while( $row = fetch( $sql ) ){
 		//Filename inkl. Ordnerstruktur
-		$filename = "sensor_graph/" . $row['iname'] . ".png";
+		$filename = "../sensor_graph/" . $row['iname'] . ".png";
 	}
 	
 	//Bild Generieren
