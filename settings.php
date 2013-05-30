@@ -1130,6 +1130,7 @@ for( $i = 0; $i <= 64; $i++ )
 		$sql1 = query( "INSERT INTO config VALUES( '', 'WetterWidget', '" . str_replace("'","\"",$_POST['WetterWidget']) . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'TimerFooter', '" . $_POST['flipTimerFooter'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'RaspberryFooter', '" . $_POST['flipRaspberryFooter'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'GroupFooter', '" . $_POST['flipGroupFooter'] . "')");
 		
 		}else{		
 		?>
@@ -1180,12 +1181,12 @@ for( $i = 0; $i <= 64; $i++ )
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
 							</select>	
 							
+					</li>
+					 <li data-role="fieldcontain">
 							<?
 							$sql = query( "SELECT value FROM config WHERE options='DreamBoxIP'");
 							$config = fetch( $sql);
 							?>
-					</li>
-					 <li data-role="fieldcontain">
 							<label for="DreamBoxIP">DreamBox IP:</label>
      						<input data-clear-btn="true" name="DreamBoxIP" id="DreamBoxIP" value="<? echo $config['value']; ?>" type="text">							
 					</li>
@@ -1257,6 +1258,26 @@ for( $i = 0; $i <= 64; $i++ )
 								<option value="No" <? echo $ValueNo; ?>>No</option>
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
 							</select>							
+					</li>
+					<li data-role="fieldcontain">
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='GroupFooter'");
+							$config = fetch( $sql);
+							$YesNo = $config['value'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							<label for="flipGroupFooter">Gruppen in footer:</label>
+							<select name="flipGroupFooter" id="flipGroupFooter" data-role="slider">
+								<option value="No" <? echo $ValueNo; ?>>No</option>
+								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
+							</select>	
+							
 					</li>
 					<li data-role="fieldcontain">		
 							<?
@@ -1671,7 +1692,9 @@ foreach($aktorenValues as $key => $value)
 									{
 									$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
 									$RoomName = fetch($sql);
-									$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
+									$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row2['type']. "'" );
+									$devtype = fetch( $sqldt );
+									$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $devtype['devtypename'] .")";
 									?>
 											
 											<input type="checkbox" name="Aktoren[]" id="Aktor-<?php echo $row2['id'] ?>"  value="<?php echo $row2['id'] ?>" class="custom" />
@@ -1875,7 +1898,10 @@ if($_GET['group'] && $_GET['step'] == 1){
 									{
 									$sql_room = query( "SELECT id,name FROM rooms WHERE id='" . $aktoren['room'] ."'" );
 									$room = fetch($sql_room);
-									$RowName = $aktoren['name'] . " (" . $room['name'] . " / " . $aktoren['type'] .")";
+									
+									$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $aktoren['type']. "'" );
+									$devtype = fetch( $sqldt );
+									$RowName = $aktoren['name'] . " (" . $room['name'] . " / " . $devtype['devtypename'] .")";
 									
 									$sql_groupaktor = query( "SELECT * FROM groupaktor WHERE groupID='" . $_GET['group'] ."' ORDER BY aktorID ASC" );
 									
