@@ -371,11 +371,16 @@ switch( $_GET['action'] ){
 <ul data-role="listview" data-inset="true">
 <?php
 $active = $_GET['room'] ;
-$sql = query( "SELECT id,name FROM rooms ORDER BY name ASC");					
+$sql = query( "SELECT id,name,icon FROM rooms ORDER BY name ASC");					
 while( $row = fetch( $sql ) )
 {
+	if ($row['icon'] == '') {
+		$imagesource = "./icons/house.png";
+	}else{
+		$imagesource = $row['icon'];
+	}
 ?>
-	<li <?php if($row['id'] == $active) { ?> class="ui-btn-active ui-state-persist" <?php } ?> ><a href="?page=room&room=<?php echo $row['id'] ?>" rel="external"> <img src="./icons/house.png"  class="ui-li-icon ui-corner-none"><?php echo $row['name'] ?></a></li>
+	<li <?php if($row['id'] == $active) { ?> class="ui-btn-active ui-state-persist" <?php } ?> ><a href="?page=room&room=<?php echo $row['id'] ?>" rel="external"> <img src="<?php echo $imagesource ?>" class="ui-li-icon ui-corner-none"><?php echo $row['name'] ?></a></li>
 <?php
 }
 ?>

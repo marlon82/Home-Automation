@@ -155,12 +155,12 @@ while( $row = fetch( $sqlRooms )){
 		$xAchse_reverse[$z] = date("H:i", $holen[zeit]);
 		
 		//Min und Max Wert für die Skala festlegen
-		if($min_wert > $holen[value]){
-			$min_wert = $holen[value];
+		if($min_wert > str_replace(",",".",$holen[value])){
+			$min_wert = str_replace(",",".",$holen[value]);
 		}
 		
-		if($max_wert < $holen[value]){
-			$max_wert = $holen[value];
+		if($max_wert < str_replace(",",".",$holen[value])){
+			$max_wert = str_replace(",",".",$holen[value]);
 		}
 		$z++;
 
@@ -180,7 +180,7 @@ while( $row = fetch( $sqlRooms )){
 	
 	while( $row = fetch( $sql ) ){
 		//Filename inkl. Ordnerstruktur
-		$filename = "sensor_graph/" . $row['iname'] . ".png";
+		$filename = "../sensor_graph/" . $row['iname'] . ".png";
 	}
 	
 	//Bild Generieren
