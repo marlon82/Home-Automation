@@ -155,12 +155,12 @@ while( $row = fetch( $sqlRooms )){
 		$xAchse_reverse[$z] = date("H:i", $holen[zeit]);
 		
 		//Min und Max Wert für die Skala festlegen
-		if($min_wert > $holen[value]){
-			$min_wert = $holen[value];
+		if($min_wert > str_replace(",",".",$holen[value])){
+			$min_wert = str_replace(",",".",$holen[value]);
 		}
 		
-		if($max_wert < $holen[value]){
-			$max_wert = $holen[value];
+		if($max_wert < str_replace(",",".",$holen[value])){
+			$max_wert = str_replace(",",".",$holen[value]);
 		}
 		$z++;
 

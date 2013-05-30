@@ -677,7 +677,7 @@ for( $i = 0; $i <= 64; $i++ )
 									while( $row = fetch( $sql ) )
 									{
 										?>																						
-										<li><a href="?page=settings&aktion=editRoom&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row['name'] . ")"; ?></span></a></li>																			
+										<li><a href="?page=settings&aktion=editRoom&step=2&id=<?php echo $row['id']; ?>"><img src="<?php echo $row['icon'] ?>" class="ui-li-icon"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row['name'] . ")"; ?></span></a></li>																			
 										<?php
 									}
 									?>
@@ -697,7 +697,46 @@ for( $i = 0; $i <= 64; $i++ )
 					
 						    <label for="roomname">Raum Name:</label>
      						<input data-clear-btn="true" name="roomname" id="roomname" value="<?php echo $row['name']; ?>" type="text">
-     													
+     						
+						<?
+						
+						// open this directory 
+						$myDirectory = opendir("glyphish-icons/");
+
+						// get each entry
+						while($entryName = readdir($myDirectory)) {
+							$dirArray[] = $entryName;
+						}
+
+						// close directory
+						closedir($myDirectory);
+
+						//	count elements in array
+						$indexCount	= count($dirArray);
+						// sort 'em
+						//sort($dirArray);
+						?>
+						<label for="roomicon" class="select">Icon:</label>
+							<select name="roomicon" id="roomicon" data-native-menu="false">
+							<option>Icon:</option>
+    							<?php
+    										
+								for($index=0; $index < $indexCount; $index++) {
+									if (substr("$dirArray[$index]", 0, 1) != "."){ // don't list hidden files
+										if($dirArray[$index] == $row['icon']){
+										?>
+											<option value="<?php echo $dirArray[$index] ?>" selected="selected"><?php echo $dirArray[$index] ?></option>
+										<?php
+										}else{
+										?>
+											<option value="<?php echo $dirArray[$index] ?>"><?php echo $dirArray[$index] ?></option>
+										<?php
+										}
+    								}
+									}
+    							?>							
+							</select>
+							
 					</div>
 				<div class="ui-body ui-body-c">
 				<fieldset class="ui-grid-a">
@@ -726,7 +765,7 @@ for( $i = 0; $i <= 64; $i++ )
 			<p>Der Raum wurde geändert</p>
 			</div>
 			<?php
-			$sql = query( "UPDATE rooms SET name = '" . $_POST['roomname'] . "' WHERE id = '" . $_GET['id'] . "'" );	
+			$sql = query( "UPDATE rooms SET name = '" . $_POST['roomname'] . "', icon = 'glyphish-icons/" . $_POST['roomicon'] . "' WHERE id = '" . $_GET['id'] . "'" );	
 			}
 		}
 									
@@ -747,7 +786,7 @@ for( $i = 0; $i <= 64; $i++ )
 																			
 									while( $row = fetch( $sql ) )
 									{
-										$sql1 = query( "SELECT  name FROM rooms WHERE id = '" . $row['room'] . "'" );
+										$sql1 = query( "SELECT  name,icon FROM rooms WHERE id = '" . $row['room'] . "'" );
 										$row1 = fetch( $sql1 )
 										?>																						
 										<li><a href="?page=settings&aktion=editDevice&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $row['type'] . ")"; ?></span></a></li>																			
@@ -947,7 +986,7 @@ for( $i = 0; $i <= 64; $i++ )
     							
 								<optgroup label="Gruppen">
 								<?php
-    							$sqlGroup = query( "SELECT id,name,aktiv FROM groups");					
+    							$sqlGroup = query( "SELECT id,name,status FROM groups");					
 								while( $Groupvalue = fetch( $sqlGroup ) )
 								{
 									$GroupID = $Groupvalue['id'];
@@ -1091,7 +1130,7 @@ for( $i = 0; $i <= 64; $i++ )
 		</div>
 																									
 		<?php	
-		$sql = query( "INSERT INTO rooms VALUES( '', '" . $_POST['raumname'] . "', '" . $_POST['raumname'] . "')" );
+		$sql = query( "INSERT INTO rooms VALUES( '', '" . $_POST['raumname'] . "', '" . $_POST['raumicon'] . "')" );
 		}else{
 		?>
 		<div id="cont">
@@ -1452,7 +1491,7 @@ for( $i = 0; $i <= 64; $i++ )
     							
 								<optgroup label="Gruppen">
 								<?php
-    							$sqlGroup = query( "SELECT id,name,aktiv FROM groups");					
+    							$sqlGroup = query( "SELECT id,name,status FROM groups");					
 								while( $Groupvalue = fetch( $sqlGroup ) )
 									{
 									?>
