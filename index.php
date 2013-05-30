@@ -25,6 +25,7 @@
     #weather .ui-icon { background:  url(glyphish-icons/25-weather.png) 50% 50% no-repeat;  background-size: 22px 24px; }
     #raspberry .ui-icon { background:  url(glyphish-icons/raspberrypi.png) 50% 50% no-repeat;  background-size: 22px 24px; }
     #settings .ui-icon { background:  url(glyphish-icons/19-gear.png) 50% 50% no-repeat; }
+    #group .ui-icon { background:  url(glyphish-icons/123-id-card.png) 50% 50% no-repeat; }
     
 
 
