@@ -18,8 +18,13 @@
 	$frequency = NumberWithCommas(exec("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq") / 1000);
 	$processor = str_replace("-compatible processor", "", explode(": ", exec("cat /proc/cpuinfo | grep Processor"))[1]);
 	$cpu_temperature = round(exec("cat /sys/class/thermal/thermal_zone0/temp ") / 1000, 1);
-	$RX = exec("ifconfig eth0 | grep 'RX bytes'| cut -d: -f2 | cut -d' ' -f1");
-	$TX = exec("ifconfig eth0 | grep 'TX bytes'| cut -d: -f3 | cut -d' ' -f1");
+	
+	//Network
+	$network_ip = exec("ifconfig eth0 | grep 'inet addr:'| cut -d: -f2 | cut -d' ' -f1");
+	$network_mask = exec("ifconfig eth0 | grep 'Mask:'| cut -d: -f2 | cut -d' ' -f1");
+	$network_rx = exec("ifconfig eth0 | grep 'RX bytes'| cut -d: -f2 | cut -d' ' -f1");
+	$network_tx = exec("ifconfig eth0 | grep 'TX bytes'| cut -d: -f3 | cut -d' ' -f1");
+	
 	list($system, $host, $kernel) = split(" ", exec("uname -a"), 4);
 	
 	//Uptime
@@ -209,6 +214,14 @@ include('functions.php');
 			<li>Uptime<span style="float:right"><? echo $uptime; ?></span></li>
 		</ul>		
     </div>	
+    <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+  		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider">Netzwerk Informationen</li>
+			<li>IP Adresse<span style="float:right"><? echo $network_ip; ?></span></li>
+			<li>Received<span style="float:right"><? echo $RX; ?></span></li>
+			<li>Transmit<span style="float:right"><?echo $TX; ?></span></li>
+		</ul>		
+    </div>
     <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider">CPU Informationen</li>
