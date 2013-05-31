@@ -184,6 +184,7 @@ setInterval( function() {
 <?php
 //$XS1 = "192.168.1.242";
 include('functions.php');
+ini_set('error_reporting', E_ALL);
 
 switch( $_GET['aktion'] )
 	{
@@ -1197,15 +1198,19 @@ for( $i = 0; $i <= 64; $i++ )
 		$sql1 = query( "INSERT INTO config VALUES( '', 'DreamBoxavail', '" . $_POST['flipDreamBox'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'Multimedia', '" . $_POST['flipMultimedia'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'WetterWidget', '" . str_replace("'","\"",$_POST['WetterWidget']) . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'WetterWidgetAktiv', '" . $_POST['flipWetter'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'TimerFooter', '" . $_POST['flipTimerFooter'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'RaspberryFooter', '" . $_POST['flipRaspberryFooter'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'GroupFooter', '" . $_POST['flipGroupFooter'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'TimeZone', '" . $_POST['Timezone'] . "')");
 		
 		}else{		
 		?>
 		<div id="cont">
 			<form action="index.php?page=settings&aktion=editConfig" method="post" class="ui-body ui-body-c ui-corner-all">
+			<div id="cont-inner">
+  				<ul data-role="listview" data-inset="true" data-theme="d">
+    			<li data-role="list-divider">XS1</li>
+				
 				<ul data-role="listview" data-inset="true">
 					 <li data-role="fieldcontain">
 							<?
@@ -1232,6 +1237,7 @@ for( $i = 0; $i <= 64; $i++ )
      						<input data-clear-btn="true" name="XS1Pass" id="XS1Pass" value="<? echo $config['value']; ?>" type="password">
 									
 					</li>
+					<li data-role="list-divider">Footer</li>
 					<li data-role="fieldcontain">
 							<?
 							$sql = query( "SELECT value FROM config WHERE options='DreamBoxavail'");
@@ -1328,44 +1334,41 @@ for( $i = 0; $i <= 64; $i++ )
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
 							</select>	
 							
-					</li>
-					<li data-role="fieldcontain">
-							<label for="Timezone" class="select">Timezone:</label>
-							<select name="Timezone" id="Timezone" data-native-menu="false">
-    							<option>Timezone:</option>
-    							<?php
-								$timezone_identifiers = DateTimeZone::listIdentifiers('128');				
-								for ($i=0; $i < 10; $i++) {
-									?>
-    									<option value="<?php echo $timezone_identifiers[$i] ?>"><?php echo $timezone_identifiers[$i] ?></option>
-    								<?php
-    							}
-																	
-    							?>
-
-							</select>
-					
-					</li>
-					<li data-role="fieldcontain">		
+						</li>
+						<li data-role="list-divider">Wetter Widget</li>
+						<li data-role="fieldcontain">		
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='WetterWidgetAktiv'");
+							$config = fetch( $sql);
+							$YesNo = $config['value'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							<label for="flipWetter">Wetter Widget:</label>
+							<select name="flipWetter" id="flipWetter" data-role="slider">
+								<option value="No" <? echo $ValueNo; ?>>No</option>
+								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
+							</select>	
+							
+						</li>
+						<li data-role="fieldcontain">
+							
 							<?
 							$sql = query( "SELECT value FROM config WHERE options='WetterWidget'");
 							$config = fetch( $sql);
 							?>
-							<label for="WetterWidget">Wetter Widget URL:</label>
+							<label for="WetterWidget">URL:</label>
      						<input data-clear-btn="true" name="WetterWidget" id="WetterWidget" value="<? echo str_replace("\"","'",$config['value']); ?>" type="text">
 							
 					
-					</li>
-					 <li data-role="fieldcontain">								
-									
-							<?
-							$sql = query( "SELECT value FROM config WHERE options='TelevisionIP'");
-							$config = fetch( $sql);
-							?>
-							<label for="TelevisionIP">Television IP:</label>
-     						<input data-clear-btn="true" name="TelevisionIP" id="TelevisionIP" value="<? echo $config['value']; ?>" type="text">
-								
-					</li>
+						</li>
+					</ul>
+				</div>  
 				</ul>
 				<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
 			</form>
@@ -1460,21 +1463,34 @@ for( $i = 0; $i <= 64; $i++ )
 		case 'addTimer':
 		
 		if( $_POST['submit'] ){
-		?>
-		<div class="boxWhite">
-			<p class="center">Timer wurde hinzugefügt</p>
-		</div>
-																									
-		<?php	
+		
 		list($hour, $minute) = explode(':', $_POST['time']);
 		list($type, $typeID) = explode('.', $_POST['aktor']);
 		if ($type == 'group' ) {
 			$isGroup = 'Yes';
-		}				
+		}
+		$tzone = date_default_timezone_get();
+		if ($tzone == '') { $tzone = 'Europe/Berlin'; }
+		$tz = new DateTimeZone($tzone); 
+		$loc = $tz->getLocation(); 
+		$sun_info = date_sun_info(time(), $loc['latitude'], $loc['longitude']);
+		
+		if ($_POST['suninfo'] == 'sunrise') {
+			$time = date("H:i", $sun_info['sunrise']);
+			$hour = date("H", $sun_info['sunrise']);
+			$minute = date("i", $sun_info['sunrise']);
+		}elseif ($_POST['suninfo'] == 'sunset') {
+			$time = date("H:i", $sun_info['sunset']);
+			$hour = date("H", $sun_info['sunset']);
+			$minute = date("i", $sun_info['sunset']);
+		}elseif ($_POST['suninfo'] == 'off') {
+			$time = $_POST['time'];
+		}
+		
 		$sql = query( "INSERT INTO timer VALUES( '', '" . $_POST['timername'] . "',
 													 '" . $typeID  . "',
 													 '" . $_POST['slider-value']  . "',
-													 '" . $_POST['time'] . "',
+													 '" . $time . "',
 													 '" . $hour . "',
 													 '" . $minute . "',	
 													 '" . $_POST['flipAktiv'] . "',
@@ -1487,6 +1503,12 @@ for( $i = 0; $i <= 64; $i++ )
 													 '" . $_POST['checkbox-h-Sonntag'] . "',	
 													 '" . $isGroup . "',			
 													 '" . $_POST['suninfo'] . "')" );			
+		?>
+		<div class="boxWhite">
+			<p class="center">Timer wurde hinzugefügt</p>
+		</div>
+																									
+		<?php	
 		}else{
 		?>
 		<div id="cont">

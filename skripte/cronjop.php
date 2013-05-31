@@ -75,7 +75,7 @@ function timer(){
 			if ($timer['isGroup'] == 'Yes') {
 			//Gruppen
 				$sqlg = query( "SELECT id,aktorID,deviceID,groupID,aktorValue FROM groupaktor WHERE groupID = '" . $timer['aktor'] . "'");
-				while( $group = fetch( $sqg ) )
+				while( $group = fetch( $sqlg ) )
 					{				
 					//echo $start . $today['weekday'];
 					if (($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) {
@@ -104,10 +104,7 @@ function timer(){
 }
 
 function calculate_sun_rise_set(){
-	$sqltz = query( "SELECT value FROM config WHERE options = 'TimeZone'" );
-	$Timezone = fetch( $sqltz );
-	//echo $Timezone['value'];
-	$tzone = $Timezone['value'];
+	$tzone = date_default_timezone_get();
 	if ($tzone == '') { $tzone = 'Europe/Berlin'; }
 	$tz = new DateTimeZone($tzone); 
     $loc = $tz->getLocation(); 
@@ -121,8 +118,8 @@ function calculate_sun_rise_set(){
 	while( $row = fetch( $sql ) )
 	{
 		//echo $row['suninfo'] . $row['name'] ;
-		if ( $row['suninfo'] == 'sunrise') { $sqlset = query( "UPDATE timer SET time = '" . date("H:i:s", $sun_info['sunrise']) . "', hour ='" . date("H", $sun_info['sunrise']) . "', minute ='" . date("i", $sun_info['sunrise']) . "' WHERE id = '" . $row['id'] . "'" ); }
-		if ( $row['suninfo'] == 'sunset') { $sqlset = query( "UPDATE timer SET time = '" . date("H:i:s", $sun_info['sunset']) . "', hour ='" . date("H", $sun_info['sunset']) . "', minute ='" . date("i", $sun_info['sunset']) . "' WHERE id = '" . $row['id'] . "'" ); }
+		if ( $row['suninfo'] == 'sunrise') { $sqlset = query( "UPDATE timer SET time = '" . date("H:i", $sun_info['sunrise']) . "', hour ='" . date("H", $sun_info['sunrise']) . "', minute ='" . date("i", $sun_info['sunrise']) . "' WHERE id = '" . $row['id'] . "'" ); }
+		if ( $row['suninfo'] == 'sunset') { $sqlset = query( "UPDATE timer SET time = '" . date("H:i", $sun_info['sunset']) . "', hour ='" . date("H", $sun_info['sunset']) . "', minute ='" . date("i", $sun_info['sunset']) . "' WHERE id = '" . $row['id'] . "'" ); }
 	}
 }
 

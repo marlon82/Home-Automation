@@ -147,7 +147,7 @@ setInterval( function() {
     
     <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
-			<li data-role="list-divider">Virtuelle Befehle</li>
+			<li data-role="list-divider">Virtuelle Befehle DEMO</li>
 			<li><a href="index.html">TV</a></li> 
 			<li><a href="index.html">DVD</a></li>
 			<li><a href="index.html">HTPC</a></li>
@@ -159,7 +159,7 @@ setInterval( function() {
 
 	<div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
-    		<li data-role="list-divider">Stromverbrauch</li>
+    		<li data-role="list-divider">Stromverbrauch DEMO</li>
     		<li>Aktuell  <span style="float:right">250 W - 0.01€</span></li>
     		<li>Heute   <span style="float:right">45.82 kWh - 12.83€</span></li>
     		<li>Gestern <span style="float:right">50.14 kWh - 15.45€</span></li>
@@ -175,7 +175,7 @@ setInterval( function() {
     
     <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
-			<li data-role="list-divider">Multimedia</li>
+			<li data-role="list-divider">Multimedia DEMO</li>
 			<li><a href="#dreampanel">TV</a></li> 
 			<li><a href="#dreampanel">Dreambox Wohnzimmer</a></li>
 			<li><a href="#dreampanel">Dreambox Schlafzimmer</a></li>
@@ -187,16 +187,18 @@ setInterval( function() {
 
 	<div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
   		<?php
-		$sqlWWidget = query( "SELECT options,value FROM config WHERE options = 'WetterWidget'" );
+		$sqlWWidget = query( "SELECT options,value FROM config WHERE options = 'WetterWidgetAktiv'" );
 		$Widget = fetch( $sqlWWidget );
+		$sqlWWidgetURL = query( "SELECT options,value FROM config WHERE options = 'WetterWidget'" );
+		$WidgetURL = fetch( $sqlWWidgetURL );
 		
-		if($Widget['value'] <> ""){
+		if($Widget['value'] == "Yes"){
 		?>
 		
 			<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider">Wetter Vorhersage</li>
 			<?php
-			echo $Widget['value'];
+			echo $WidgetURL['value'];
 			?>
 			</ul>
 		
