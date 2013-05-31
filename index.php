@@ -6,10 +6,16 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	<title>Multi-page template</title> 
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+	<link rel="stylesheet" href="./jquery/jquery.mobile-1.3.1.css" />
 	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+	<script src="./jquery/jquery.mobile-1.3.1.js"></script>
 	<script src="slider.js"></script>
+	<?php
+
+/// calculating width of each navbar ///
+
+$width = 100/7; /// dividing 100% space among 7 items. If data is coming form DB then use mysql_num_rows($resource) instead of static number "7"
+?>
         <style>
            /**** Trying to style h1 and paragraph *******/
                .nav-glyphish-example .ui-btn .ui-btn-inner { padding-top: 40px !important; }
@@ -36,6 +42,8 @@ font-weight:bold;color:#000000;border: 2px solid #b5a759;letter-spacing:0pt;word
 
 		
 			.red {font-weight:bold;color:#cc0000;font-size:20px}
+
+
         </style>
 </head> 
 
