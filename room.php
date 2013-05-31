@@ -284,7 +284,7 @@ for ($i=1; $holen =  fetch($sql); $i++) {
 	echo "var singleValues = $(\"#flip-" . $holen['iid'] . "\").val();\n";
 	echo "var url = \"$link\";\n";
 	echo "var url_komplett = \"aktor.php\" +  url + singleValues;\n";
-	//echo "alert(url_komplett);\n";
+//echo "alert(url_komplett);\n";
 	echo "var jqxhr = $.get(url_komplett, function() {\n";
 	echo "})\n";
 	echo "changeElement(\"flip-" . $holen['iid'] . "-schalten-css\")\n";
