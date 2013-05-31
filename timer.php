@@ -129,7 +129,7 @@ while( $timer = fetch( $sql ) )
 			if ( $timer['isGroup'] != 'Yes') { ?> <li>Value<span style="float:right"><? echo $timer['value']; ?></span></li> <? }
 			?>
 			<li>Zeit<span style="float:right"><? echo $timer['time']; ?></span></li> 
-			<li>Wochentage<span style="float:right"><? echo $Wochentage; ?></span></li>
+			<li>Tage<span style="float:right"><? echo $Wochentage; ?></span></li>
 			<?
 			if ( $timer['enabled'] == 'Yes') {
 			?>
