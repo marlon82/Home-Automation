@@ -1564,7 +1564,8 @@ for( $i = 0; $i <= 64; $i++ )
 			
 			//var_dump($_POST['Aktoren']);
 			
-$typ = array("schalter","dimmer"); 
+$typ = array("schalter","rolladen","dimmer"); 
+$typid = array("1","2","3"); 
 //$aktoren = array("1","2","3","4");
 $initial = true;
 $lastGroup = false;
@@ -1584,8 +1585,9 @@ for($x = 0; $x < count($typ); $x++) {
     			<li data-role="list-divider"><?php echo $typ[$x]; ?></li>
     			
     	<?php 
-    	} 	 
-		$sql = query( "SELECT name FROM aktor WHERE id = '" . $aktoren[$i] . "' AND type = '" . $typ[$x] . "'" );	
+    	}
+		
+		$sql = query( "SELECT name FROM aktor WHERE id = '" . $aktoren[$i] . "' AND type = '" . $typid[$x] . "'" );	
 		if ( mysql_num_rows($sql) == 0 ) {
   			// nichts gefunden
 		} else {
@@ -1593,19 +1595,32 @@ for($x = 0; $x < count($typ); $x++) {
   			?>
     		<li>
     		<?php
-    		if($typ[$x] == "dimmer"){
+			$sqltype = query( "SELECT id,devtype,devtypename FROM deviceTypes WHERE id = '" . $typid[$x] . "'" );
+			$devtype = fetch( $sqltype );
+    		if($devtype['devtypename'] == "Dimmer"){
     		?>
     			<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
-    			<input name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-highlight="true" min="0" max="100" value="0" type="range">
+    			<input name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-highlight="true" min="0" max="100" step="5" value="0" type="range">
     		<?php
     		}
-    		if($typ[$x] == "schalter"){
+    		if($devtype['devtypename'] == "Schalter"){
     		?>
     			<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
     			<select name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-role="slider">
         			<option value="0">Aus</option>
         			<option value="100">An</option>
     			</select>
+    		<?php
+    		}
+    		if($devtype['devtypename'] == "Rolladen"){
+    		?>
+    			<fieldset data-role="controlgroup" data-type="horizontal">
+				<legend><?php echo $row['name'] ?></legend>
+					<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-h-<?php echo $aktoren[$i] ?>" value="100">
+					<label for="Aktor-h-<?php echo $aktoren[$i] ?>">Hoch</label>
+					<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-r-<?php echo $aktoren[$i] ?>" value="0">
+					<label for="Aktor-r-<?php echo $aktoren[$i] ?>">Runter</label>
+				</fieldset>
     		<?php
     		}
     		?>    					
@@ -1774,8 +1789,9 @@ case 'editGroup':
 			$aktoren = $_POST['Aktoren'];
 			
 			//var_dump($_POST['Aktoren']);
-			
-$typ = array("schalter","dimmer"); 
+
+$typ = array("schalter","rolladen","dimmer"); 
+$typid = array("1","2","3"); 
 //$aktoren = array("1","2","3","4");
 $initial = true;
 $lastGroup = false;
@@ -1804,19 +1820,32 @@ for($x = 0; $x < count($typ); $x++) {
   			?>
     		<li>
     		<?php
-    		if($typ[$x] == "dimmer"){
+			$sqltype = query( "SELECT id,devtype,devtypename FROM deviceTypes WHERE id = '" . $typid[$x] . "'" );
+			$devtype = fetch( $sqltype );
+    		if($devtype['devtypename'] == "Dimmer"){
     		?>
     			<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
     			<input name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-highlight="true" min="0" max="100" value="0" type="range">
     		<?php
     		}
-    		if($typ[$x] == "schalter"){
+    		if($devtype['devtypename'] == "Schalter"){
     		?>
     			<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
     			<select name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-role="slider">
         			<option value="0">Aus</option>
         			<option value="100">An</option>
     			</select>
+    		<?php
+    		}
+    		if($devtype['devtypename'] == "Rolladen"){
+    		?>
+    			<fieldset data-role="controlgroup" data-type="horizontal">
+				<legend><?php echo $row['name'] ?></legend>
+					<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-h-<?php echo $aktoren[$i] ?>" value="100">
+					<label for="Aktor-h-<?php echo $aktoren[$i] ?>">Hoch</label>
+					<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-r-<?php echo $aktoren[$i] ?>" value="0">
+					<label for="Aktor-r-<?php echo $aktoren[$i] ?>">Runter</label>
+				</fieldset>
     		<?php
     		}
     		?>    					
