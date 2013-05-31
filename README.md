@@ -29,6 +29,7 @@ Maybe you must edit that lines, if the webpage is not located in html root
 
 `0 * * * * wget -q -O /dev/null localhost/skripte/cronjop.php?func=1h`
 `* * * * * wget -q -O /dev/null localhost/skripte/cronjop.php?func=1min`
+`0 0 * * * wget -q -O /dev/null localhost/skripte/cronjop.php?func=calcSun`
 
 
 ## Database structure

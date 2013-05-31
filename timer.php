@@ -88,7 +88,7 @@ setInterval( function() {
 <?php
 
 include('functions.php');
-$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup FROM timer" );
+$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup FROM timer ORDER BY name ASC" );
 
 while( $timer = fetch( $sql ) )
 {
@@ -126,9 +126,8 @@ while( $timer = fetch( $sql ) )
 				<li>Aktor<span style="float:right"><? echo $aktor['name'] . " (" . $room['name'] ."/" . $devtype['devtypename'] . ")"; ?></span></li> 
 			<?
 			}
+			if ( $timer['isGroup'] != 'Yes') { ?> <li>Value<span style="float:right"><? echo $timer['value']; ?></span></li> <? }
 			?>
-					
-			<li>Value<span style="float:right"><? echo $timer['value']; ?></span></li> 
 			<li>Zeit<span style="float:right"><? echo $timer['time']; ?></span></li> 
 			<li>Wochentage<span style="float:right"><? echo $Wochentage; ?></span></li>
 			<?
