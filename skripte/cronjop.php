@@ -103,6 +103,28 @@ function timer(){
 	}
 }
 
+function calculate_sun_rise_set(){
+	$sqltz = query( "SELECT value FROM config WHERE options = 'TimeZone'" );
+	$Timezone = fetch( $sqltz );
+	//echo $Timezone['value'];
+	$tzone = $Timezone['value'];
+	if ($tzone == '') { $tzone = 'Europe/Berlin'; }
+	$tz = new DateTimeZone($tzone); 
+    $loc = $tz->getLocation(); 
+	$sun_info = date_sun_info(time(), $loc['latitude'], $loc['longitude']);
+	//returns sunrise, sunset, ... 
+	//echo "Sunrise: " . date("H:i:s", $sun_info['sunrise']) . "\n";
+	//echo "Sunset: " . date("H:i:s", $sun_info['sunset']) . "\n";
+	
+	//update sunrise
+	$sql = query( "SELECT id,suninfo FROM timer WHERE suninfo='sunrise' or suninfo='sunset'");
+	while( $row = fetch( $sql ) )
+	{
+		if ( $row['suninfo'] == 'sunrise') { $sql = query( "UPDATE timer SET time = '" . date("H:i:s", $sun_info['sunrise']) . "', hour ='" . date("H", $sun_info['sunrise']) . "', minute ='" . date("i", $sun_info['sunrise']) . "' WHERE id = '" . $row['id'] . "'" ); }
+		if ( $row['suninfo'] == 'sunset') { $sql = query( "UPDATE timer SET time = '" . date("H:i:s", $sun_info['sunset']) . "', hour ='" . date("H", $sun_info['sunset']) . "', minute ='" . date("i", $sun_info['sunset']) . "' WHERE id = '" . $row['id'] . "'" ); }
+	}
+}
+
 function update_sensoren(){
 
 	$sql = query( "SELECT id, iid FROM sensoren");
@@ -212,6 +234,10 @@ switch( $_GET['func'] ){
 	case 'genGraph':
 	update_sensoren_graph_today();
 	break;	
+	
+	case 'calcSun':
+	calculate_sun_rise_set();
+	break;
 	
 	case 'test':
 	update_geraete();

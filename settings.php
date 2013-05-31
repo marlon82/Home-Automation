@@ -942,7 +942,7 @@ for( $i = 0; $i <= 64; $i++ )
 		<?php
 		}
 		if($_GET['step'] == 2){
-		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup FROM timer WHERE id = '" . $_GET['id'] . "'" );
+		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup, suninfo FROM timer WHERE id = '" . $_GET['id'] . "'" );
 		$row = fetch( $sql );
 		?>
 		<div id="cont">
@@ -1007,6 +1007,20 @@ for( $i = 0; $i <= 64; $i++ )
 						<li data-role="fieldcontain">		
 							<label for="slider-value">Value:</label>
 							<input name="slider-value" id="slider-value" data-highlight="true" min="0" max="100" value="<?php echo $row['value'] ?>" type="range">		
+						</li>
+						<li data-role="fieldcontain">
+						<label for="suninfo" class="select">Suninfo:</label>
+							<?
+							if ($row['suninfo'] == 'off') { $setOff = "selected=\"selected\""; }
+							if ($row['suninfo'] == 'sunrise') { $setSunrise = "selected=\"selected\""; }
+							if ($row['suninfo'] == 'sunset') { $setSunset = "selected=\"selected\""; }
+							if ($row['suninfo'] == '') { $setOff = "selected=\"selected\""; }
+							?>
+							<select name="suninfo" id="suninfo" data-native-menu="false">
+    							<option value="off" <? echo $setOff; ?>>off</option>
+    							<option value="sunrise" <? echo $setSunrise; ?>>Sonnenaufgang</option>
+    							<option value="sunset" <? echo $setSunset; ?>>Sonnenuntergang</option>
+    						</select>
 						</li>
 						<li data-role="fieldcontain">							
 							<label for="time">Time:</label>
@@ -1110,7 +1124,7 @@ for( $i = 0; $i <= 64; $i++ )
 			if ($type == 'group' ) {
 				$isGroup = 'Yes';
 			}	
-			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $typeID . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "', Monday = '" . $_POST['checkbox-h-Montag'] . "', Tuesday = '" . $_POST['checkbox-h-Dienstag'] . "', Wednesday = '" . $_POST['checkbox-h-Mittwoch'] . "', Thursday = '" . $_POST['checkbox-h-Donnerstag'] . "', Friday = '" . $_POST['checkbox-h-Freitag'] . "', Saturday = '" . $_POST['checkbox-h-Samstag'] . "', Sunday = '" . $_POST['checkbox-h-Sonntag'] . "' isGroup = '" . $isGroup . "' WHERE id = '" . $id . "'" );
+			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $typeID . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "', Monday = '" . $_POST['checkbox-h-Montag'] . "', Tuesday = '" . $_POST['checkbox-h-Dienstag'] . "', Wednesday = '" . $_POST['checkbox-h-Mittwoch'] . "', Thursday = '" . $_POST['checkbox-h-Donnerstag'] . "', Friday = '" . $_POST['checkbox-h-Freitag'] . "', Saturday = '" . $_POST['checkbox-h-Samstag'] . "', Sunday = '" . $_POST['checkbox-h-Sonntag'] . "', isGroup = '" . $isGroup . "', suninfo = '" . $_POST['suninfo'] ."' WHERE id = '" . $id . "'" );
 			?>
 			<div id="cont1">
 			<p>Der Timer wurde geändert</p>
@@ -1170,6 +1184,7 @@ for( $i = 0; $i <= 64; $i++ )
 		$sql1 = query( "INSERT INTO config VALUES( '', 'TimerFooter', '" . $_POST['flipTimerFooter'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'RaspberryFooter', '" . $_POST['flipRaspberryFooter'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'GroupFooter', '" . $_POST['flipGroupFooter'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'TimeZone', '" . $_POST['Timezone'] . "')");
 		
 		}else{		
 		?>
@@ -1318,6 +1333,23 @@ for( $i = 0; $i <= 64; $i++ )
 							</select>	
 							
 					</li>
+					<li data-role="fieldcontain">
+							<label for="Timezone" class="select">Timezone:</label>
+							<select name="Timezone" id="Timezone" data-native-menu="false">
+    							<option>Timezone:</option>
+    							<?php
+								$timezone_identifiers = DateTimeZone::listIdentifiers('128');				
+								for ($i=0; $i < 10; $i++) {
+									?>
+    									<option value="<?php echo $timezone_identifiers[$i] ?>"><?php echo $timezone_identifiers[$i] ?></option>
+    								<?php
+    							}
+																	
+    							?>
+
+							</select>
+					
+					</li>
 					<li data-role="fieldcontain">		
 							<?
 							$sql = query( "SELECT value FROM config WHERE options='WetterWidget'");
@@ -1456,8 +1488,9 @@ for( $i = 0; $i <= 64; $i++ )
 													 '" . $_POST['checkbox-h-Donnerstag'] . "',
 													 '" . $_POST['checkbox-h-Freitag'] . "',
 													 '" . $_POST['checkbox-h-Samstag'] . "',
-													 '" . $_POST['checkbox-h-Sonntag'] . "',			
-													 '" . $isGroup . "')" );			
+													 '" . $_POST['checkbox-h-Sonntag'] . "',	
+													 '" . $isGroup . "',			
+													 '" . $_POST['suninfo'] . "')" );			
 		}else{
 		?>
 		<div id="cont">
@@ -1504,7 +1537,16 @@ for( $i = 0; $i <= 64; $i++ )
 					</li>
 					<li data-role="fieldcontain">	
 						<label for="slider-value">Value:</label>
-						<input name="slider-value" id="slider-value" data-highlight="true" min="0" max="100" value="0" type="range">		
+						<input name="slider-value" id="slider-value" data-highlight="true" min="0" max="100" step="5" value="0" type="range">		
+					</li>
+					<li data-role="fieldcontain">
+					<label for="suninfo" class="select">Suninfo:</label>
+							<select name="suninfo" id="suninfo" data-native-menu="false">
+    							<option value="off" selected="selected">off</option>
+    							<option value="sunrise">Sonnenaufgang</option>
+    							<option value="sunset">Sonnenuntergang</option>
+    							
+							</select>
 					</li>
 					<li data-role="fieldcontain">								
      					<label for="time">Time:</label>
@@ -1812,7 +1854,7 @@ for($x = 0; $x < count($typ); $x++) {
     			
     	<?php 
     	} 	 
-		$sql = query( "SELECT name FROM aktor WHERE id = '" . $aktoren[$i] . "' AND type = '" . $typ[$x] . "'" );	
+		$sql = query( "SELECT name FROM aktor WHERE id = '" . $aktoren[$i] . "' AND type = '" . $typid[$x] . "'" );	
 		if ( mysql_num_rows($sql) == 0 ) {
   			// nichts gefunden
 		} else {
