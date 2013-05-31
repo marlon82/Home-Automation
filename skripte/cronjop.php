@@ -117,11 +117,12 @@ function calculate_sun_rise_set(){
 	//echo "Sunset: " . date("H:i:s", $sun_info['sunset']) . "\n";
 	
 	//update sunrise
-	$sql = query( "SELECT id,suninfo FROM timer WHERE suninfo='sunrise' or suninfo='sunset'");
+	$sql = query( "SELECT id,suninfo,name FROM timer WHERE suninfo='sunset' OR suninfo='sunrise'");
 	while( $row = fetch( $sql ) )
 	{
-		if ( $row['suninfo'] == 'sunrise') { $sql = query( "UPDATE timer SET time = '" . date("H:i:s", $sun_info['sunrise']) . "', hour ='" . date("H", $sun_info['sunrise']) . "', minute ='" . date("i", $sun_info['sunrise']) . "' WHERE id = '" . $row['id'] . "'" ); }
-		if ( $row['suninfo'] == 'sunset') { $sql = query( "UPDATE timer SET time = '" . date("H:i:s", $sun_info['sunset']) . "', hour ='" . date("H", $sun_info['sunset']) . "', minute ='" . date("i", $sun_info['sunset']) . "' WHERE id = '" . $row['id'] . "'" ); }
+		//echo $row['suninfo'] . $row['name'] ;
+		if ( $row['suninfo'] == 'sunrise') { $sqlset = query( "UPDATE timer SET time = '" . date("H:i:s", $sun_info['sunrise']) . "', hour ='" . date("H", $sun_info['sunrise']) . "', minute ='" . date("i", $sun_info['sunrise']) . "' WHERE id = '" . $row['id'] . "'" ); }
+		if ( $row['suninfo'] == 'sunset') { $sqlset = query( "UPDATE timer SET time = '" . date("H:i:s", $sun_info['sunset']) . "', hour ='" . date("H", $sun_info['sunset']) . "', minute ='" . date("i", $sun_info['sunset']) . "' WHERE id = '" . $row['id'] . "'" ); }
 	}
 }
 

@@ -194,7 +194,6 @@ right:50px;
 
 $(document).ready(function() {
 
-
 setInterval( function() {
 	// Create a newDate() object and extract the seconds of the current time on the visitor's
 	var seconds = new Date().getSeconds();

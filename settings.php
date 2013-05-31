@@ -44,12 +44,30 @@ margin-top:15px;
 
 <script type="text/javascript">
 
-
-
-
-
 $(document).ready(function() {
 
+//
+$('#suninfo').change(function(e) {
+    var state = ($(this).val() == 'off') ? 'enable' : 'disable';
+    $("#time").textinput(state);
+});
+
+$('#aktor').change(function(e) {
+	var test = $(this).val();
+	var dis = "enable";
+	
+	if (test.indexOf("group") !=-1) {
+		dis = "disable";
+	}
+	
+	if (dis === "disable" ) {
+		$("#slider-value").slider(dis);
+	}
+	else {
+		$("#slider-value").slider(dis);
+	}
+    
+});
 
 setInterval( function() {
 	// Create a newDate() object and extract the seconds of the current time on the visitor's
@@ -1177,9 +1195,7 @@ for( $i = 0; $i <= 64; $i++ )
 		$sql1 = query( "INSERT INTO config VALUES( '', 'XS1User', '" . $_POST['XS1User'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'XS1Pass', '" . $_POST['XS1Pass'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'DreamBoxavail', '" . $_POST['flipDreamBox'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'DreamBoxIP', '" . $_POST['DreamBoxIP'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'Multimedia', '" . $_POST['flipMultimedia'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'SamsungIP', '" . $_POST['SamsungIP'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'WetterWidget', '" . str_replace("'","\"",$_POST['WetterWidget']) . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'TimerFooter', '" . $_POST['flipTimerFooter'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'RaspberryFooter', '" . $_POST['flipRaspberryFooter'] . "')");
@@ -1216,7 +1232,7 @@ for( $i = 0; $i <= 64; $i++ )
      						<input data-clear-btn="true" name="XS1Pass" id="XS1Pass" value="<? echo $config['value']; ?>" type="password">
 									
 					</li>
-					 <li data-role="fieldcontain">
+					<li data-role="fieldcontain">
 							<?
 							$sql = query( "SELECT value FROM config WHERE options='DreamBoxavail'");
 							$config = fetch( $sql);
@@ -1229,20 +1245,12 @@ for( $i = 0; $i <= 64; $i++ )
 								$ValueNo = "selected=\"selected\"";
 							}
 							?>
-							<label for="flipDreamBox">DreamBox available:</label>
+							<label for="flipDreamBox">DreamBox Footer:</label>
 							<select name="flipDreamBox" id="flipDreamBox" data-role="slider">
 								<option value="No" <? echo $ValueNo; ?>>No</option>
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
 							</select>	
 							
-					</li>
-					 <li data-role="fieldcontain">
-							<?
-							$sql = query( "SELECT value FROM config WHERE options='DreamBoxIP'");
-							$config = fetch( $sql);
-							?>
-							<label for="DreamBoxIP">DreamBox IP:</label>
-     						<input data-clear-btn="true" name="DreamBoxIP" id="DreamBoxIP" value="<? echo $config['value']; ?>" type="text">							
 					</li>
 					<li data-role="fieldcontain">
 							<?
@@ -1257,23 +1265,11 @@ for( $i = 0; $i <= 64; $i++ )
 								$ValueNo = "selected=\"selected\"";
 							}
 							?>
-							<label for="flipMultimedia">Multimedia:</label>
+							<label for="flipMultimedia">Multimedia Footer:</label>
 							<select name="flipMultimedia" id="flipMultimedia" data-role="slider">
 								<option value="No" <? echo $ValueNo; ?>>No</option>
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
 							</select>							
-					</li>
-					
-					 <li data-role="fieldcontain">								
-									
-							<?
-							$sql = query( "SELECT value FROM config WHERE options='SamsungIP'");
-							$config = fetch( $sql);
-							?>					
-							<label for="SamsungIP">Samsung IP:</label>
-     						<input data-clear-btn="true" name="SamsungIP" id="SamsungIP" value="<? echo $config['value']; ?>" type="text">
-							
-								
 					</li>
 					<li data-role="fieldcontain">
 							<?
@@ -1288,7 +1284,7 @@ for( $i = 0; $i <= 64; $i++ )
 								$ValueNo = "selected=\"selected\"";
 							}
 							?>
-							<label for="flipTimerFooter">Timer in footer:</label>
+							<label for="flipTimerFooter">Timer footer:</label>
 							<select name="flipTimerFooter" id="flipTimerFooter" data-role="slider">
 								<option value="No" <? echo $ValueNo; ?>>No</option>
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
@@ -1307,7 +1303,7 @@ for( $i = 0; $i <= 64; $i++ )
 								$ValueNo = "selected=\"selected\"";
 							}
 							?>
-							<label for="flipRaspberryFooter">RaspberryPi in footer:</label>
+							<label for="flipRaspberryFooter">RaspberryPi footer:</label>
 							<select name="flipRaspberryFooter" id="flipRaspberryFooter" data-role="slider">
 								<option value="No" <? echo $ValueNo; ?>>No</option>
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
@@ -1326,7 +1322,7 @@ for( $i = 0; $i <= 64; $i++ )
 								$ValueNo = "selected=\"selected\"";
 							}
 							?>
-							<label for="flipGroupFooter">Gruppen in footer:</label>
+							<label for="flipGroupFooter">Gruppen Footer:</label>
 							<select name="flipGroupFooter" id="flipGroupFooter" data-role="slider">
 								<option value="No" <? echo $ValueNo; ?>>No</option>
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
