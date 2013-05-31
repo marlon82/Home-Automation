@@ -1,5 +1,7 @@
 <div data-role="page" id="dashboard">
-
+<?
+include('functions.php');
+?>
 <div data-role="header" data-position="fixed" data-theme="b">
 	<a href="index.php?page=dashboard" data-icon="home" rel="external">Home</a>
 	<div id="container">
@@ -94,9 +96,44 @@ table tr td, th{
 </style>
 
 <script type="text/javascript">
-
+function aktor(url)
+{
+//var jqxhr = $.get('http://192.168.1.22/web/zap?sRef=1:0:1:2EE3:441:1:C00000:0:0:0:', function() {
+//http://192.168.1.130/homecontrol/kanal.php?kanal=1:0:1:2EE3:441:1:C00000:0:0:0:
+var jqxhr = $.get("aktor.php?link=" + url, function() {})
+}
 $(document).ready(function() {
 
+<?php
+
+
+$sql = query( "SELECT id FROM groups");
+
+for ($i=1; $holen =  fetch($sql); $i++) {
+	$link = '?group=' . $holen['id'] . '&value=';
+	echo "$(\"#flip-" . $holen['id'] . "\").on(\"slidestop\", function( event, ui ) { \n";
+	echo "var singleValues = $(\"#flip-" . $holen['id'] . "\").val();\n";
+	echo "var url = \"$link\";\n";
+	echo "var url_komplett = \"aktor.php\" +  url + singleValues;\n";
+	//echo "alert(url_komplett);\n";
+	echo "var jqxhr = $.get(url_komplett, function() {\n";
+	echo "})\n";
+	//echo "changeElement(\"flip-" . $holen['id'] . "-schalten-css\")\n";
+	echo "});\n";	
+	
+	/*   Ausführen mit PHP
+	$link = '&action=setAktor&id=' . $holen['iid'] . '&value=';
+	
+	echo "$(\"#flip-" . $holen['iid'] . "\").on(\"slidestop\", function( event, ui ) { \n";
+	echo "var singleValues = $(\"#flip-" . $holen['iid'] . "\").val();\n";
+	echo "var link = \"$link\";\n";
+	echo "var test = \"index.php?page=room&room=1\" + link + singleValues;\n";
+	echo "window.location= \"index.php?page=room&room=1\" + link + singleValues;\n";
+	echo "});\n";
+	*/
+	
+}
+?>
 
 setInterval( function() {
 	// Create a newDate() object and extract the seconds of the current time on the visitor's
@@ -125,7 +162,7 @@ setInterval( function() {
 
 <?php
 
-include('functions.php');
+
 $sql_groups = query( "SELECT id, name, status FROM groups" );
 
 while( $groups = fetch( $sql_groups ) )
@@ -149,7 +186,7 @@ while( $groups = fetch( $sql_groups ) )
 		$sql_aktor = query( "SELECT name,room FROM aktor where id='" . $groupaktor['aktorID'] ."'" );
 		$aktor = fetch( $sql_aktor );
 		
-		$sql_raum = query( "SELECT name FROM rooms where id='" . $aktor['room'] ."'" );
+		$sql_raum = query( "SELECT id,name FROM rooms where id='" . $aktor['room'] ."'" );
 		$raum = fetch( $sql_raum );
 		//var_dump($raum1);
 		if($groupaktor['aktorValue'] > 0){
@@ -183,8 +220,15 @@ while( $groups = fetch( $sql_groups ) )
 			
 			<li><a href="#popup-<? echo $groups['id'] ?>"  data-inline="true" data-rel="popup" data-position-to="window">Aktoren: </a></li> 
 			<li><a href="#">Geräte: </a></li> 
-			<li>Schalten:</li>
-
+			<li>
+			<label for="flip-<? echo $groups['id']?>"><b>Schalten:</b></label>
+			<div style="position: absolute ;right:10px;top:0">
+    			<select  name="flip-<? echo $groups['id']?>" id="flip-<? echo $groups['id']?>" data-role="slider">
+        			<option value="off">Aus</option>
+        			<option value="on">An</option>
+    			</select>
+    		</div>
+			</li>
 			
 		</ul>		
     </div>
