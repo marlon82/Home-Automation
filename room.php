@@ -417,7 +417,7 @@ while( $row = fetch( $sql ) )
     ?>
 	<li>
     <label for="slider-<?php echo $row['iid'] ?>"><?php echo $row['name'] ?></label>
-    <input name="slider-<?php echo $row['iid'] ?>" id="slider-<?php echo $row['iid'] ?>" data-highlight="true" min="0" max="100" value="<?php echo $value ?>" type="range">
+    <input name="slider-<?php echo $row['iid'] ?>" id="slider-<?php echo $row['iid'] ?>" data-highlight="true" min="0" max="100" step="5" value="<?php echo $value ?>" type="range">
     </li>
 <?php
 
