@@ -1,10 +1,10 @@
 <?php
-$width = 100/5; /// dividing 100% space among 7 items. If data is coming form DB then use mysql_num_rows($resource) instead of static number "7"
+//$width = 100/7; /// dividing 100% space among 7 items. If data is coming form DB then use mysql_num_rows($resource) instead of static number "7"
 $active = $_GET['page'] 
 ?>
 
 
-<div data-role="footer" class="nav-glyphish-example" data-position="fixed" data-theme="c" data-tap-toggle="false">
+<div data-role="footer" id="footer" class="nav-glyphish-example" data-position="fixed" data-theme="c" data-tap-toggle="false">
 	<div data-role="navbar" class="nav-glyphish-example">
 		<ul>
 			<li><a href="?page=dashboard" <?php if($active == 'dashboard') { ?> class="ui-btn-active ui-state-persist" <?php } ?> id="dashboard1" data-icon="custom" rel="external">Dashboard</a></li>
