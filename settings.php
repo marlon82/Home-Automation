@@ -184,7 +184,7 @@ setInterval( function() {
 <?php
 //$XS1 = "192.168.1.242";
 include('functions.php');
-ini_set('error_reporting', E_ALL);
+//ini_set('error_reporting', E_ALL);
 
 switch( $_GET['aktion'] )
 	{
