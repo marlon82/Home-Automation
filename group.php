@@ -111,26 +111,15 @@ $sql = query( "SELECT id FROM groups");
 
 for ($i=1; $holen =  fetch($sql); $i++) {
 	$link = '?group=' . $holen['id'] . '&value=';
-	echo "$(\"#flip-" . $holen['id'] . "\").on(\"slidestop\", function( event, ui ) { \n";
-	echo "var singleValues = $(\"#flip-" . $holen['id'] . "\").val();\n";
+	echo "$(\"#button-" . $holen['id'] . "\").bind(\"click\", function( event, ui ) { \n";
+	echo "var singleValues = $(\"#button-" . $holen['id'] . "\").val();\n";
 	echo "var url = \"$link\";\n";
 	echo "var url_komplett = \"aktor.php\" +  url + singleValues;\n";
 	//echo "alert(url_komplett);\n";
 	echo "var jqxhr = $.get(url_komplett, function() {\n";
 	echo "})\n";
-	//echo "changeElement(\"flip-" . $holen['id'] . "-schalten-css\")\n";
 	echo "});\n";	
-	
-	/*   Ausführen mit PHP
-	$link = '&action=setAktor&id=' . $holen['iid'] . '&value=';
-	
-	echo "$(\"#flip-" . $holen['iid'] . "\").on(\"slidestop\", function( event, ui ) { \n";
-	echo "var singleValues = $(\"#flip-" . $holen['iid'] . "\").val();\n";
-	echo "var link = \"$link\";\n";
-	echo "var test = \"index.php?page=room&room=1\" + link + singleValues;\n";
-	echo "window.location= \"index.php?page=room&room=1\" + link + singleValues;\n";
-	echo "});\n";
-	*/
+
 	
 }
 ?>
@@ -222,11 +211,8 @@ while( $groups = fetch( $sql_groups ) )
 			<li><a href="#">Geräte: </a></li> 
 			<li>
 			<label for="flip-<? echo $groups['id']?>"><b>Schalten:</b></label>
-			<div style="position: absolute ;right:10px;top:0">
-    			<select  name="flip-<? echo $groups['id']?>" id="flip-<? echo $groups['id']?>" data-role="slider">
-        			<option value="off">Aus</option>
-        			<option value="on">An</option>
-    			</select>
+			<div style="position: absolute ;right:10px;top:0px">
+    			<a href="#" data-role="button" id="button-<? echo $groups['id']?>" data-inline="true" data-mini="true">schalten</a>
     		</div>
 			</li>
 			
