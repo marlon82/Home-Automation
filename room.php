@@ -534,7 +534,7 @@ while( $row = fetch( $sql ) )
 	<li>
     	<?php 
 		if($row['hcType'] == "temperatur"){
-		echo $row['name'] . " atkuell: " . $row['value'] . " °C</br></br>"  ; 
+		echo $row['name'] . " aktuell: " . $row['value'] . " °C</br></br>"  ; 
     	//GenGraph($vars,$vars);
     	$filename = "sensor_graph/" . $row['iname'] . ".png";
     	//$filename = "sensor_graph/" . "temp_sensor" . ".png";

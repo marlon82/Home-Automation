@@ -32,6 +32,7 @@ $width = 100/7; /// dividing 100% space among 7 items. If data is coming form DB
     #raspberry .ui-icon { background:  url(glyphish-icons/raspberrypi.png) 50% 50% no-repeat;  background-size: 22px 24px; }
     #settings .ui-icon { background:  url(glyphish-icons/19-gear.png) 50% 50% no-repeat; }
     #group .ui-icon { background:  url(glyphish-icons/123-id-card.png) 50% 50% no-repeat; }
+    #sensor .ui-icon { background:  url(glyphish-icons/16-line-chart.png) 50% 50% no-repeat; }
     
 
 
@@ -80,6 +81,10 @@ switch( $_GET['page'] )
 		
 		case 'group':
 		include('group.php');
+		break;			
+		
+		case 'sensoren':
+		include('sensoren.php');
 		break;			
 	
 		default:

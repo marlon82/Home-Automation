@@ -61,6 +61,16 @@ $active = $_GET['page']
 			?>
 			
 			<?
+			$sql = query( "SELECT value FROM config WHERE options='SensorFooter'");
+			$config = fetch( $sql);
+			if ($config['value'] == 'Yes'){
+				?>
+				<li><a href="?page=sensoren" <?php if($active == 'sensoren') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="sensor" data-icon="custom" rel="external">Sensoren</a></li>
+				<?
+			}
+			?>
+			
+			<?
 			$sql = query( "SELECT value FROM config WHERE options='RaspberryFooter'");
 			$config = fetch( $sql);
 			if ($config['value'] == 'Yes'){
