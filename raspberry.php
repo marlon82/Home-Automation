@@ -20,10 +20,28 @@
 	$cpu_temperature = round(exec("cat /sys/class/thermal/thermal_zone0/temp ") / 1000, 1);
 	
 	//Network
-	$network_ip = exec("ifconfig eth0 | grep 'inet addr:'| cut -d: -f2 | cut -d' ' -f1");
-	$network_mask = exec("ifconfig eth0 | grep 'Mask:'| cut -d: -f2 | cut -d' ' -f1");
-	$network_rx = exec("ifconfig eth0 | grep 'RX bytes'| cut -d: -f2 | cut -d' ' -f1");
-	$network_tx = exec("ifconfig eth0 | grep 'TX bytes'| cut -d: -f3 | cut -d' ' -f1");
+	$network_ip = exec("/sbin/ifconfig eth0 | grep 'inet addr:'| cut -d: -f2 | cut -d' ' -f1");
+	$network_mask = exec("/sbin/ifconfig eth0 | grep 'Mask:'| cut -d: -f2 | cut -d' ' -f1");
+	$network_rx = exec("/sbin/ifconfig eth0 | grep 'RX bytes'| cut -d: -f2 | cut -d' ' -f1");
+	$network_tx = exec("/sbin/ifconfig eth0 | grep 'TX bytes'| cut -d: -f3 | cut -d' ' -f1");
+	if($network_rx > 1000){
+		$network_rx = round($network_rx /1000,2);
+		$network_rx_einheit = "KByte";
+		if($network_rx > 1000){
+			$network_rx = round($network_rx /1000,2);
+			$network_rx_einheit = "MByte";
+		}
+	}
+	if($network_tx > 1000){
+		$network_tx = round($network_tx /1000,2);
+		$network_tx_einheit = "KByte";
+		if($network_tx > 1000){
+			$network_tx = round($network_tx /1000,2);
+			$network_tx_einheit = "MByte";
+		}
+	}
+	
+	
 	
 	list($system, $host, $kernel) = split(" ", exec("uname -a"), 4);
 	
@@ -218,8 +236,8 @@ include('functions.php');
   		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider">Netzwerk Informationen</li>
 			<li>IP Adresse<span style="float:right"><? echo $network_ip; ?></span></li>
-			<li>Received<span style="float:right"><? echo $RX; ?></span></li>
-			<li>Transmit<span style="float:right"><?echo $TX; ?></span></li>
+			<li>Received<span style="float:right"><? echo $network_rx . " " . $network_rx_einheit; ?></span></li>
+			<li>Transmit<span style="float:right"><?echo $network_tx . " " . $network_tx_einheit; ?></span></li>
 		</ul>		
     </div>
     <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
