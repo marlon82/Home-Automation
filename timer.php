@@ -118,7 +118,7 @@ while( $timer = fetch( $sql ) )
 			}else {
 				$sqla = query( "SELECT id, name, room, type FROM aktor WHERE id='" . $timer['aktor'] ."'" );
 				$aktor = fetch( $sqla );
-				$sqlr = query( "SELECT id, name, type FROM aktor WHERE id='" . $aktor['room'] ."'" );
+				$sqlr = query( "SELECT id, name, icon FROM rooms WHERE id='" . $aktor['room'] ."'" );
 				$room = fetch( $sqlr );
 				$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $aktor['type']. "'" );
 				$devtype = fetch( $sqldt );

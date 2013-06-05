@@ -200,7 +200,7 @@ while( $row = fetch( $sqlRooms )){
 	
 	while( $row = fetch( $sql ) ){
 		//Filename inkl. Ordnerstruktur
-		$filename = "../sensor_graph/" . $row['iname'] . ".png";
+		$filename = "../sensor_graph/" . $row['iname'] . "_day.png";
 	}
 	
 	//Bild Generieren
@@ -208,6 +208,117 @@ while( $row = fetch( $sqlRooms )){
 	//var_dump("$xAchse\n");
 	//var_dump("$min_wert\n");
 	//var_dump("$max_wert\n");
+	GenGraph($yAchse,$xAchse,$filename,$min_wert,$max_wert);
+	}
+}
+
+function update_sensoren_graph_week(){
+
+$sqlRooms = query( "SELECT id, iid FROM sensoren");
+
+//Für jeden Sensor den Graph anlegen
+while( $row = fetch( $sqlRooms )){
+	$roomid = $row['iid'];
+	$yAchse_reverse = array();
+	$xAchse_reverse = array();
+	$min_wert = 100;
+	$max_wert = 0;
+	$z = 0;
+	//Die letzten 168 Einträge aus der DB holen
+	$sqlbefehl = "SELECT * FROM `logsensoren` WHERE iid = '" . $roomid . "' order by `zeit` DESC LIMIT 0,168";
+	$sql = query($sqlbefehl);
+
+	for ($i=0; $holen = fetch($sql); $i++) {
+		//Nur ins Array schreiben wenn Datum mit Heute übereinstimmt
+		//if(date('Ymd') == date('Ymd', $holen['zeit'])){
+		$yAchse_reverse[$z] = str_replace(",",".",$holen[value]);
+		$xAchse_reverse[$z] = date("d.m", $holen[zeit]);
+		
+		//Min und Max Wert für die Skala festlegen
+		if($min_wert > str_replace(",",".",$holen[value])){
+			$min_wert = str_replace(",",".",$holen[value]);
+		}
+		
+		if($max_wert < str_replace(",",".",$holen[value])){
+			$max_wert = str_replace(",",".",$holen[value]);
+		}
+		$z++;
+
+
+	}
+
+	// Array Werte herumdrehen, neuste Werte am Anfang stehen
+	$yAchse = array_reverse($yAchse_reverse);
+	$xAchse = array_reverse($xAchse_reverse);
+
+	//Anzeigebereich auf der Y-Achse erhöhen
+	$min_wert = round($min_wert) - 5;
+	$max_wert = round($max_wert) + 5;
+
+	$sqlbefehl = "SELECT iname FROM `sensoren` WHERE iid = '" . $roomid . "'";
+	$sql = query($sqlbefehl);
+	
+	while( $row = fetch( $sql ) ){
+		//Filename inkl. Ordnerstruktur
+		$filename = "../sensor_graph/" . $row['iname'] . "_week.png";
+	}
+	//Bild Generieren
+	GenGraph($yAchse,$xAchse,$filename,$min_wert,$max_wert);
+	}
+}
+
+
+function update_sensoren_graph_month(){
+
+$sqlRooms = query( "SELECT id, iid FROM sensoren");
+
+//Für jeden Sensor den Graph anlegen
+while( $row = fetch( $sqlRooms )){
+	$roomid = $row['iid'];
+	$yAchse_reverse = array();
+	$xAchse_reverse = array();
+	$min_wert = 100;
+	$max_wert = 0;
+	$z = 0;
+	//Die letzten 168 Einträge aus der DB holen
+	$sqlbefehl = "SELECT * FROM `logsensoren` WHERE iid = '" . $roomid . "' order by `zeit` DESC LIMIT 0,744";
+	$sql = query($sqlbefehl);
+
+	for ($i=0; $holen = fetch($sql); $i++) {
+		//Nur ins Array schreiben wenn Datum mit Heute übereinstimmt
+		//if(date('Ymd') == date('Ymd', $holen['zeit'])){
+		$yAchse_reverse[$z] = str_replace(",",".",$holen[value]);
+		$xAchse_reverse[$z] = date("d.m", $holen[zeit]);
+		
+		//Min und Max Wert für die Skala festlegen
+		if($min_wert > str_replace(",",".",$holen[value])){
+			$min_wert = str_replace(",",".",$holen[value]);
+		}
+		
+		if($max_wert < str_replace(",",".",$holen[value])){
+			$max_wert = str_replace(",",".",$holen[value]);
+		}
+		$z++;
+
+
+	}
+
+	// Array Werte herumdrehen, neuste Werte am Anfang stehen
+	$yAchse = array_reverse($yAchse_reverse);
+	$xAchse = array_reverse($xAchse_reverse);
+
+	//Anzeigebereich auf der Y-Achse erhöhen
+	$min_wert = round($min_wert) - 5;
+	$max_wert = round($max_wert) + 5;
+
+	$sqlbefehl = "SELECT iname FROM `sensoren` WHERE iid = '" . $roomid . "'";
+	$sql = query($sqlbefehl);
+	
+	while( $row = fetch( $sql ) ){
+		//Filename inkl. Ordnerstruktur
+		$filename = "../sensor_graph/" . $row['iname'] . "_month.png";
+	}
+	//Bild Generieren
 	GenGraph($yAchse,$xAchse,$filename,$min_wert,$max_wert);
 	}
 }
@@ -229,8 +340,16 @@ switch( $_GET['func'] ){
 	update_sensoren_graph_today();
 	break;
 
-	case 'genGraph':
+	case 'genGraphDay':
 	update_sensoren_graph_today();
+	break;	
+
+	case 'genGraphWeek':
+	update_sensoren_graph_week();
+	break;	
+
+	case 'genGraphMonth':
+	update_sensoren_graph_month();
 	break;	
 	
 	case 'calcSun':
