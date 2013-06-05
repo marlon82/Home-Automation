@@ -536,7 +536,7 @@ while( $row = fetch( $sql ) )
 		if($row['hcType'] == "temperatur"){
 		echo $row['name'] . " aktuell: " . $row['value'] . " °C</br></br>"  ; 
     	//GenGraph($vars,$vars);
-    	$filename = "sensor_graph/" . $row['iname'] . ".png";
+    	$filename = "sensor_graph/" . $row['iname'] . "_day.png";
     	//$filename = "sensor_graph/" . "temp_sensor" . ".png";
     	?>
     	<p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>
@@ -546,7 +546,7 @@ while( $row = fetch( $sql ) )
 		
 			echo $row['name'] . " aktuell: " . $row['value'] . "%</br></br>"  ; 
 			//GenGraph($vars,$vars);
-			$filename = "sensor_graph/" . $row['iname'] . ".png";
+			$filename = "sensor_graph/" . $row['iname'] . "_day.png";
 			//$filename = "sensor_graph/" . "temp_sensor" . ".png";
 			?>
 			<p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>

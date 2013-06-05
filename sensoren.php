@@ -90,39 +90,52 @@ setInterval( function() {
 include('functions.php');
 $sqlr = query( "SELECT id, name, icon FROM rooms ORDER BY name ASC" );
 
+$i=0;
+$rooms = array();
+$sensors = array();
+
 while( $room = fetch( $sqlr ) )
 {
-	$sqls = query("SELECT iname,name,value,iid,hcType FROM sensoren WHERE room = '" . $room['id'] . "'" );
+	$sqls = query("SELECT id,iname,name,value,iid,hcType FROM sensoren WHERE room = '" . $room['id'] . "'" );
 	while($sensor = fetch($sqls))
 	{	
+		$found == False;
+		for( $x = 0; $x <= count($rooms); $x++ ){
+			if($room['id'] == $rooms[$x]) { 
+			$found = True; 
+			break;
+			}
+		}
+		
+		if ($found == False) { 
+			$rooms[$i] = $room['id'];
+		}
+		
+		$sensors[$i] = $sensor['id'];
 		?>
-		<div style="float: left; border-radius:10px; height:280px; width:32%; margin-left:10px; margin-bottom:12px">
+		<div style="float: left; border-radius:10px; height:400px; width:32%; margin-left:10px; margin-bottom:12px">
 			<ul data-role="listview" data-inset="true">
-				<li data-role="list-divider"><? echo $room['name'] . " " . $sensor['name'] . " aktuell: " . $sensor['value'] . " °C"?></li>
-				<?
-				if($sensor['hcType'] == "temperatur"){
-					//echo $sensor['name'] . " atkuell: " . $sensor['value'] . " °C</br></br>"  ; 
-					//GenGraph($vars,$vars);
-					$filename = "sensor_graph/" . $sensor['iname'] . ".png";
-					//$filename = "sensor_graph/" . "temp_sensor" . ".png";
-				?>
-					<p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>
-
-				<?php
-				}elseif($sensor['hcType'] == "luftfeuchtigkeit"){
-					//echo $sensor['name'] . " aktuell: " . $sensor['value'] . "%</br></br>"  ; 
-					//GenGraph($vars,$vars);
-					$filename = "sensor_graph/" . $sensor['iname'] . ".png";
-					//$filename = "sensor_graph/" . "temp_sensor" . ".png";
-				?>
-					<p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>
-				<?php
-				}
-				?>
-			</ul>		
-		</div>
+				<li data-role="list-divider"><? echo $room['name'];?></li>
 		<?
+		
+		if($sensor['hcType'] == "temperatur"){
+			$filename = "sensor_graph/" . $sensor['iname'] . "_day.png";
+			?><p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>
+			<?php
+		}elseif($sensor['hcType'] == "luftfeuchtigkeit"){
+			$filename = "sensor_graph/" . $sensor['iname'] . "_day.png";
+			?>
+			<p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>
+			<?php
+		}
+		?>
+		</ul>		
+		</div>
+	<?
+	$i = $i + 1;
 	}
 }
 ?>
+
+
 </div>

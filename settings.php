@@ -1434,7 +1434,7 @@ for( $i = 0; $i <= 64; $i++ )
 								<select name="typ" id="typ" data-native-menu="false">
 								<option>Typ:</option>
 								<?php
-    							$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes");					
+    							$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes ORDER BY devtypename ASC");					
 								while( $row2 = fetch( $sql2 ) )
 									{
 									if( $row2['device'] == 'device'){
