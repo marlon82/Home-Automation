@@ -1202,6 +1202,7 @@ for( $i = 0; $i <= 64; $i++ )
 		$sql1 = query( "INSERT INTO config VALUES( '', 'TimerFooter', '" . $_POST['flipTimerFooter'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'RaspberryFooter', '" . $_POST['flipRaspberryFooter'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'GroupFooter', '" . $_POST['flipGroupFooter'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'SensorFooter', '" . $_POST['flipSensorFooter'] . "')");
 		
 		}else{		
 		?>
@@ -1334,7 +1335,27 @@ for( $i = 0; $i <= 64; $i++ )
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
 							</select>	
 							
-						</li>
+					</li>
+					<li data-role="fieldcontain">
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='SensorFooter'");
+							$config = fetch( $sql);
+							$YesNo = $config['value'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							<label for="flipSensorFooter">Sensor Footer:</label>
+							<select name="flipSensorFooter" id="flipSensorFooter" data-role="slider">
+								<option value="No" <? echo $ValueNo; ?>>No</option>
+								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
+							</select>	
+							
+					</li>
 						<li data-role="list-divider">Wetter Widget</li>
 						<li data-role="fieldcontain">		
 							<?
@@ -1413,7 +1434,7 @@ for( $i = 0; $i <= 64; $i++ )
 								<select name="typ" id="typ" data-native-menu="false">
 								<option>Typ:</option>
 								<?php
-    							$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes");					
+    							$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes ORDER BY devtypename ASC");					
 								while( $row2 = fetch( $sql2 ) )
 									{
 									if( $row2['device'] == 'device'){
