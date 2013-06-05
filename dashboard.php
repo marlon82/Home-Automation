@@ -97,46 +97,70 @@ setInterval( function() {
 	</div><!-- /content wrapper for padding -->
 </div>
 
+<?
+$sql_sensors = query( "SELECT id,name,iname,hcType,value,room FROM sensoren" );
+
+while( $sensors = fetch( $sql_sensors ) )
+{
+?>
+<div data-role="popup" id="popup-sensor-<? echo $sensors['id'] ?>" class="ui-content" data-theme="d">
+	<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+	<?
+	$sql_rooms = query( "SELECT name FROM rooms WHERE id='" . $sensors['room'] . "'" );
+	$room = fetch( $sql_rooms );
+	$filename = "sensor_graph/" . $sensors['iname'] . "_day.png";
+	if($sensors['hcType'] == "temperatur"){
+		$wert = $room['name'] . " " . $sensors['name'] . " aktuell: " . $sensors['value'] . " °C"; 
+	}elseif($sensors['hcType'] == "luftfeuchtigkeit"){
+		$wert = $room['name'] . " " . $sensors['name'] . " aktuell: " . $sensors['value'] . "%"; 
+	}
+	?>
+	<p><? echo $wert; ?></p>
+	<img src="<? echo $filename; ?>" border="2" style="border:0px solid black;max-width:100%;" alt="Graph" />
+</div>
+<?
+}
+?>
 
 <div data-role="content" >	
-
-
 	<div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true" data-theme="d">
     		<li data-role="list-divider">Aktive Aktoren (5 max)</li>
 	
 				<?php
-				$XS1Online = ping('192.168.1.242');
-				//echo $XS1Online;
+				//$sqlc = query( "SELECT value,options FROM config WHERE options='XS1IP'" );
+				//$IP = fetch($sqlc);
+				global $XS1;
+				$XS1Online = ping($XS1['rawip']);
+				//echo $XS1['rawip'];
 				if ($XS1Online){
-				for( $i = 0; $i <= 64; $i++ ){
-					extract(ReadXS1(actuator, $i));
+					for( $i = 0; $i <= 64; $i++ ){
+						extract(ReadXS1(actuator, $i));
 						//compact('number', 'value', 'name', 'type', 'unit', 'utime', 'newvalue')
-					$sql = query( "SELECT id,name,room,type FROM aktor WHERE iName = '" . $name . "' ORDER BY name ASC" );
-					$row = fetch( $sql );
+						$sql = query( "SELECT id,name,room,type FROM aktor WHERE iName = '" . $name . "' ORDER BY name ASC" );
+						$row = fetch( $sql );
 					
-					$sql1 = query( "SELECT id,name FROM rooms WHERE id = '" . $row['room']. "' ORDER BY name ASC" );
-					$room = fetch( $sql1 );
+						$sql1 = query( "SELECT id,name FROM rooms WHERE id = '" . $row['room']. "' ORDER BY name ASC" );
+						$room = fetch( $sql1 );
 					
-					$sql2 = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row['type']. "' ORDER BY devtypename ASC" );
-					$devtype = fetch( $sql2 );
+						$sql2 = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row['type']. "' ORDER BY devtypename ASC" );
+						$devtype = fetch( $sql2 );
 					
-					if( $row['id']  && $name && $type != 'disabled' )
-					{
-						if( $value > 1 ){
-							?>
-							<li><a href="index.php?page=room&room=<?php echo $room['id']; ?>" rel="external"><?php echo $room['name'] . " - " . $row['name'] . " (" . $devtype['devtypename'] . ")"; ?></a></li>
-							<?php
-							$count = $count + 1;
+						if( $row['id']  && $name && $type != 'disabled' )
+						{
+							if( $value > 1 ){
+								?>
+								<li><a href="index.php?page=room&room=<?php echo $room['id']; ?>" rel="external"><?php echo $room['name'] . " - " . $row['name'] . " (" . $devtype['devtypename'] . ")"; ?></a></li>
+								<?php
+								$count = $count + 1;
+							}
+						}
+						if ($count == 5){
+							break;
 						}
 					}
-					if ($count == 5){
-						break;
-					}
-				}
-				//echo "Es sind " . $count . " Online";
 				}else{
-					echo 'XS1 ist offline';
+					echo "XS1 (" . $XS1['rawip'] . ") ist offline";
 				}
 				?>	
 				
@@ -211,11 +235,11 @@ setInterval( function() {
 <?php
 //#########################Sensoren auslesen und ausgeben
 
-$sql = query( "SELECT name,hcType,room,value FROM sensoren" );	
+$sql = query( "SELECT id,name,hcType,room,value FROM sensoren" );	
 
 $initial = true;
 			
-while( $row = fetch( $sql ) )
+while( $sensor = fetch( $sql ) )
 {
 	if($initial)
 	{
@@ -227,17 +251,17 @@ while( $row = fetch( $sql ) )
     		<li data-role="list-divider">Aktuelle Sensor Werte</li>
     <?php
     }
-	$sqlRoomName = query( "SELECT name FROM rooms WHERE id = '" . $row['room'] . "'" );
+	$sqlRoomName = query( "SELECT name FROM rooms WHERE id = '" . $sensor['room'] . "'" );
 	$RoomName = fetch( $sqlRoomName );
 		
-	if($row['hcType'] == "temperatur"){
+	if($sensor['hcType'] == "temperatur"){
 	?>
-		<li><? echo $RoomName['name']; ?> <? echo $row['name']; ?>  <span style="float:right"><? echo $row['value']; ?> °C</span></li>
+		<li><a href="#popup-sensor-<? echo $sensor['id'] ?>"  data-inline="true" data-rel="popup" data-position-to="window"><? echo $RoomName['name'] ." " . $sensor['name']; ?><span style="float:right"><? echo $sensor['value']; ?> °C</span></a></li>
 		<?php
-	}elseif($row['hcType'] == "luftfeuchtigkeit"){
+	}elseif($sensor['hcType'] == "luftfeuchtigkeit"){
 	?>
-		<li><? echo $RoomName['name']; ?> <? echo $row['name']; ?>  <span style="float:right"><? echo $row['value']; ?>%</span></li>
-		<?php
+		<li><a href="#popup-sensor-<? echo $sensor['id'] ?>"  data-inline="true" data-rel="popup" data-position-to="window"><? echo $RoomName['name'] ." " . $sensor['name']; ?><span style="float:right"><? echo $sensor['value']; ?>%</span></a></li>
+	<?php
 	}
 
 }

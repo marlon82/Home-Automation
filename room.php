@@ -513,7 +513,6 @@ if(!$initial){
 
 
 //#########################Sensoren auslesen und ausgeben
-//$typ = "schalter";  //Nur sensoren auslesen und anzeigen
 $sql = query( "SELECT iname,name,value,iid,hcType FROM sensoren WHERE room = '" . $roomid . "'" );	
 
 
@@ -535,9 +534,7 @@ while( $row = fetch( $sql ) )
     	<?php 
 		if($row['hcType'] == "temperatur"){
 		echo $row['name'] . " aktuell: " . $row['value'] . " °C</br></br>"  ; 
-    	//GenGraph($vars,$vars);
     	$filename = "sensor_graph/" . $row['iname'] . "_day.png";
-    	//$filename = "sensor_graph/" . "temp_sensor" . ".png";
     	?>
     	<p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>
 
@@ -545,9 +542,7 @@ while( $row = fetch( $sql ) )
 		}elseif($row['hcType'] == "luftfeuchtigkeit"){
 		
 			echo $row['name'] . " aktuell: " . $row['value'] . "%</br></br>"  ; 
-			//GenGraph($vars,$vars);
 			$filename = "sensor_graph/" . $row['iname'] . "_day.png";
-			//$filename = "sensor_graph/" . "temp_sensor" . ".png";
 			?>
 			<p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>
 				

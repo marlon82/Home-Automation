@@ -114,7 +114,20 @@ setInterval( function() {
 	</div><!-- /content wrapper for padding -->
 </div>
 
-
+<div data-role="popup" id="popup-TVMacroHelp" class="ui-content" data-theme="d">
+	<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+	<p>Erklärung:</p>
+	<p></p>
+	<p>Key (beginnt mit "KEY_"):				"KEY_ENTER"	oder   "key_enter"</p>
+	<p>Key (beginnt mit $ anstatt "KEY_"):		"$ENTER"    oder   "$enter"</p>
+	<p>Zahlen (z.B. Sender / Ping):			"0123"</p>
+	<p></p>
+	<p>Keys werden mit komma "," getrennt</p>
+	<p></p>
+	<p>Beispiel:</p>
+	<p></p>
+	<p>Sender 101:								"1,0,1,KEY_ENTER" oder "1,0,1,$enter" oder "0101"</p>
+</div>
 
 
 
@@ -174,6 +187,15 @@ setInterval( function() {
     	<ul data-role="listview">
         	<li <?php if($_GET['aktion'] == 'addGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addGroup">hinzufügen</a></li>
         	<li <?php if($_GET['aktion'] == 'editGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editGroup" selected="selected">bearbeiten</a></li>
+    	</ul>
+
+	</div> 
+
+	<div data-role="collapsible"  data-theme="d" data-content-theme="d">
+    	<h2>TV Macros</h2>
+    	<ul data-role="listview">
+        	<li <?php if($_GET['aktion'] == 'addTVMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addTVMacro">hinzufügen</a></li>
+        	<li <?php if($_GET['aktion'] == 'editTVMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editTVMacro" selected="selected">bearbeiten</a></li>
     	</ul>
 
 	</div> 
@@ -440,7 +462,7 @@ for( $i = 0; $i <= 64; $i++ )
 		if(!$_GET['step']){
 		?>
 		<div id="cont">
-		<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true" data-theme="d">
     		<li data-role="list-divider">Aktoren</li>
     	<?php
@@ -567,7 +589,7 @@ for( $i = 0; $i <= 64; $i++ )
 		if(!$_GET['step']){
 		?>
 		<div id="cont">
-		<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true" data-theme="d">
     		<li data-role="list-divider">Sensoren</li>
     	<?php
@@ -687,16 +709,16 @@ for( $i = 0; $i <= 64; $i++ )
 		if(!$_GET['step']){
 		?>
 		<div id="cont">
-		<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true" data-theme="d">
     		<li data-role="list-divider">Räume</li>
     	<?php
 		$sql = query( "SELECT id,name,icon FROM rooms");
 																			
-									while( $row = fetch( $sql ) )
+									while( $room = fetch( $sql ) )
 									{
 										?>																						
-										<li><a href="?page=settings&aktion=editRoom&step=2&id=<?php echo $row['id']; ?>"><img src="<?php echo $row['icon'] ?>" class="ui-li-icon"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row['name'] . ")"; ?></span></a></li>																			
+										<li><a href="?page=settings&aktion=editRoom&step=2&id=<?php echo $room['id']; ?>"><img src="<?php echo $room['icon'] ?>" class="ui-li-icon"><?php echo $room['name'] ?> <span style="float:right;position:absolute;right:40px;"></span></a></li>																			
 										<?php
 									}
 									?>
@@ -707,7 +729,7 @@ for( $i = 0; $i <= 64; $i++ )
 		}
 		if($_GET['step'] == 2){
 		$sql = query( "SELECT id, name, icon FROM rooms WHERE id = '" . $_GET['id'] . "'" );
-		$row = fetch( $sql );
+		$room = fetch( $sql );
 		?>
 		<div id="cont">
 			<form action="index.php?page=settings&aktion=editRoom&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
@@ -715,8 +737,10 @@ for( $i = 0; $i <= 64; $i++ )
 					<div data-role="fieldcontain">
 					
 						    <label for="roomname">Raum Name:</label>
-     						<input data-clear-btn="true" name="roomname" id="roomname" value="<?php echo $row['name']; ?>" type="text">
-     						
+     						<input data-clear-btn="true" name="roomname" id="roomname" value="<?php echo $room['name']; ?>" type="text">
+     				</div>		
+					
+					<div data-role="fieldcontain">
 						<?
 						
 						// open this directory 
@@ -734,6 +758,9 @@ for( $i = 0; $i <= 64; $i++ )
 						$indexCount	= count($dirArray);
 						// sort 'em
 						//sort($dirArray);
+						
+						list($foldername, $filename) = explode('/', $room['icon']);
+						
 						?>
 						<label for="roomicon" class="select">Icon:</label>
 							<select name="roomicon" id="roomicon" data-native-menu="false">
@@ -742,7 +769,7 @@ for( $i = 0; $i <= 64; $i++ )
     										
 								for($index=0; $index < $indexCount; $index++) {
 									if (substr("$dirArray[$index]", 0, 1) != "."){ // don't list hidden files
-										if($dirArray[$index] == $row['icon']){
+										if($dirArray[$index] == $filename){
 										?>
 											<option value="<?php echo $dirArray[$index] ?>" selected="selected"><?php echo $dirArray[$index] ?></option>
 										<?php
@@ -789,7 +816,79 @@ for( $i = 0; $i <= 64; $i++ )
 		}
 									
 		//include('dreambox.php');
-		break;			
+		break;		
+
+		
+		
+		
+		case 'editTVMacro':
+		if(!$_GET['step']){
+		?>
+		<div id="cont">
+		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+  		<ul data-role="listview" data-inset="true" data-theme="d">
+    		<li data-role="list-divider">Räume</li>
+    	<?php
+		$sql = query( "SELECT id,name,value FROM tvmacros");
+																			
+									while( $macro = fetch( $sql ) )
+									{
+										?>																						
+										<li><a href="?page=settings&aktion=editTVMacro&step=2&id=<?php echo $macro['id']; ?>"><?php echo $macro['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $macro['value'] . ")"; ?></span></a></li>																			
+										<?php
+									}
+									?>
+									</ul>
+		</div>
+   
+		<?php
+		}
+		if($_GET['step'] == 2){
+		$sql = query( "SELECT id, name, value FROM tvmacros WHERE id = '" . $_GET['id'] . "'" );
+		$macro = fetch( $sql );
+		?>
+		<div id="cont">
+			<form action="index.php?page=settings&aktion=editTVMacro&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+				<fieldset>
+					<div data-role="fieldcontain">
+					    <label for="macroname">TV Macro Name:</label>
+     					<input data-clear-btn="true" name="macroname" id="macroname" value="<?php echo $macro['name']; ?>" type="text">					
+					</div>
+					<div data-role="fieldcontain">
+					    <label for="macrovalue">Commands: (<a href="#popup-TVMacroHelp"  data-inline="true" data-rel="popup" data-position-to="window">Erklärung</a>)</label>
+     					<input data-clear-btn="true" name="macrovalue" id="macrovalue" value="<?php echo $macro['value']; ?>" type="text">					
+					</div>
+				<div class="ui-body ui-body-c">
+				<fieldset class="ui-grid-a">
+					<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
+					<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
+	    		</fieldset>
+				</div>
+			</fieldset>
+			</form>
+		</div>		
+		<?php
+		
+		}
+		if($_GET['step'] == 3){
+			if( $_POST['delete'] ){
+			?>
+			<div id="cont1">
+			<p>Das TV Macro wurde gelöscht</p>
+			</div>
+			<?php
+			$sql = query( "DELETE FROM tvmacros WHERE id = '" . $_GET['id'] . "'" );	
+			}
+			if( $_POST['submit'] ){
+			?>
+			<div id="cont1">
+			<p>Das TV Macro wurde geändert</p>
+			</div>
+			<?php
+			$sql = query( "UPDATE tvmacros SET name = '" . $_POST['macroname'] . "', value = '" . $_POST['macrovalue'] . "'" );	
+			}
+		}
+		break;					
 	
 		
 		//EDIT DEVICE
@@ -797,7 +896,7 @@ for( $i = 0; $i <= 64; $i++ )
 		if(!$_GET['step']){
 		?>
 		<div id="cont">
-		<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true" data-theme="d">
     		<li data-role="list-divider">Geräte</li>
     	<?php
@@ -924,7 +1023,7 @@ for( $i = 0; $i <= 64; $i++ )
 		if(!$_GET['step']){
 		?>
 		<div id="cont">
-		<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true" data-theme="d">
     		<li data-role="list-divider">Timer</li>
     	<?php
@@ -1172,6 +1271,68 @@ for( $i = 0; $i <= 64; $i++ )
 					<div data-role="fieldcontain">
 						<label for="raumname">Raum Name:</label>
      					<input data-clear-btn="true" name="raumname" id="raumname" value="" type="text">
+					</div>
+					<?
+					// open this directory 
+					$myDirectory = opendir("glyphish-icons/");
+
+					// get each entry
+					while($entryName = readdir($myDirectory)) {
+						$dirArray[] = $entryName;
+					}
+
+					// close directory
+					closedir($myDirectory);
+					//	count elements in array
+					$indexCount	= count($dirArray);
+					// sort 'em
+					//sort($dirArray);
+					?>
+					<label for="roomicon" class="select">Icon:</label>
+						<select name="roomicon" id="roomicon" data-native-menu="false">
+						<option>Icon:</option>
+    						<?php
+    									
+							for($index=0; $index < $indexCount; $index++) {
+								if (substr("$dirArray[$index]", 0, 1) != "."){ // don't list hidden files
+									?>
+										<option value="<?php echo $dirArray[$index] ?>"><?php echo $dirArray[$index] ?></option>
+									<?php
+									}
+								}
+    						?>							
+						</select>
+					
+					<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
+				</fieldset>
+			</form>
+		</div>
+		<?php
+		}
+		break;	
+	
+		case 'addTVMacro':
+		
+		if( $_POST['submit'] ){
+		?>
+		<div class="boxWhite">
+			<p class="center">TV Macro wurde hinzugefügt</p>
+		</div>
+																									
+		<?php	
+		$sql = query( "INSERT INTO tvmacros VALUES( '', '" . $_POST['macroname'] . "', '" . $_POST['macrovalue'] . "')" );
+		}else{
+		?>
+		<div id="cont">
+			<form action="index.php?page=settings&aktion=addRoom" method="post" class="ui-body ui-body-c ui-corner-all">
+				<fieldset>
+					<div data-role="fieldcontain">
+						<label for="macroname">Macro Name:</label>
+     					<input data-clear-btn="true" name="macroname" id="macroname" value="" type="text">
+					</div>
+					<div data-role="fieldcontain">
+						<label for="macrovalue">Commands: (<a href="#popup-TVMacroHelp"  data-inline="true" data-rel="popup" data-position-to="window">Erklärung</a>)</label>
+     					<input data-clear-btn="true" name="macrovalue" id="macrovalue" value="" type="text">
 					</div>
 					<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
 				</fieldset>

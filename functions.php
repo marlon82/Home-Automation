@@ -1,38 +1,36 @@
 <?php
+error_reporting(E_ALL);
+include("config.php");
 /*
  * Created on 19.02.2012
  *
  * To change the template for this generated file go to
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
- 
-function temp(){
- 
-$sqlc = query( "SELECT value,options FROM config" );
 
-while( $timer = fetch( $sql ) )
-{
-	switch($config['options']) {
-		case 'DreamBoxIP':
-			$dreamIP = $config['value'];
-			break;
-		case 'XS1IP':	
-			$XS1['ip'] = 'http://' . $config['value'] . '/';
-			break;
-		case 'XS1User':
-			$XS1['user'] = $config['value'];
-			break;
-		case 'XS1Pass':
-			$XS1['pw'] = $config['value'];
-			break;
-	}
-}
-}
 $dreamIP = '192.168.1.22';
+
 $XS1 = array();
 $XS1['ip'] = 'http://192.168.1.242/';
 $XS1['user'] = '';
 $XS1['pw'] = '';
+
+$sql_config = query( "SELECT value,options FROM config" );
+while( $config = fetch( $sql_config ) )
+	{
+		switch($config['options']) {
+			case 'XS1IP':	
+				$XS1['ip'] = 'http://' . $config['value'] . '/';
+				$XS1['rawip'] = $config['value'];
+				break;
+			case 'XS1User':
+				$XS1['user'] = $config['value'];
+				break;
+			case 'XS1Pass':
+				$XS1['pw'] = $config['value'];
+				break;
+		}
+	}
 
 setlocale(LC_ALL,'de_DE@euro', 'de_DE',  'de', 'ge');
 date_default_timezone_set('Europe/Berlin');
@@ -240,6 +238,7 @@ function fetch( $query )
 }
 function ReadXS1($aktion, $id) 
 {
+
     global $XS1;
 	  	  
 	if (strcmp($aktion,'sensor')==0){
@@ -393,13 +392,15 @@ function setAktor($id, $value, $funktion )
 
 	$zeitDelta = intval( $zeitDelta );
 	//echo "xs1:" . $XS1['ip'] . "  id:" . $id . "  val:" . $value;
+	//echo $funktion;
 	// URL zum Aktor setzen zusammenbauen 
-	if( $funktion == false )
+	if( $funktion == false ){
 		$url = $XS1['ip'] . 'preset?switch='.$id.'&value='.$value;
-		//echo $XS1['ip'] . 'preset?switch='.$id.'&value='.$value;
-	else 
-		$url = $XS1['ip'] . 'control?callback=cname&cmd=set_state_actuator&number='.$id.'&function='.$funktion;
-		//echo $XS1['ip'] . 'control?callback=cname&cmd=set_state_actuator&number='.$id.'&function='.$funktion;
+		//echo $XS1['ip'] . "preset?switch=" . $id . "&value=" . $value;
+	}else {
+		$url = $XS1['ip'] . 'control?callback=cname&cmd=set_state_actuator&number=' . $id . '&function=' . $funktion;
+		//echo $XS1['ip'] . "control?callback=cname&cmd=set_state_actuator&number=" . $id . "&function=" . $funktion;
+	}
 	$filesize= 10000;
 	setUrl($url);
 	//$handle = fopen($url, "r");
@@ -634,5 +635,4 @@ function samsung_send_key($tvip, $SendKey)
 
     //echo "\n\n";
 }
- 
 ?>
