@@ -323,6 +323,72 @@ while( $row = fetch( $sqlRooms )){
 	}
 }
 
+function calculate_strom(){
+global $verbrauch;
+		$sql = query( "SELECT iid, zeitEin, zeitHeute FROM aktor" );
+		while( $row = fetch( $sql ) )
+		{
+			$deltaZeit = 0;
+			$zeitHeute = 0;
+
+			// Wenn der Aktor ein ist 
+			// zeitEin auf jetzt (Mitternacht) setzen damit die Stromverbrauchberechnug (für den nächsten Tag) stimmt			
+			if( $row['zeitEin'] > 0 )
+			{
+				// $deltaZeit = Zeit die der Aktor bis jetz (Mitternacht) ein war
+				$deltaZeit = time() - $row['zeitEin'];
+				
+				$sql2 = query("UPDATE aktor SET zeitEIN = '" . time() . "' WHERE iid = '" . $row['iid'] . "'");
+			}
+
+			// zeitHeute brechnen
+			$zeitHeute = $deltaZeit + $row['zeitHeute'];
+				
+			rechneVerbrauchHeute($row['iid'],"aktor", $zeitHeute);
+			$verbrauchAktoren = $verbrauchAktoren + $verbrauch['kwh'];
+		
+			$sql2 = query("INSERT INTO logVerbrauch VALUES( '', '" . $row['iid'] . "', '" . $verbrauch['kwh'] . "', '" . "aktor" . "', '" . $row['zeitEin'] . "', '" . time() . "')");
+		}
+		
+		//$verbrauchAktoren = $verbrauchGesamt;
+		
+		
+		$sql = query( "SELECT id, zeitEin, zeitHeute FROM devices" );
+		while( $row = fetch( $sql ) )
+		{
+			$deltaZeit = 0;
+			$zeitHeute = 0;
+
+			// Wenn der Aktor ein ist 
+			// zeitEin auf jetzt (Mitternacht) setzen damit die Stromverbrauchberechnug (für den nächsten Tag) stimmt			
+			if( $row['zeitEin'] > 0 )
+			{
+				// $deltaZeit = Zeit die der Aktor bis jetz (Mitternacht) ein war
+				$deltaZeit = time() - $row['zeitEin'];
+				
+				$sql2 = query("UPDATE devices SET zeitEIN = '" . time() . "' WHERE id = '" . $row['id'] . "'");
+			}
+
+			// zeitHeute brechnen
+			$zeitHeute = $deltaZeit + $row['zeitHeute'];
+				
+			rechneVerbrauchHeute($row['id'],"devices", $zeitHeute);
+			$verbrauchDevices = $verbrauchDevices + $verbrauch['kwh'];
+		
+			$sql2 = query("INSERT INTO logVerbrauch VALUES( '', '" . $row['id'] . "', '" . $verbrauch['kwh'] . "', '" . "device" . "', '" . $row['zeitEin'] . "', '" . time() . "')");
+		}
+		
+		$verbrauchAktoren = $verbrauchGesamt;		
+		
+
+		
+		// Bei allen Aktoren die heutige Zeit auf 0 setzen
+		$sql = query("UPDATE aktor SET zeitHeute = '0'");
+		$sql = query("UPDATE devices SET zeitHeute = '0'");
+
+
+
+}
 
 switch( $_GET['func'] ){
 	
@@ -352,8 +418,9 @@ switch( $_GET['func'] ){
 	update_sensoren_graph_month();
 	break;	
 	
-	case 'calcSun':
+	case 'midnight':
 	calculate_sun_rise_set();
+	calculate_strom();
 	break;
 	
 	case 'test':
