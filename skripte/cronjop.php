@@ -146,7 +146,7 @@ function update_sensoren_min(){
 		extract(ReadXS1(sensor, $row['iid']));	
 		if($utime && $number && $value){																															
 			//$sql1 = query( "INSERT INTO logsensoren VALUES( '', '" . $number . "', '" . $value . "' , '" . $utime . "')" );
-			$sql = query( "UPDATE sensoren SET value = '" . $value . "' WHERE id = '" . $row['iid'] . "'" );		
+			$sql1 = query( "UPDATE sensoren SET value = '" . $value . "' WHERE id = '" . $row['iid'] . "'" );		
 		}									
 	}
 }
