@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 include("config.php");
 /*
  * Created on 19.02.2012
