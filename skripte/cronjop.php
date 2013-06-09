@@ -397,6 +397,10 @@ switch( $_GET['func'] ){
 	timer();
 	break;
 	
+	case '5min':
+	update_geraete();
+	break;
+
 	case 'timer':
 	timer();
 	break;
