@@ -283,80 +283,9 @@ function setUrl($url)
 	fread($handle,$filesize);
 }
 
-function rechneVerbrauch($id,$zeitEin, $zeitAus)
-{
-	global $zeitAus, $zeitDelta, $verbrauch, $_CONFIG;
-	
-	if( !$zeitAus)
-	{
-		$zeitAus = time();
-	}
-	
-	$zeitDelta = $zeitAus - $zeitEin;
-	
-	if( $id )
-	{
-	
-		$sql = query( "SELECT verbrauchWatt FROM aktor WHERE iid = '" . $id . "' ");
-		$row = fetch( $sql );
-			
-		$watt = $row['verbrauchWatt'];
-	}
-	else
-	{
-		
-		$sql = query( "SELECT watt FROM verbrauchGeraete" );
-		
-		while( $row = fetch( $sql ) )
-		{
 
-			$watt = $watt + $row['watt'];
-			
-		}
-	}
-	
-	$verbrauch['kwh'] = $watt * $zeitDelta / 60 / 60 / 1000;
-		
-	$kwhPreis = $_CONFIG['kwhPreis'];
-	$verbrauch['euro'] = $kwhPreis * $verbrauch['kwh'];
-	
-	return $verbrauch;
-}
 
-function rechneVerbrauchHeute( $id, $zeitHeute )
-{
-	global $verbrauch, $_CONFIG;
-	
-	if( $id )
-	{
-		$sql01 = query( "SELECT verbrauchWatt FROM aktor WHERE iid = '" . $id . "' ");
-		$row01 = fetch( $sql01 );
-		
-		$watt = $row01['verbrauchWatt'];
-	}
-	else
-	{	
-		$zeitAus = time();
-		
-		// zeitHeute ist in dem Fall der timestamp von Gestern Mitternacht
-		$zeitHeute = $zeitAus - $zeitHeute;
-		
-		$sql = query( "SELECT watt FROM verbrauchGeraete" );
-		
-		while( $row = fetch( $sql ) )
-		{
-			$watt = $watt + $row['watt'];	
-		}
-	}
-	
-	$verbrauch['kwh'] = $watt * $zeitHeute / 60 / 60 / 1000;
-	
-	$kwhPreis = $_CONFIG['kwhPreis'];
-	$verbrauch['euro'] = $kwhPreis * $verbrauch['kwh'];
-	
-	return $verbrauch;
-	
-}
+
 
 function ping($host, $timeout = 1) {
 
