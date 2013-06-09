@@ -284,80 +284,6 @@ function setUrl($url)
 	fread($handle,$filesize);
 }
 
-function rechneVerbrauch($id,$zeitEin, $zeitAus)
-{
-	global $zeitAus, $zeitDelta, $verbrauch, $_CONFIG;
-	
-	if( !$zeitAus)
-	{
-		$zeitAus = time();
-	}
-	
-	$zeitDelta = $zeitAus - $zeitEin;
-	
-	if( $id )
-	{
-	
-		$sql = query( "SELECT verbrauchWatt FROM aktor WHERE iid = '" . $id . "' ");
-		$row = fetch( $sql );
-			
-		$watt = $row['verbrauchWatt'];
-	}
-	else
-	{
-		
-		$sql = query( "SELECT watt FROM verbrauchGeraete" );
-		
-		while( $row = fetch( $sql ) )
-		{
-
-			$watt = $watt + $row['watt'];
-			
-		}
-	}
-	
-	$verbrauch['kwh'] = $watt * $zeitDelta / 60 / 60 / 1000;
-		
-	$kwhPreis = $_CONFIG['kwhPreis'];
-	$verbrauch['euro'] = $kwhPreis * $verbrauch['kwh'];
-	
-	return $verbrauch;
-}
-
-function rechneVerbrauchHeute( $id, $zeitHeute )
-{
-	global $verbrauch, $_CONFIG;
-	
-	if( $id )
-	{
-		$sql01 = query( "SELECT verbrauchWatt FROM aktor WHERE iid = '" . $id . "' ");
-		$row01 = fetch( $sql01 );
-		
-		$watt = $row01['verbrauchWatt'];
-	}
-	else
-	{	
-		$zeitAus = time();
-		
-		// zeitHeute ist in dem Fall der timestamp von Gestern Mitternacht
-		$zeitHeute = $zeitAus - $zeitHeute;
-		
-		$sql = query( "SELECT watt FROM verbrauchGeraete" );
-		
-		while( $row = fetch( $sql ) )
-		{
-			$watt = $watt + $row['watt'];	
-		}
-	}
-	
-	$verbrauch['kwh'] = $watt * $zeitHeute / 60 / 60 / 1000;
-	
-	$kwhPreis = $_CONFIG['kwhPreis'];
-	$verbrauch['euro'] = $kwhPreis * $verbrauch['kwh'];
-	
-	return $verbrauch;
-	
-}
 
 function ping($host, $timeout = 1) {
 
@@ -426,7 +352,7 @@ function setAktor($id, $value, $funktion )
 		// Doppeltes ausschalten verhindern
 		if( $zeitEin > 0 )
 		{
-			rechneVerbrauch($id, $zeitEin, $zeitAus);
+			rechneVerbrauch($id,"aktor", $zeitEin, $zeitAus);
 			$zeitHeute = $row['zeitHeute'] + $zeitDelta;
 			
 			//$sql = query( "INSERT INTO logAktor VALUES( '', '" . $id . "', '" . $zeitEin . "', '" . $zeitAus . "', '" . $zeitDelta . "', '" . $verbrauch['kwh'] . "', '" . $verbrauch['euro'] . "')" );
@@ -633,6 +559,248 @@ function samsung_send_key($tvip, $SendKey)
     socket_close($sock);
 
     //echo "\n\n";
+}
+
+
+function rechneVerbrauch($id,$type,$zeitEin, $zeitAus)
+{
+	global $zeitAus, $zeitDelta, $verbrauch, $_CONFIG;
+	
+	if(!$zeitAus){
+		$zeitAus = time();
+	}
+	
+	$zeitDelta = $zeitAus - $zeitEin;
+	
+	if($type == "devices"){
+	
+		$sql = query( "SELECT verbrauchWatt FROM devices WHERE iid = '" . $id . "' ");
+		$row = fetch( $sql );	
+		$watt = $row['verbrauchWatt'];
+		
+	}else{
+		
+		$sql = query( "SELECT verbrauchWatt FROM aktor WHERE iid = '" . $id . "' ");
+		$row = fetch( $sql );		
+		$watt = $row['verbrauchWatt'];
+	}
+	
+	$verbrauch['kwh'] = $watt * $zeitDelta / 60 / 60 / 1000;
+		
+	$kwhPreis = 0.28;
+	$verbrauch['euro'] = $kwhPreis * $verbrauch['kwh'];
+	
+	return $verbrauch;
+}
+
+
+
+function rechneVerbrauchHeute( $id,$type,$zeitHeute )
+{
+	global $verbrauch;
+	//echo $type;
+	if($type == "devices"){
+		$sql = query( "SELECT verbrauchWatt FROM devices WHERE id = '" . $id . "' ");
+		$row = fetch($sql);
+		
+		$watt = $row['verbrauchWatt'];
+		//echo "test";
+	}else{	
+		$sql = query( "SELECT verbrauchWatt FROM aktor WHERE iid = '" . $id . "' ");
+		$row = fetch($sql);
+		
+		$watt = $row['verbrauchWatt'];
+	}
+	
+	$verbrauch['kwh'] = $watt * $zeitHeute / 60 / 60 / 1000;
+	
+	$kwhPreis = 0.28;
+	$verbrauch['euro'] = $kwhPreis * $verbrauch['kwh'];
+	//var_dump($verbrauch);
+	return $verbrauch;
+	
+}
+
+
+function verbrauchAktuell()
+{
+	/*
+	 * Aktuellen Verbrauch berechnen
+	 * Rückgabewert in WATT !
+	*/
+	
+	global $verbrauch, $_CONFIG;
+		
+	$verbrauchAktor = 0.00;
+		
+	$sql = query( "SELECT verbrauchWatt FROM aktor WHERE zeitEIN > 0" );
+	while( $row = fetch( $sql ) )
+	{
+		$verbrauchAktor = $verbrauchAktor + $row['verbrauchWatt'];
+	}
+		
+	
+		
+	// Verbrauch der Geräte die immer an sind mitberechnen
+
+	$verbrauchGeraete = 0.00;
+
+	$sql = query( "SELECT verbrauchWatt FROM devices WHERE zeitEIN > 0" );
+	while( $row = fetch( $sql ) )
+	{
+		$verbrauchGeraete = $verbrauchGeraete + $row['verbrauchWatt'];
+	}
+
+	$verbrauchAktuell = $verbrauchAktor + $verbrauchGeraete;
+	$euroAktuell = $verbrauchAktuell * 0.28 / 1000;	
+	$verbrauch['euro'] = round($euroAktuell,2);
+	$verbrauch['kwh'] = $verbrauchAktuell;
+		
+	return $verbrauch;
+		
+}
+
+
+function verbrauchHeute()
+{
+	/*
+	 *  Heutigen Verbrauch berechnen
+	 */
+	
+	global $verbrauch;
+		
+	$verbrauchHeuteAktor = 0.0;
+	$euroHeuteAktor = 0.0;
+	$verbrauchHeuteDevices = 0.0;
+	$euroHeuteDevices = 0.0;
+		
+	$sql = query( "SELECT iid, zeitEin, zeitHeute FROM aktor" );
+	while( $row = fetch($sql))
+	{
+		$deltaZeit = 0;
+		$zeitHeute = 0;
+		
+		// Zeit der Aktiven Aktoren miteinbeziehen
+		if( $row['zeitEin'] > 0 )
+		{
+			// $deltaZeit = Zeit die der Aktor bis jetz ein war
+			$deltaZeit = time() - $row['zeitEin'];
+		}
+	
+		// zeitHeute brechnen
+		$zeitHeute = $deltaZeit + $row['zeitHeute'];
+		//echo $row['iid'] ."<br/>";
+		rechneVerbrauchHeute($row['iid'],"aktor", $zeitHeute);
+		//echo "aktor " .  $row['iid'] . " :" . $verbrauch['kwh'] . "<br/>";
+		//print_r($verbrauch);
+		$verbrauchHeuteAktor = $verbrauchHeuteAktor + $verbrauch['kwh'];
+		$euroHeuteAktor = $euroHeuteAktor + $verbrauch['euro'];
+	}
+	
+	/* Verbrauch der "Geräte" miteinbeziehen
+	$monat = date("m");
+	$tagHeute = date("d");
+	$jahr = date("Y");
+	$timestamp = mktime(0, 0, 0, $monat, $tagHeute, $jahr);
+	
+	rechneVerbrauchHeute( false, $timestamp );
+	$verbrauchHeute = $verbrauchHeute + $verbrauch['kwh'];
+	$euroHeute = $euroHeute + $verbrauch['euro'];
+	*/
+	
+	$sql = query( "SELECT id, zeitEin, zeitHeute FROM devices" );
+	while( $row = fetch($sql))
+	{
+		$deltaZeit = 0;
+		$zeitHeute = 0;
+		
+		// Zeit der Aktiven Aktoren miteinbeziehen
+		if( $row['zeitEin'] > 0 )
+		{
+			// $deltaZeit = Zeit die der Aktor bis jetz ein war
+			$deltaZeit = time() - $row['zeitEin'];
+		}
+	
+		// zeitHeute brechnen
+		$zeitHeute = $deltaZeit + $row['zeitHeute'];
+		//echo $zeitHeute . "<br/>";
+		rechneVerbrauchHeute($row['id'],"devices", $zeitHeute);
+		//echo "device " .  $row['id'] . " :" . $verbrauch['kwh'] . "<br/>";
+		$verbrauchHeuteDevices = $verbrauchHeuteDevices + $verbrauch['kwh'];
+		$euroHeuteDevices = $euroHeuteDevices + $verbrauch['euro'];
+	}	
+	
+	$verbrauch['kwh'] = round($verbrauchHeuteDevices + $verbrauchHeuteAktor,2) ;
+	$verbrauch['euro'] = round($euroHeuteDevices + $euroHeuteAktor,2);
+	
+	return $verbrauch;
+	
+}
+ 
+function verbrauchTimestamp( $timestamp )
+{
+	global $verbrauch;
+
+	$verbrauchTimestamp = 0.0;
+	
+	$sql = query( "SELECT kwh FROM logVerbrauch WHERE zeitEIN >= '" . $timestamp . "' " );
+	while( $row = fetch( $sql ) )
+	{
+		$verbrauchTimestamp = $verbrauchTimestamp + $row['kwh'];
+	}
+
+	$euroTimestamp = $verbrauchTimestamp * 0.28;
+	
+	$verbrauch['kwh'] = round($verbrauchTimestamp,2);
+	$verbrauch['euro'] = round($euroTimestamp,2);
+	
+	return $verbrauch;
+	
+}
+
+
+function verbrauchGestern()
+{
+	global $verbrauch;
+
+		$tag = date("d");
+		$monat = date("m");
+		$jahr = date("Y");
+					
+		$timestamp = mktime(0, 0, 0, $monat, $tag -1, $yahr -1);
+
+					
+	return verbrauchTimestamp($timestamp);
+	
+}
+
+function verbrauchMonat()
+{
+	global $verbrauch;
+
+		$tag = date("d");
+		$monat = date("m");
+		$jahr = date("Y");
+					
+		$timestamp = mktime(0, 0, 0, $monat -1, $tag, $yahr);
+					
+	return verbrauchTimestamp($timestamp);
+	
+}
+
+function verbrauchJahr()
+{
+	global $verbrauch;
+
+		// Timestamp von letzetb Monat generieren
+		$tag = date("d");
+		$monat = date("m");
+		$jahr = date("Y");
+					
+		$timestamp = mktime(0, 0, 0, $monat, $tag, $yahr -1);
+					
+	return verbrauchTimestamp($timestamp);
+	
 }
  
 ?>

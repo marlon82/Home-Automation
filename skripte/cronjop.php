@@ -104,7 +104,10 @@ function timer(){
 }
 
 function calculate_sun_rise_set(){
-	$tzone = date_default_timezone_get();
+	$sqltz = query( "SELECT value FROM config WHERE options = 'TimeZone'" );
+	$Timezone = fetch( $sqltz );
+	//echo $Timezone['value'];
+	$tzone = $Timezone['value'];
 	if ($tzone == '') { $tzone = 'Europe/Berlin'; }
 	$tz = new DateTimeZone($tzone); 
     $loc = $tz->getLocation(); 
@@ -114,12 +117,11 @@ function calculate_sun_rise_set(){
 	//echo "Sunset: " . date("H:i:s", $sun_info['sunset']) . "\n";
 	
 	//update sunrise
-	$sql = query( "SELECT id,suninfo,name FROM timer WHERE suninfo='sunset' OR suninfo='sunrise'");
+	$sql = query( "SELECT id,suninfo FROM timer WHERE suninfo='sunrise' or suninfo='sunset'");
 	while( $row = fetch( $sql ) )
 	{
-		//echo $row['suninfo'] . $row['name'] ;
-		if ( $row['suninfo'] == 'sunrise') { $sqlset = query( "UPDATE timer SET time = '" . date("H:i", $sun_info['sunrise']) . "', hour ='" . date("H", $sun_info['sunrise']) . "', minute ='" . date("i", $sun_info['sunrise']) . "' WHERE id = '" . $row['id'] . "'" ); }
-		if ( $row['suninfo'] == 'sunset') { $sqlset = query( "UPDATE timer SET time = '" . date("H:i", $sun_info['sunset']) . "', hour ='" . date("H", $sun_info['sunset']) . "', minute ='" . date("i", $sun_info['sunset']) . "' WHERE id = '" . $row['id'] . "'" ); }
+		if ( $row['suninfo'] == 'sunrise') { $sql = query( "UPDATE timer SET time = '" . date("H:i:s", $sun_info['sunrise']) . "', hour ='" . date("H", $sun_info['sunrise']) . "', minute ='" . date("i", $sun_info['sunrise']) . "' WHERE id = '" . $row['id'] . "'" ); }
+		if ( $row['suninfo'] == 'sunset') { $sql = query( "UPDATE timer SET time = '" . date("H:i:s", $sun_info['sunset']) . "', hour ='" . date("H", $sun_info['sunset']) . "', minute ='" . date("i", $sun_info['sunset']) . "' WHERE id = '" . $row['id'] . "'" ); }
 	}
 }
 
@@ -213,9 +215,77 @@ while( $row = fetch( $sqlRooms )){
 }
 
 
+function calculate_strom(){
+global $verbrauch;
+		$sql = query( "SELECT iid, zeitEin, zeitHeute FROM aktor" );
+		while( $row = fetch( $sql ) )
+		{
+			$deltaZeit = 0;
+			$zeitHeute = 0;
+
+			// Wenn der Aktor ein ist 
+			// zeitEin auf jetzt (Mitternacht) setzen damit die Stromverbrauchberechnug (für den nächsten Tag) stimmt			
+			if( $row['zeitEin'] > 0 )
+			{
+				// $deltaZeit = Zeit die der Aktor bis jetz (Mitternacht) ein war
+				$deltaZeit = time() - $row['zeitEin'];
+				
+				$sql2 = query("UPDATE aktor SET zeitEIN = '" . time() . "' WHERE iid = '" . $row['iid'] . "'");
+			}
+
+			// zeitHeute brechnen
+			$zeitHeute = $deltaZeit + $row['zeitHeute'];
+				
+			rechneVerbrauchHeute($row['iid'],"aktor", $zeitHeute);
+			$verbrauchAktoren = $verbrauchAktoren + $verbrauch['kwh'];
+		
+			$sql2 = query("INSERT INTO logVerbrauch VALUES( '', '" . $row['iid'] . "', '" . $verbrauch['kwh'] . "', '" . "aktor" . "', '" . $row['zeitEin'] . "', '" . time() . "')");
+		}
+		
+		//$verbrauchAktoren = $verbrauchGesamt;
+		
+		
+		$sql = query( "SELECT id, zeitEin, zeitHeute FROM devices" );
+		while( $row = fetch( $sql ) )
+		{
+			$deltaZeit = 0;
+			$zeitHeute = 0;
+
+			// Wenn der Aktor ein ist 
+			// zeitEin auf jetzt (Mitternacht) setzen damit die Stromverbrauchberechnug (für den nächsten Tag) stimmt			
+			if( $row['zeitEin'] > 0 )
+			{
+				// $deltaZeit = Zeit die der Aktor bis jetz (Mitternacht) ein war
+				$deltaZeit = time() - $row['zeitEin'];
+				
+				$sql2 = query("UPDATE devices SET zeitEIN = '" . time() . "' WHERE id = '" . $row['id'] . "'");
+			}
+
+			// zeitHeute brechnen
+			$zeitHeute = $deltaZeit + $row['zeitHeute'];
+				
+			rechneVerbrauchHeute($row['id'],"devices", $zeitHeute);
+			$verbrauchDevices = $verbrauchDevices + $verbrauch['kwh'];
+		
+			$sql2 = query("INSERT INTO logVerbrauch VALUES( '', '" . $row['id'] . "', '" . $verbrauch['kwh'] . "', '" . "device" . "', '" . $row['zeitEin'] . "', '" . time() . "')");
+		}
+		
+		$verbrauchAktoren = $verbrauchGesamt;		
+		
+
+		
+		// Bei allen Aktoren die heutige Zeit auf 0 setzen
+		$sql = query("UPDATE aktor SET zeitHeute = '0'");
+		$sql = query("UPDATE devices SET zeitHeute = '0'");
+
+
+
+}
+
 switch( $_GET['func'] ){
 	
 	case '1min':
+	update_geraete();
 	update_sensoren_min();
 	timer();
 	break;
@@ -233,12 +303,13 @@ switch( $_GET['func'] ){
 	update_sensoren_graph_today();
 	break;	
 	
-	case 'calcSun':
+	case 'midnight':
 	calculate_sun_rise_set();
+	calculate_strom();
 	break;
 	
 	case 'test':
-	update_geraete();
+	test();
 	break;		
 		
 		default:

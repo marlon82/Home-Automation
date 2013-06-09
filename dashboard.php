@@ -160,11 +160,12 @@ setInterval( function() {
 	<div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
     		<li data-role="list-divider">Stromverbrauch DEMO</li>
-    		<li>Aktuell  <span style="float:right">250 W - 0.01€</span></li>
-    		<li>Heute   <span style="float:right">45.82 kWh - 12.83€</span></li>
-    		<li>Gestern <span style="float:right">50.14 kWh - 15.45€</span></li>
-    		<li>Monat   <span style="float:right">245.82 kWh - 12.83€</span></li>
-    		<li>Jahr    <span style="float:right">81.72 kWh - 22.88€</span></li>
+    		
+    		<li>Aktuell  <span style="float:right"><? $verbrauch = verbrauchAktuell(); echo $verbrauch['kwh'] . " W - " . $verbrauch['euro'] . " €"; ?></span></li>
+    		<li>Heute   <span style="float:right"><? $verbrauch = verbrauchHeute(); echo $verbrauch['kwh'] . " KW - " . $verbrauch['euro'] . " €"; ?></span></li>
+    		<li>Gestern <span style="float:right"><? $verbrauch = verbrauchGestern(); echo $verbrauch['kwh'] . " KW - " . $verbrauch['euro'] . " €"; ?></span></li>
+    		<li>Monat   <span style="float:right"><? $verbrauch = verbrauchMonat(); echo $verbrauch['kwh'] . " KW - " . $verbrauch['euro'] . " €"; ?></span></li>
+    		<li>Jahr    <span style="float:right"><? $verbrauch = verbrauchJahr(); echo $verbrauch['kwh'] . " KW - " . $verbrauch['euro'] . " €"; ?></span></li>
 		</ul>
     </div>
 	
