@@ -356,7 +356,7 @@ function setAktor($id, $value, $funktion )
 		// Doppeltes ausschalten verhindern
 		if( $zeitEin > 0 )
 		{
-			rechneVerbrauch($id, $zeitEin, $zeitAus);
+			rechneVerbrauch($id,"aktor", $zeitEin, $zeitAus);
 			$zeitHeute = $row['zeitHeute'] + $zeitDelta;
 			
 			//$sql = query( "INSERT INTO logAktor VALUES( '', '" . $id . "', '" . $zeitEin . "', '" . $zeitAus . "', '" . $zeitDelta . "', '" . $verbrauch['kwh'] . "', '" . $verbrauch['euro'] . "')" );
@@ -746,8 +746,8 @@ function verbrauchTimestamp( $timestamp )
 	global $verbrauch;
 
 	$verbrauchTimestamp = 0.0;
-	
-	$sql = query( "SELECT kwh FROM logVerbrauch WHERE zeitEIN >= '" . $timestamp . "' " );
+
+	$sql = query( "SELECT kwh FROM logVerbrauch WHERE date >= '" . $timestamp . "' " );
 	while( $row = fetch( $sql ) )
 	{
 		$verbrauchTimestamp = $verbrauchTimestamp + $row['kwh'];
@@ -771,7 +771,7 @@ function verbrauchGestern()
 		$monat = date("m");
 		$jahr = date("Y");
 					
-		$timestamp = mktime(0, 0, 0, $monat, $tag -1, $yahr -1);
+		$timestamp = mktime(0, 0, 0, $monat, $tag -1, $jahr);
 
 					
 	return verbrauchTimestamp($timestamp);
@@ -786,7 +786,7 @@ function verbrauchMonat()
 		$monat = date("m");
 		$jahr = date("Y");
 					
-		$timestamp = mktime(0, 0, 0, $monat -1, $tag, $yahr);
+		$timestamp = mktime(0, 0, 0, $monat -1, $tag, $jahr);
 					
 	return verbrauchTimestamp($timestamp);
 	
@@ -796,12 +796,12 @@ function verbrauchJahr()
 {
 	global $verbrauch;
 
-		// Timestamp von letzetb Monat generieren
+		
 		$tag = date("d");
 		$monat = date("m");
 		$jahr = date("Y");
 					
-		$timestamp = mktime(0, 0, 0, $monat, $tag, $yahr -1);
+		$timestamp = mktime(0, 0, 0, $monat -12, $tag, $jahr);
 					
 	return verbrauchTimestamp($timestamp);
 	
