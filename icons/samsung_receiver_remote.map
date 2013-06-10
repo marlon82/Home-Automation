@@ -1,0 +1,64 @@
+<img src="icons\samsung_receiver_remote.png" width="146" height="689" border="0" usemap="#SamsungBluRayRemote" />
+
+<map name="SamsungBluRayRemote">
+<!-- #$-:Image map file created by GIMP Image Map plug-in -->
+<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+<!-- #$-:Please do not edit lines starting with "#$" -->
+<!-- #$VERSION:2.3 -->
+<!-- #$AUTHOR:marlon.scheid -->
+<area shape="rect" coords="18,113,50,134" alt="1" href="http://1" />
+<area shape="rect" coords="55,112,87,134" alt="2" href="http://2" />
+<area shape="rect" coords="94,113,126,133" alt="3" href="http://3" />
+<area shape="rect" coords="18,141,50,161" alt="4" href="http://4" />
+<area shape="rect" coords="56,141,88,160" alt="5" href="http://5" />
+<area shape="rect" coords="94,140,126,161" alt="6" href="http://6" />
+<area shape="rect" coords="92,289,126,319" alt="ChannelUp" href="http://ChUp" />
+<area shape="rect" coords="91,321,126,350" alt="ChannelDown" href="http://ChDown" />
+<area shape="rect" coords="64,404,83,431" alt="up" href="http://up" />
+<area shape="rect" coords="92,439,126,461" alt="rigth" href="http://rigth" />
+<area shape="rect" coords="62,468,83,500" alt="down" href="http://down" />
+<area shape="rect" coords="17,441,53,461" alt="left" href="http://left" />
+<area shape="rect" coords="59,440,86,463" alt="enter" href="http://enter" />
+<area shape="rect" coords="18,474,52,499" alt="return" href="http://return" />
+<area shape="rect" coords="93,474,127,499" alt="exit" href="http://exit" />
+<area shape="rect" coords="18,402,52,428" alt="tools" href="http://tools" />
+<area shape="rect" coords="93,401,126,427" alt="info" href="http://info" />
+<area shape="rect" coords="47,362,98,387" alt="home" href="http://home" />
+<area shape="rect" coords="104,361,127,389" alt="guide" href="http://guide" />
+<area shape="rect" coords="18,362,42,388" alt="channellist" href="http://chlist" />
+<area shape="rect" coords="18,169,51,189" alt="7" href="http://7" />
+<area shape="rect" coords="57,169,88,189" alt="8" href="http://8" />
+<area shape="rect" coords="94,169,126,189" alt="9" href="http://9" />
+<area shape="rect" coords="56,197,88,217" alt="0" href="http://0" />
+<area shape="rect" coords="95,197,126,217" alt="titleMenu" href="http://titlemenu" />
+<area shape="rect" coords="19,197,50,217" alt="discMenu" href="http://discmenu" />
+<area shape="rect" coords="19,227,40,245" alt="ChapterBack" href="http://chapterback" />
+<area shape="rect" coords="47,227,68,245" alt="ChapterForward" href="http://chapterforward" />
+<area shape="rect" coords="77,227,97,245" alt="FastBack" href="http://fastback" />
+<area shape="rect" coords="105,226,126,244" alt="FastForward" href="http://fastforward" />
+<area shape="rect" coords="19,253,41,277" alt="stop" href="http://stop" />
+<area shape="rect" coords="48,253,97,277" alt="Play" href="http://play" />
+<area shape="rect" coords="105,253,127,277" alt="Pause" href="http://pause" />
+<area shape="rect" coords="75,85,98,102" alt="Eject" href="http://eject" />
+<area shape="rect" coords="103,85,127,103" alt="TeleText" href="http://teletext" />
+<area shape="rect" coords="19,86,40,102" alt="BD" href="http://BD" />
+<area shape="rect" coords="48,87,69,102" alt="TV" href="http://TV" />
+<area shape="circle" coords="34,61,16" alt="Power" href="http://Power" />
+<area shape="circle" coords="110,60,16" alt="TVPower" href="http://TVPower" />
+<area shape="rect" coords="60,290,85,316" alt="Mute" href="http://mute" />
+<area shape="rect" coords="60,325,85,350" alt="TVSource" href="http://TVSource" />
+<area shape="rect" coords="18,289,54,320" alt="VolumeUp" href="http://VolUp" />
+<area shape="rect" coords="18,320,54,350" alt="VolumeDown" href="http://VolDown" />
+<area shape="rect" coords="17,513,40,530" alt="A" href="http://A" />
+<area shape="rect" coords="46,513,69,530" alt="B" href="http://B" />
+<area shape="rect" coords="75,514,99,530" alt="C" href="http://C" />
+<area shape="rect" coords="104,512,129,529" alt="D" href="http://D" />
+<area shape="rect" coords="17,540,41,556" alt="SmartHUB" href="http://SmartHUB" />
+<area shape="rect" coords="46,539,70,556" alt="Search" href="http://Search" />
+<area shape="rect" coords="75,539,98,556" alt="PIP" href="http://PIP" />
+<area shape="rect" coords="104,539,128,556" alt="2D-3D" href="http://2D-3D" />
+<area shape="rect" coords="17,565,41,582" alt="www" href="http://www" />
+<area shape="rect" coords="46,565,69,582" alt="TV" href="http://TV" />
+<area shape="rect" coords="76,565,99,582" alt="Rec" href="http://Rec" />
+<area shape="rect" coords="105,566,127,582" alt="RecPause" href="http://RecPause" />
+</map>
