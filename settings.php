@@ -1968,19 +1968,14 @@ foreach($aktorenValues as $key => $value)
 			<form action="index.php?page=settings&aktion=addGroup&step=2" method="post" class="ui-body ui-body-c ui-corner-all">
 				<fieldset>
 					<div data-role="fieldcontain">
-					
-					<li data-role="fieldcontain">
-						<label for="groupname">Gruppen Name:</label>
-     					<input data-clear-btn="true" name="groupname" id="groupname" value="" type="text">
-					</li>
-					
-
-
-	
+						<li data-role="fieldcontain">
+							<label for="groupname">Gruppen Name:</label>
+							<input data-clear-btn="true" name="groupname" id="groupname" value="" type="text">
+						</li>
 					
 					<div data-role="fieldcontain">
-    <fieldset data-role="controlgroup">
-	   <legend>Aktoren:</legend>
+					<fieldset data-role="controlgroup">
+					<legend>Aktoren:</legend>
 								<?php
     							$sql2 = query( "SELECT id,name,type,room FROM aktor");
     							$i = 0;					

@@ -1,0 +1,21 @@
+<img src="icons\dreambox.png" width="191" height="578" border="0" usemap="#Dreambox Remote" />
+
+<map name="Dreambox Remote">
+<!-- #$-:Image map file created by GIMP Image Map plug-in -->
+<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+<!-- #$-:Please do not edit lines starting with "#$" -->
+<!-- #$VERSION:2.3 -->
+<!-- #$AUTHOR:marlon.scheid -->
+<area shape="circle" coords="32,286,13" alt="Info"  nohref="nohref" />
+<area shape="circle" coords="149,287,13" alt="Dream"  nohref="nohref" />
+<area shape="circle" coords="37,362,13" alt="Audio"  nohref="nohref" />
+<area shape="circle" coords="146,361,12" alt="Video"  nohref="nohref" />
+<area shape="circle" coords="41,401,12" alt="Red"  nohref="nohref" />
+<area shape="circle" coords="75,402,11" alt="Green"  nohref="nohref" />
+<area shape="circle" coords="108,403,10" alt="Yellow"  nohref="nohref" />
+<area shape="circle" coords="141,402,11" alt="Blue"  nohref="nohref" />
+<area shape="circle" coords="45,440,11" alt="TV"  nohref="nohref" />
+<area shape="circle" coords="75,443,11" alt="Radio"  nohref="nohref" />
+<area shape="circle" coords="107,442,11" alt="Text"  nohref="nohref" />
+<area shape="circle" coords="137,440,11" alt="Help"  nohref="nohref" />
+</map>

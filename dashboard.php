@@ -254,9 +254,27 @@ while( $multimedia = fetch( $sql_Devices ) )
 	?>
 	<div data-role="panel" id="DreamPanel" data-theme="b">
 		<div class="panel-content" data-theme="b">
-			<h3>Dreambox Remote</h3>
-			<img src="dreambox.png"></img>
-			<p></p>
+<img src="icons\dreambox.png" width="191" height="578" border="0" usemap="#Dreambox Remote" />
+
+<map name="Dreambox Remote">
+<!-- #$-:Image map file created by GIMP Image Map plug-in -->
+<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+<!-- #$-:Please do not edit lines starting with "#$" -->
+<!-- #$VERSION:2.3 -->
+<!-- #$AUTHOR:marlon.scheid -->
+<area shape="circle" coords="32,286,13" alt="Info" href="#" onClick="DreamKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+<area shape="circle" coords="149,287,13" alt="Dream" href="#" onClick="DreamKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+<area shape="circle" coords="37,362,13" alt="Audio" href="#" onClick="DreamKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+<area shape="circle" coords="146,361,12" alt="Video" href="#" onClick="DreamKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+<area shape="circle" coords="41,401,12" alt="Red" href="#" onClick="DreamKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+<area shape="circle" coords="75,402,11" alt="Green" href="#" onClick="DreamKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+<area shape="circle" coords="108,403,10" alt="Yellow" href="#" onClick="DreamKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+<area shape="circle" coords="141,402,11" alt="Blue" href="#" onClick="DreamKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+<area shape="circle" coords="45,440,11" alt="TV" href="#" onClick="DreamKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+<area shape="circle" coords="75,443,11" alt="Radio" href="#" onClick="DreamKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+<area shape="circle" coords="107,442,11" alt="Text" href="#" onClick="DreamKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+<area shape="circle" coords="137,440,11" alt="Help" href="#" onClick="DreamKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+</map>
 			<a href="#demo-links" data-rel="close" data-role="button" data-theme="c" data-icon="delete" data-inline="true">Close panel</a>
 		</div><!-- /content wrapper for padding -->
 	</div>

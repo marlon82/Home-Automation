@@ -565,6 +565,34 @@ function samsung_send_key($tvip, $SendKey)
     //echo "\n\n";
 }
 
+function Onkyo_send_key($device,$key){
+	$port = "60128";
+	$fp = stream_socket_client("tcp://".$device.":".$port, $errno, $errstr, 5);
+	if (!$fp) {
+		if($errno == "110" OR $errno == "113") {
+			echo "<html><center><div style='color:red; font-size:15px; font-family:Verdana,sans-serif;'>
+			No receiver found at $ip:$port<br>
+           Please check if IP and Port settings are correct and the device is switched on!<p style='color:#888;font-size:12px;'>
+           To switch on the device via Ethernet, you have to set 'Setup/Network Setup/NetworkControl' to ON<br>
+           (Remember that this setting uses &sim;20 W Power at Standby instead of &sim;2 W with NetworkControl OFF)</p></div></center></html>\n";} 
+		else{ 
+			echo "<html><center><div style='color:red; font-size:15px; font-family:Verdana,sans-serif;'>
+				Error connecting to $device:$port<br>$errstr ($errno)</div></center></html>\n";}
+	}
+	else
+	{
+
+		$length=strlen($key); 
+		$length=$length+1;
+		$total=$length+16;
+		$code=chr($length);
+		// total eiscp packet to send 
+		$line="ISCP\x00\x00\x00\x10\x00\x00\x00$code\x01\x00\x00\x00".$key."\x0D";
+		fwrite($fp, $line); 
+		return $line;
+	}
+}
+
 
 function rechneVerbrauch($id,$type,$zeitEin, $zeitAus)
 {
