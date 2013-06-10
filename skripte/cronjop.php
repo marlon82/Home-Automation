@@ -229,8 +229,6 @@ while( $row = fetch( $sqlRooms )){
 	$sql = query($sqlbefehl);
 
 	for ($i=0; $holen = fetch($sql); $i++) {
-		//Nur ins Array schreiben wenn Datum mit Heute übereinstimmt
-		//if(date('Ymd') == date('Ymd', $holen['zeit'])){
 		$yAchse_reverse[$z] = str_replace(",",".",$holen[value]);
 		$xAchse_reverse[$z] = date("d.m", $holen[zeit]);
 		
@@ -247,6 +245,8 @@ while( $row = fetch( $sqlRooms )){
 
 	}
 
+		
+	//var_dump($xAchse_reverse);
 	// Array Werte herumdrehen, neuste Werte am Anfang stehen
 	$yAchse = array_reverse($yAchse_reverse);
 	$xAchse = array_reverse($xAchse_reverse);
@@ -408,6 +408,8 @@ switch( $_GET['func'] ){
 	case '1h':
 	update_sensoren();
 	update_sensoren_graph_today();
+	update_sensoren_graph_week();
+	update_sensoren_graph_month();
 	break;
 
 	case 'genGraphDay':

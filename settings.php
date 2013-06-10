@@ -907,7 +907,7 @@ for( $i = 0; $i <= 64; $i++ )
 										$sql1 = query( "SELECT  name,icon FROM rooms WHERE id = '" . $row['room'] . "'" );
 										$row1 = fetch( $sql1 )
 										?>																						
-										<li><a href="?page=settings&aktion=editDevice&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $row['type'] . ")"; ?></span></a></li>																			
+										<li><a href="?page=settings&aktion=editDevice&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $row['ip'] . ")"; ?></span></a></li>																			
 										<?php
 									}
 									?>
