@@ -325,6 +325,13 @@ while( $row = fetch( $sqlRooms )){
 
 function calculate_strom(){
 global $verbrauch;
+
+		$tag = date("d");
+		$monat = date("m");
+		$jahr = date("Y");
+					
+		$timestamp_gestern = mktime(0, 0, 0, $monat, $tag -1, $jahr);
+    
 		$sql = query( "SELECT iid, zeitEin, zeitHeute FROM aktor" );
 		while( $row = fetch( $sql ) )
 		{
@@ -347,7 +354,7 @@ global $verbrauch;
 			rechneVerbrauchHeute($row['iid'],"aktor", $zeitHeute);
 			$verbrauchAktoren = $verbrauchAktoren + $verbrauch['kwh'];
 		
-			$sql2 = query("INSERT INTO logVerbrauch VALUES( '', '" . $row['iid'] . "', '" . $verbrauch['kwh'] . "', '" . "aktor" . "', '" . $row['zeitEin'] . "', '" . time() . "')");
+			$sql3 = query("INSERT INTO logVerbrauch VALUES( '', '" . $row['iid'] . "', '" . $verbrauch['kwh'] . "', '" . "aktor" . "', '" . $row['zeitEin'] . "', '" . $timestamp_gestern . "')");
 		}
 		
 		//$verbrauchAktoren = $verbrauchGesamt;
@@ -375,7 +382,7 @@ global $verbrauch;
 			rechneVerbrauchHeute($row['id'],"devices", $zeitHeute);
 			$verbrauchDevices = $verbrauchDevices + $verbrauch['kwh'];
 		
-			$sql2 = query("INSERT INTO logVerbrauch VALUES( '', '" . $row['id'] . "', '" . $verbrauch['kwh'] . "', '" . "device" . "', '" . $row['zeitEin'] . "', '" . time() . "')");
+			$sql3 = query("INSERT INTO logVerbrauch VALUES( '', '" . $row['id'] . "', '" . $verbrauch['kwh'] . "', '" . "device" . "', '" . $row['zeitEin'] . "', '" . $timestamp_gestern . "')");
 		}
 		
 		$verbrauchAktoren = $verbrauchGesamt;		
