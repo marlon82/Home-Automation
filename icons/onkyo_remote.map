@@ -1,0 +1,36 @@
+<img src="icons\onkyo_remote.png" width="207" height="700" border="0" usemap="#Onkyo Remote" />
+
+<map name="Onkyo Remote">
+<!-- #$-:Image map file created by GIMP Image Map plug-in -->
+<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+<!-- #$-:Please do not edit lines starting with "#$" -->
+<!-- #$VERSION:2.3 -->
+<!-- #$AUTHOR:marlon.scheid -->
+<area shape="circle" coords="41,40,12" alt="Power"  nohref="nohref" />
+<area shape="circle" coords="168,40,12" alt="Source"  nohref="nohref" />
+<area shape="circle" coords="43,258,10" alt="Top Menu"  nohref="nohref" />
+<area shape="circle" coords="44,322,11" alt="Setup"  nohref="nohref" />
+<area shape="circle" coords="104,358,11" alt="Home"  nohref="nohref" />
+<area shape="circle" coords="164,322,11" alt="Return"  nohref="nohref" />
+<area shape="circle" coords="164,259,10" alt="Menu"  nohref="nohref" />
+<area shape="circle" coords="103,291,19" alt="Enter"  nohref="nohref" />
+<area shape="circle" coords="83,40,11" alt="Zone 2"  nohref="nohref" />
+<area shape="circle" coords="37,383,12" alt="Fast Backward"  nohref="nohref" />
+<area shape="circle" coords="75,386,10" alt="Backward"  nohref="nohref" />
+<area shape="circle" coords="132,385,10" alt="FastForward"  nohref="nohref" />
+<area shape="circle" coords="171,383,13" alt="Chapter forward"  nohref="nohref" />
+<area shape="circle" coords="55,470,12" alt="1"  nohref="nohref" />
+<area shape="circle" coords="104,472,11" alt="2"  nohref="nohref" />
+<area shape="circle" coords="154,470,11" alt="3"  nohref="nohref" />
+<area shape="circle" coords="55,501,12" alt="4"  nohref="nohref" />
+<area shape="circle" coords="104,502,11" alt="5"  nohref="nohref" />
+<area shape="circle" coords="154,501,12" alt="6"  nohref="nohref" />
+<area shape="circle" coords="55,531,12" alt="7"  nohref="nohref" />
+<area shape="circle" coords="104,532,12" alt="8"  nohref="nohref" />
+<area shape="circle" coords="154,531,11" alt="9"  nohref="nohref" />
+<area shape="circle" coords="55,562,12" alt="Dimmer"  nohref="nohref" />
+<area shape="circle" coords="105,562,12" alt="0"  nohref="nohref" />
+<area shape="circle" coords="154,561,12" alt="Sleep"  nohref="nohref" />
+<area shape="rect" coords="155,172,182,202" alt="Volume Up"  nohref="nohref" />
+<area shape="rect" coords="154,202,182,232" alt="Volume Down"  nohref="nohref" />
+</map>

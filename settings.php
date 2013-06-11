@@ -22,8 +22,8 @@ float:left;
 #container{
 position:absolute;
 float:right;
-right:10px;
-top:15px;
+right:110px;
+top:12px;
 height:20px;
 
  }
@@ -82,6 +82,7 @@ $('#aktor').change(function(e) {
 		<li class="sec"></li>
 		</div>
 	<h1>Settings</h1>
+	<a href="javascript:history.go(0)" data-icon="refresh">refresh</a>
 </div><!-- /header -->
 
 <div data-role="panel" id="defaultpanel" data-theme="b">

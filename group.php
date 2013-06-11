@@ -12,6 +12,7 @@ include('functions.php');
 		<li class="sec"></li>
 	</div>
 	<h1>Gruppen</h1>
+	<a href="javascript:history.go(0)" data-icon="refresh">refresh</a>
 </div><!-- /header -->
 
 <div data-role="popup" id="positionWindow" class="ui-content" data-theme="d">
@@ -43,8 +44,8 @@ float:left;
 #container{
 position:absolute;
 float:right;
-right:10px;
-top:15px;
+right:110px;
+top:12px;
 height:20px;
 
  }
