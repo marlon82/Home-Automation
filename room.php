@@ -1,5 +1,6 @@
 <div data-role="page2" id="dashboard">
 
+
 <div data-role="header" data-position="fixed" data-theme="b">
 	<a href="index.php?page=dashboard" data-icon="home" rel="external">Home</a>
 			<div id="container">
@@ -74,149 +75,9 @@ height:20px;
 	margin-bottom:20px;  
 	max-width:800px;
  }
- #content {
-    width:60px;
-    margin:30px auto;
-}
-//.thermometer {
-//    float: right;
-// margin:0 150px;
-//}
-
-.thermometer  {
-float:right;
-position:relative ;
-top:-250px;
-right:50px;
-    width:70px;
-    height:200px;
-   // position: relative;
-    background: #ddd;
-    border:1px solid #aaa;
-    border-radius: 12px;
-    box-shadow: 1px 1px 4px #999, 5px 0 20px #999;
-}
-
-
-.thermometer .track {
-    z-index:2;
-    height:150px;
-    top:10px;
-    width:20px;
-    border: 1px solid #aaa;
-    position: relative;
-    margin:0 auto;
-    background: rgb(255,255,255);
-
-
-    background:   linear-gradient(to bottom, rgb(0,0,0) 1px,rgb(255,255,255) 10%);
-    background-position: 0 -1px;
-    background-size: 100% 5%;
-}
-
-.track:before{
-   
-    left:-9px;
-     bottom: -35px;
-    content: "";
-     background: rgb(255,0,0);
-     
-   // background: rgba(255,0,0,0.6);
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    border: 1px solid #aaa;
- position: absolute;
-}
-.thermometer .progress1 {
-       z-index:2;
-    height:250px;
-    top:10px;
-    width:20px;
-    border: 1px solid #aaa;
-    position: relative;
-    margin:0 auto;
-    background: rgb(255,255,255);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(0,0,0)), color-stop(100%,rgb(255,255,255)));
-
-    background:   linear-gradient(to bottom, rgb(0,0,0) 10%,rgb(255,255,255) 10%);
-    background-position: 0 -1px;
-    background-size: 100% 5%; 
-}
-
-.thermometer .progress {
-    z-index:-1;
-    width:100%;
-     background: rgb(255,0,0);
- //background: rgb(255,255,255);
-    //background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(0,0,0)), color-stop(1%,rgb(255,255,255)))
-        background:   linear-gradient(to bottom, rgb(0,0,0) 0%,rgb(255,255,255) 10%);
-    
-    //border: 1px solid #aaa;
-    //background-size: 100% 5%;
-    //background: rgba(255,0,0,0.6);
-    position: absolute;
-        background-position: 0 -1px;
-    background-size: 100% 5%;
-    bottom:0;
-    left:0;
-}
-
-.thermometer .goal {
-    position:absolute;
-    top:0;
-}
-
-.thermometer .amount {
-    display: inline-block;
-    padding:0 5px 0 60px;
-    border-top:1px solid black;
-    font-family: Trebuchet MS;
-    font-weight: bold;
-    color:black;
-}
-
-.thermometer .progress .amount1 {
-    padding:0 50px 0 5px;
-    position: absolute;
-    border-top:1px solid black;
-    color:black;
-    right:0;
-    font-weight: bold;
-}
-
-
-
  
 </style>
 
-<script type="text/javascript">
-
-$(document).ready(function() {
-
-setInterval( function() {
-	// Create a newDate() object and extract the seconds of the current time on the visitor's
-	var seconds = new Date().getSeconds();
-	// Add a leading zero to seconds value
-	$(".sec").html(( seconds < 10 ? "0" : "" ) + seconds);
-	},1000);
-	
-setInterval( function() {
-	// Create a newDate() object and extract the minutes of the current time on the visitor's
-	var minutes = new Date().getMinutes();
-	// Add a leading zero to the minutes value
-	$(".min").html(( minutes < 10 ? "0" : "" ) + minutes);
-    },1000);
-	
-setInterval( function() {
-	// Create a newDate() object and extract the hours of the current time on the visitor's
-	var hours = new Date().getHours();
-	// Add a leading zero to the hours value
-	$(".hours").html(( hours < 10 ? "0" : "" ) + hours);
-    }, 1000);	
-});
-
-</script>
 
 
 

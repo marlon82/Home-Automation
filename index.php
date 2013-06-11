@@ -9,7 +9,8 @@
 	<link rel="stylesheet" href="./jquery/jquery.mobile-1.3.1.css" />
 	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 	<script src="./jquery/jquery.mobile-1.3.1.js"></script>
-	<script src="slider.js"></script>
+	<script src="./skripte/time.js"></script>
+	<!-- <script src="slider.js"></script> -->
 	<?php
 
 /// calculating width of each navbar ///
