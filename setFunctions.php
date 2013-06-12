@@ -1,5 +1,5 @@
 <?php
-ini_set('error_reporting', E_ALL);
+//ini_set('error_reporting', E_ALL);
 include('functions.php');
 
 switch( $_GET['function'] ){
@@ -12,5 +12,14 @@ switch( $_GET['function'] ){
 	case 'OnkyoSendKey':
 		Onkyo_Send_Key($_GET['Device'], $_GET['Key']);
 		break;
-		}
+			
+	case 'ChangeTimerState':
+		//echo "GroupdID:" . $_GET['ID'];
+		change_timer_state($_GET['ID']);
+		break;
+		
+	case 'test':
+		echo "Dies war ein Test!";
+		break;
+}
 ?>

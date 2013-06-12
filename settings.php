@@ -1040,7 +1040,7 @@ for( $i = 0; $i <= 64; $i++ )
 		<?php
 		}
 		if($_GET['step'] == 2){
-		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup, suninfo FROM timer WHERE id = '" . $_GET['id'] . "'" );
+		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup, suninfo, duration FROM timer WHERE id = '" . $_GET['id'] . "'" );
 		$row = fetch( $sql );
 		?>
 		<div id="cont">
@@ -1173,6 +1173,10 @@ for( $i = 0; $i <= 64; $i++ )
 							</fieldset>
 						</li>
 						<li data-role="fieldcontain">	
+						    <label for="timerlaufzeit">Laufzeit (in sec):</label>
+     						<input data-clear-btn="true" name="timerlaufzeit" id="timerlaufzeit" value="<?php echo $row['duration']; ?>" type="text">
+     					</li>
+						<li data-role="fieldcontain">	
 							<?
 							
 							$YesNo = $row['enabled'];
@@ -1222,7 +1226,7 @@ for( $i = 0; $i <= 64; $i++ )
 			if ($type == 'group' ) {
 				$isGroup = 'Yes';
 			}	
-			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $typeID . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "', Monday = '" . $_POST['checkbox-h-Montag'] . "', Tuesday = '" . $_POST['checkbox-h-Dienstag'] . "', Wednesday = '" . $_POST['checkbox-h-Mittwoch'] . "', Thursday = '" . $_POST['checkbox-h-Donnerstag'] . "', Friday = '" . $_POST['checkbox-h-Freitag'] . "', Saturday = '" . $_POST['checkbox-h-Samstag'] . "', Sunday = '" . $_POST['checkbox-h-Sonntag'] . "', isGroup = '" . $isGroup . "', suninfo = '" . $_POST['suninfo'] ."' WHERE id = '" . $id . "'" );
+			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $typeID . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "', Monday = '" . $_POST['checkbox-h-Montag'] . "', Tuesday = '" . $_POST['checkbox-h-Dienstag'] . "', Wednesday = '" . $_POST['checkbox-h-Mittwoch'] . "', Thursday = '" . $_POST['checkbox-h-Donnerstag'] . "', Friday = '" . $_POST['checkbox-h-Freitag'] . "', Saturday = '" . $_POST['checkbox-h-Samstag'] . "', Sunday = '" . $_POST['checkbox-h-Sonntag'] . "', isGroup = '" . $isGroup . "', suninfo = '" . $_POST['suninfo'] ."', duration = '" . $_POST['timerlaufzeit'] ."' WHERE id = '" . $id . "'" );
 			?>
 			<div id="cont1">
 			<p>Der Timer wurde geändert</p>
@@ -1344,6 +1348,9 @@ for( $i = 0; $i <= 64; $i++ )
 		$sql1 = query( "INSERT INTO config VALUES( '', 'RaspberryFooter', '" . $_POST['flipRaspberryFooter'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'GroupFooter', '" . $_POST['flipGroupFooter'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'SensorFooter', '" . $_POST['flipSensorFooter'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'ShowDayGraph', '" . $_POST['flipDayGraph'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'ShowWeekGraph', '" . $_POST['flipWeekGraph'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'ShowMonthGraph', '" . $_POST['flipMonthGraph'] . "')");
 		
 		}else{		
 		?>
@@ -1351,9 +1358,10 @@ for( $i = 0; $i <= 64; $i++ )
 			<form action="index.php?page=settings&aktion=editConfig" method="post" class="ui-body ui-body-c ui-corner-all">
 			<div id="cont-inner">
   				<ul data-role="listview" data-inset="true" data-theme="d">
-    			<li data-role="list-divider">XS1</li>
+    			
 				
 				<ul data-role="listview" data-inset="true">
+					<li data-role="list-divider">XS1</li>
 					 <li data-role="fieldcontain">
 							<?
 							$sql = query( "SELECT value FROM config WHERE options='XS1IP'");
@@ -1378,6 +1386,67 @@ for( $i = 0; $i <= 64; $i++ )
 							<label for="XS1Pass">XS1 Password:</label>
      						<input data-clear-btn="true" name="XS1Pass" id="XS1Pass" value="<? echo $config['value']; ?>" type="password">
 									
+					</li>
+					<li data-role="list-divider">Graphen</li>
+					<li data-role="fieldcontain">
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='ShowDayGraph'");
+							$config = fetch( $sql);
+							$YesNo = $config['value'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							<label for="flipDayGraph">Show Day Graph:</label>
+							<select name="flipDayGraph" id="flipDayGraph" data-role="slider">
+								<option value="No" <? echo $ValueNo; ?>>No</option>
+								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
+							</select>	
+							
+					</li>
+					<li data-role="fieldcontain">
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='ShowWeekGraph'");
+							$config = fetch( $sql);
+							$YesNo = $config['value'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							<label for="flipWeekGraph">Show Week Graph:</label>
+							<select name="flipWeekGraph" id="flipWeekGraph" data-role="slider">
+								<option value="No" <? echo $ValueNo; ?>>No</option>
+								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
+							</select>	
+							
+					</li>
+					<li data-role="fieldcontain">
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='ShowMonthGraph'");
+							$config = fetch( $sql);
+							$YesNo = $config['value'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							<label for="flipMonthGraph">Show Month Graph:</label>
+							<select name="flipMonthGraph" id="flipMonthGraph" data-role="slider">
+								<option value="No" <? echo $ValueNo; ?>>No</option>
+								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
+							</select>	
+							
 					</li>
 					<li data-role="list-divider">Footer</li>
 					<li data-role="fieldcontain">
@@ -1974,10 +2043,34 @@ foreach($aktorenValues as $key => $value)
     								}
     							?>	
     							
-						    </fieldset>
-</div>	
+					</fieldset>
+					</div>	
 
 
+					
+					<div data-role="fieldcontain">
+					<fieldset data-role="controlgroup">
+					<legend>Geräte:</legend>
+								<?php
+    							$sql2 = query( "SELECT id,name,type,room FROM devices");
+    							$i = 0;					
+								while( $row2 = fetch( $sql2 ) )
+									{
+									$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+									$RoomName = fetch($sql);
+									//$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row2['type']. "'" );
+									//$devtype = fetch( $sqldt );
+									$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
+									?>
+											
+											<input type="checkbox" name="Geraete[]" id="Geraet-<?php echo $row2['id'] ?>"  value="<?php echo $row2['id'] ?>" class="custom" />
+	   										<label for="Geraet-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
+    								<?php
+    								}
+    							?>	
+    							
+					</fieldset>
+					</div>
 				
 
 					<li data-role="fieldcontain">	

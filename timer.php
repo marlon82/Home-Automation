@@ -61,11 +61,28 @@ margin-top:15px;
 <?php
 
 include('functions.php');
+
+echo "<script>\n";
+echo "$(document).ready( function () {\n";
+
+$sql_timer = query( "SELECT id FROM timer ORDER BY name ASC" );
+
+while ($timers = fetch($sql_timer))
+{
+	echo "$(\"#flip-timer-" . $timers['id'] . "\").on(\"slidestop\", function( event, ui ) { \n";
+	//echo "alert(\"testID:" . $timers['id'] . "\")\n";
+	echo "var jqxhr = $.get(\"setFunctions.php?function=ChangeTimerState&ID=" . $timers['id'] . "\", function() {})\n";
+	echo "changeElement(\"flip-timer-" . $timers['id'] . "-schalten-css\")\n";
+	echo "});\n";	
+}
+
+echo "});\n"; 			
+echo "</script>\n";
+
 $sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup FROM timer ORDER BY name ASC" );
 
 while( $timer = fetch( $sql ) )
-{
-	
+{	
 	if ($timer['Monday'] == 'Yes') { $Wochentage =  $Wochentage . ' Mo /';}
 	if ($timer['Tuesday'] == 'Yes') { $Wochentage = $Wochentage . ' Di /';}
 	if ($timer['Wednesday'] == 'Yes') { $Wochentage = $Wochentage . ' Mi /';}
@@ -103,18 +120,15 @@ while( $timer = fetch( $sql ) )
 			?>
 			<li>Zeit<span style="float:right"><? echo $timer['time']; ?></span></li> 
 			<li>Tage<span style="float:right"><? echo $Wochentage; ?></span></li>
-			<?
-			if ( $timer['enabled'] == 'Yes') {
-			?>
-				<li>Aktiv<span style="float:right"><FONT COLOR="#01DF01"><? echo $timer['enabled']; ?></FONT></span></li> 
-			<?
-			}else {
-			?>
-				<li>Aktiv<span style="float:right"><FONT COLOR="#FF0000"><? echo $timer['enabled']; ?></FONT></span></li> 
-			<?
-			}
-			?>
-			
+			<li>
+			<label for="flip-timer-<?php echo $timer['id'] ?>">Aktiv</label>
+			<div style="position: absolute ;right:10px;top:0">
+			<select name="flip-timer-<?php echo $timer['id'] ?>" id="flip-timer-<?php echo $timer['id'] ?>" data-role="slider" data-mini="true">
+				<option value="off" <? if($timer['enabled'] != 'Yes'){ echo "selected=\"selected\"";}; ?>>Aus</option>
+				<option value="on" <? if($timer['enabled'] == 'Yes'){ echo "selected=\"selected\"";}; ?>>An</option>
+			</select>		
+			</div>
+			</li>
 		</ul>		
     </div>
 	<?

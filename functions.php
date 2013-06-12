@@ -435,6 +435,19 @@ function push( $event, $description, $priority )
 	return $xml;	
 }
 
+function change_timer_state($ID)
+{
+	$sql = query( "SELECT id,enabled FROM timer WHERE id = '" . $ID . "'" );
+	$timer = fetch( $sql );
+	if($timer['enabled'] != 'Yes')
+	{
+	$sql = query( "UPDATE timer SET enabled = 'Yes' WHERE id = '" . $ID . "'" );
+	}elseif($timer['enabled'] == 'Yes')
+	{
+	$sql = query( "UPDATE timer SET enabled = '' WHERE id = '" . $ID . "'" );
+	}
+}
+
 function getLocalIp()
 { return gethostbyname(trim(`hostname`)); }
 

@@ -3,6 +3,7 @@
 include("functions.php");
 include("config.php");
 ?>
+
 <style type="text/css">
 
 li{
@@ -154,61 +155,61 @@ while( $multimedia = fetch( $sql_Devices ) )
 			<!-- #$-:Please do not edit lines starting with "#$" -->
 			<!-- #$VERSION:2.3 -->
 			<!-- #$AUTHOR:marlon.scheid -->
-			<area shape="rect" coords="18,113,50,134" alt="1" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="55,112,87,134" alt="2" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_2')" />
-			<area shape="rect" coords="94,113,126,133" alt="3" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_3')" />
-			<area shape="rect" coords="18,141,50,161" alt="4" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_4')" />
-			<area shape="rect" coords="56,141,88,160" alt="5" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_5')" />
-			<area shape="rect" coords="94,140,126,161" alt="6" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_6')" />
-			<area shape="rect" coords="18,169,51,189" alt="7" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_7')" />
-			<area shape="rect" coords="57,169,88,189" alt="8" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_8')" />
-			<area shape="rect" coords="94,169,126,189" alt="9" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_9')" />
-			<area shape="rect" coords="56,197,88,217" alt="0" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_0')" />
-			<area shape="rect" coords="92,289,126,319" alt="ChannelUp" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_CHUP')" />
-			<area shape="rect" coords="91,321,126,350" alt="ChannelDown" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_CHDOWN')" />
-			<area shape="rect" coords="64,404,83,431" alt="up" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_UP')" />
-			<area shape="rect" coords="92,439,126,461" alt="rigth" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_RIGTH')" />
-			<area shape="rect" coords="62,468,83,500" alt="down" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_DOWN')" />
-			<area shape="rect" coords="17,441,53,461" alt="left" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_LEFT')" />
-			<area shape="rect" coords="59,440,86,463" alt="enter" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_ENTER')" />
-			<area shape="rect" coords="18,474,52,499" alt="return" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_RETURN')" />
-			<area shape="rect" coords="93,474,127,499" alt="exit" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_EXIT')" />
-			<area shape="rect" coords="18,402,52,428" alt="tools" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_TOOLS')" />
-			<area shape="rect" coords="93,401,126,427" alt="info" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_INFO')" />
-			<area shape="rect" coords="47,362,98,387" alt="home" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_CONTENTS')" />
-			<area shape="rect" coords="104,361,127,389" alt="guide" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_GUIDE')" />
-			<area shape="rect" coords="18,362,42,388" alt="channellist" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_CH_LIST')" />
-			<area shape="rect" coords="95,197,126,217" alt="titleMenu" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="19,197,50,217" alt="discMenu" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="19,227,40,245" alt="ChapterBack" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="47,227,68,245" alt="ChapterForward" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="77,227,97,245" alt="FastBack" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_REWIND')" />
-			<area shape="rect" coords="105,226,126,244" alt="FastForward" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_FF')" />
-			<area shape="rect" coords="19,253,41,277" alt="stop" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_STOP')" />
-			<area shape="rect" coords="48,253,97,277" alt="Play" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_PLAY')" />
-			<area shape="rect" coords="105,253,127,277" alt="Pause" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_PAUSE')" />
-			<area shape="rect" coords="75,85,98,102" alt="Eject" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_EJECT')" />
-			<area shape="rect" coords="103,85,127,103" alt="TeleText" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="19,86,40,102" alt="BD" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="48,87,69,102" alt="TV" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="circle" coords="34,61,16" alt="Power" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_POWEROFF')" />
-			<area shape="circle" coords="110,60,16" alt="TVPower" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="60,290,85,316" alt="Mute" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_MUTE')" />
-			<area shape="rect" coords="60,325,85,350" alt="TVSource" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="18,289,54,320" alt="VolumeUp" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_VOLUP')" />
-			<area shape="rect" coords="18,320,54,350" alt="VolumeDown" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_VOLDOWN')" />
-			<area shape="rect" coords="17,513,40,530" alt="A" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_A')" />
-			<area shape="rect" coords="46,513,69,530" alt="B" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_B')" />
-			<area shape="rect" coords="75,514,99,530" alt="C" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_C')" />
-			<area shape="rect" coords="104,512,129,529" alt="D" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_D')" />
-			<area shape="rect" coords="17,540,41,556" alt="SmartHUB" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="46,539,70,556" alt="Search" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="75,539,98,556" alt="PIP" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_PIP')" />
-			<area shape="rect" coords="104,539,128,556" alt="2D-3D" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="17,565,41,582" alt="www" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_RSS')" />
-			<area shape="rect" coords="46,565,69,582" alt="TV" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-			<area shape="rect" coords="76,565,99,582" alt="Rec" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_REC')" />
-			<area shape="rect" coords="105,566,127,582" alt="RecPause" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
+			<area shape="rect" coords="18,113,50,134" alt="1" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="55,112,87,134" alt="2" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','2')" />
+			<area shape="rect" coords="94,113,126,133" alt="3" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','3')" />
+			<area shape="rect" coords="18,141,50,161" alt="4" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','4')" />
+			<area shape="rect" coords="56,141,88,160" alt="5" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','5')" />
+			<area shape="rect" coords="94,140,126,161" alt="6" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','6')" />
+			<area shape="rect" coords="18,169,51,189" alt="7" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','7')" />
+			<area shape="rect" coords="57,169,88,189" alt="8" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','8')" />
+			<area shape="rect" coords="94,169,126,189" alt="9" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','9')" />
+			<area shape="rect" coords="56,197,88,217" alt="0" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','0')" />
+			<area shape="rect" coords="92,289,126,319" alt="ChannelUp" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','CHUP')" />
+			<area shape="rect" coords="91,321,126,350" alt="ChannelDown" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','CHDOWN')" />
+			<area shape="rect" coords="64,404,83,431" alt="up" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','UP')" />
+			<area shape="rect" coords="92,439,126,461" alt="rigth" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','RIGTH')" />
+			<area shape="rect" coords="62,468,83,500" alt="down" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','DOWN')" />
+			<area shape="rect" coords="17,441,53,461" alt="left" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','LEFT')" />
+			<area shape="rect" coords="59,440,86,463" alt="enter" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','ENTER')" />
+			<area shape="rect" coords="18,474,52,499" alt="return" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','RETURN')" />
+			<area shape="rect" coords="93,474,127,499" alt="exit" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','EXIT')" />
+			<area shape="rect" coords="18,402,52,428" alt="tools" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','TOOLS')" />
+			<area shape="rect" coords="93,401,126,427" alt="info" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','INFO')" />
+			<area shape="rect" coords="47,362,98,387" alt="home" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','CONTENTS')" />
+			<area shape="rect" coords="104,361,127,389" alt="guide" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','GUIDE')" />
+			<area shape="rect" coords="18,362,42,388" alt="channellist" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','CH_LIST')" />
+			<area shape="rect" coords="95,197,126,217" alt="titleMenu" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="19,197,50,217" alt="discMenu" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="19,227,40,245" alt="ChapterBack" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="47,227,68,245" alt="ChapterForward" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="77,227,97,245" alt="FastBack" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','REWIND')" />
+			<area shape="rect" coords="105,226,126,244" alt="FastForward" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','FF')" />
+			<area shape="rect" coords="19,253,41,277" alt="stop" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','STOP')" />
+			<area shape="rect" coords="48,253,97,277" alt="Play" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','PLAY')" />
+			<area shape="rect" coords="105,253,127,277" alt="Pause" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','PAUSE')" />
+			<area shape="rect" coords="75,85,98,102" alt="Eject" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','EJECT')" />
+			<area shape="rect" coords="103,85,127,103" alt="TeleText" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="19,86,40,102" alt="BD" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="48,87,69,102" alt="TV" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="circle" coords="34,61,16" alt="Power" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','POWEROFF')" />
+			<area shape="circle" coords="110,60,16" alt="TVPower" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="60,290,85,316" alt="Mute" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','MUTE')" />
+			<area shape="rect" coords="60,325,85,350" alt="TVSource" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="18,289,54,320" alt="VolumeUp" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','VOLUP')" />
+			<area shape="rect" coords="18,320,54,350" alt="VolumeDown" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','VOLDOWN')" />
+			<area shape="rect" coords="17,513,40,530" alt="A" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','A')" />
+			<area shape="rect" coords="46,513,69,530" alt="B" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','B')" />
+			<area shape="rect" coords="75,514,99,530" alt="C" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','C')" />
+			<area shape="rect" coords="104,512,129,529" alt="D" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','D')" />
+			<area shape="rect" coords="17,540,41,556" alt="SmartHUB" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="46,539,70,556" alt="Search" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="75,539,98,556" alt="PIP" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','PIP')" />
+			<area shape="rect" coords="104,539,128,556" alt="2D-3D" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="17,565,41,582" alt="www" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','RSS')" />
+			<area shape="rect" coords="46,565,69,582" alt="TV" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
+			<area shape="rect" coords="76,565,99,582" alt="Rec" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','REC')" />
+			<area shape="rect" coords="105,566,127,582" alt="RecPause" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','RECPAUSE')" />
 			</map>
 			<a href="#demo-links" data-rel="close" data-role="button" data-theme="c" data-icon="delete" data-inline="true">Close panel</a>
 		</div><!-- /content wrapper for padding -->
@@ -307,7 +308,9 @@ while( $sensors = fetch( $sql_sensors ) )
 	<?
 	$sql_rooms = query( "SELECT name FROM rooms WHERE id='" . $sensors['room'] . "'" );
 	$room = fetch( $sql_rooms );
-	$filename = "sensor_graph/" . $sensors['iname'] . "_day.png";
+	$filenameDay = "sensor_graph/" . $sensors['iname'] . "_day.png";
+	$filenameWeek = "sensor_graph/" . $sensors['iname'] . "_Week.png";
+	$filenameMonth = "sensor_graph/" . $sensors['iname'] . "_Month.png";
 	if($sensors['hcType'] == "temperatur"){
 		$wert = $room['name'] . " " . $sensors['name'] . " aktuell: " . $sensors['value'] . " °C"; 
 	}elseif($sensors['hcType'] == "luftfeuchtigkeit"){
@@ -315,7 +318,19 @@ while( $sensors = fetch( $sql_sensors ) )
 	}
 	?>
 	<p><? echo $wert; ?></p>
-	<img src="<? echo $filename; ?>" border="2" style="border:0px solid black;max-width:100%;" alt="Graph" />
+	<?
+	$sql_config = query( "SELECT value FROM config WHERE options='ShowDayGraph'" );
+	$config = fetch( $sql_config );
+	if ($config['value']=='Yes'){ echo "<img src=\"" . $filenameDay . "\" border=\"2\" style=\"border:0px solid black;max-width:100%;\" alt=\"Graph\" />\n<br>";}
+	
+	$sql_config = query( "SELECT value FROM config WHERE options='ShowWeekGraph'" );
+	$config = fetch( $sql_config );
+	if ($config['value']=='Yes'){ echo "<img src=\"" . $filenameWeek . "\" border=\"2\" style=\"border:0px solid black;max-width:100%;\" alt=\"Graph\" />\n<br>";}
+	
+	$sql_config = query( "SELECT value FROM config WHERE options='ShowMonthGraph'" );
+	$config = fetch( $sql_config );
+	if ($config['value']=='Yes'){ echo "<img src=\"" . $filenameMonth . "\" border=\"2\" style=\"border:0px solid black;max-width:100%;\" alt=\"Graph\" />\n";}
+	?>
 </div>
 <?
 }

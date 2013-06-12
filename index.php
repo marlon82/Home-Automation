@@ -5,7 +5,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
-	<title>Multi-page template</title> 
+	<title>Home Automation</title> 
 	<link rel="stylesheet" href="./jquery/jquery.mobile-1.3.1.css" />
 	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 	<script src="./jquery/jquery.mobile-1.3.1.js"></script>
