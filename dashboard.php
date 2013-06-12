@@ -309,8 +309,8 @@ while( $sensors = fetch( $sql_sensors ) )
 	$sql_rooms = query( "SELECT name FROM rooms WHERE id='" . $sensors['room'] . "'" );
 	$room = fetch( $sql_rooms );
 	$filenameDay = "sensor_graph/" . $sensors['iname'] . "_day.png";
-	$filenameWeek = "sensor_graph/" . $sensors['iname'] . "_Week.png";
-	$filenameMonth = "sensor_graph/" . $sensors['iname'] . "_Month.png";
+	$filenameWeek = "sensor_graph/" . $sensors['iname'] . "_week.png";
+	$filenameMonth = "sensor_graph/" . $sensors['iname'] . "_month.png";
 	if($sensors['hcType'] == "temperatur"){
 		$wert = $room['name'] . " " . $sensors['name'] . " aktuell: " . $sensors['value'] . " °C"; 
 	}elseif($sensors['hcType'] == "luftfeuchtigkeit"){
@@ -337,7 +337,7 @@ while( $sensors = fetch( $sql_sensors ) )
 ?>
 
 <div data-role="content" >	
-	<div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+	<div style="float: left; border-radius:10px; height:260px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true" data-theme="d">
     		<li data-role="list-divider">Aktive Aktoren (5 max)</li>
 	
@@ -383,7 +383,7 @@ while( $sensors = fetch( $sql_sensors ) )
 	
 
     
-    <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+    <div style="float: left; border-radius:10px; height:260px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider">Virtuelle Befehle DEMO</li>
 			<li><a href="index.html">TV</a></li> 
@@ -395,7 +395,7 @@ while( $sensors = fetch( $sql_sensors ) )
     </div>
 
 
-	<div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+	<div style="float: left; border-radius:10px; height:260px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
     		<li data-role="list-divider">Stromverbrauch</li>    		
     		<li>Aktuell  <span style="float:right"><? $verbrauch = verbrauchAktuell(); echo $verbrauch['kwh'] . " W - " . $verbrauch['euro'] . " €"; ?></span></li>
@@ -411,7 +411,7 @@ while( $sensors = fetch( $sql_sensors ) )
 
 
     
-    <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+    <div style="float: left; border-radius:10px; height:260px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider">Multimedia</li>
 			<?
@@ -427,7 +427,7 @@ while( $sensors = fetch( $sql_sensors ) )
     </div>
 
 
-	<div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+	<div style="float: left; border-radius:10px; height:260px; width:32%; margin-left:10px; margin-bottom:12px">
   		<?php
 		$sqlWWidget = query( "SELECT options,value FROM config WHERE options = 'WetterWidgetAktiv'" );
 		$Widget = fetch( $sqlWWidget );
@@ -464,7 +464,7 @@ while( $sensor = fetch( $sql ) )
 		$initial = false;	
 		?>
 
-	<div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+	<div style="float: left; border-radius:10px; height:260px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
     		<li data-role="list-divider">Aktuelle Sensor Werte</li>
     <?php

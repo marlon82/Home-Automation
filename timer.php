@@ -121,7 +121,8 @@ while( $timer = fetch( $sql ) )
 			<li>Zeit<span style="float:right"><? echo $timer['time']; ?></span></li> 
 			<li>Tage<span style="float:right"><? echo $Wochentage; ?></span></li>
 			<li>
-			<label for="flip-timer-<?php echo $timer['id'] ?>">Aktiv</label>
+			
+			<label for="flip-timer-<?php echo $timer['id'] ?>"><STRONG>Aktiv</STRONG></label>
 			<div style="position: absolute ;right:10px;top:0">
 			<select name="flip-timer-<?php echo $timer['id'] ?>" id="flip-timer-<?php echo $timer['id'] ?>" data-role="slider" data-mini="true">
 				<option value="off" <? if($timer['enabled'] != 'Yes'){ echo "selected=\"selected\"";}; ?>>Aus</option>

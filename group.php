@@ -107,7 +107,19 @@ $(document).ready(function() {
 
 <?php
 
+$sql_group = query( "SELECT id FROM groups ORDER BY name ASC" );
 
+while ($groups = fetch($sql_group))
+{
+	echo "$(\"#flip-group-" . $groups['id'] . "\").on(\"slidestop\", function( event, ui ) { \n";
+	echo "var jqxhr = $.get(\"setFunctions.php?function=ChangeGroupState&ID=" . $groups['id'] . "\", function() {})\n";
+	echo "changeElement(\"flip-group-" . $groups['id'] . "-schalten-css\")\n";
+	echo "});\n";	
+	echo "\n";	
+}
+
+	echo "\n";	
+	echo "\n";	
 $sql = query( "SELECT id FROM groups");
 
 for ($i=1; $holen =  fetch($sql); $i++) {
@@ -136,13 +148,13 @@ $sql_groups = query( "SELECT id, name, status FROM groups" );
 
 while( $groups = fetch( $sql_groups ) )
 {
-	$sql_groupaktor = query( "SELECT aktorID,aktorValue FROM groupaktor WHERE groupID='" . $groups['id'] ."'" );
+	$sql_groupaktor = query( "SELECT aktorID,aktorValue,deviceID FROM groupaktor WHERE groupID='" . $groups['id'] ."'" );
 	//$aktor = fetch( $sql1 );
 	
 	
 	?>
 	
-<div data-role="popup" id="popup-<? echo $groups['id'] ?>" class="ui-content" data-theme="d">
+<div data-role="popup" id="popup-aktor-<? echo $groups['id'] ?>" class="ui-content" data-theme="d">
 	<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
 		<table>
   <tr>
@@ -152,6 +164,7 @@ while( $groups = fetch( $sql_groups ) )
   </tr>
 	<?
 	while( $groupaktor = fetch( $sql_groupaktor ) ){
+	if ($groupaktor['aktorID'] != 0) {
 		$sql_aktor = query( "SELECT name,room FROM aktor where id='" . $groupaktor['aktorID'] ."'" );
 		$aktor = fetch( $sql_aktor );
 		
@@ -172,7 +185,9 @@ while( $groups = fetch( $sql_groups ) )
     <td style="padding: 5px"><FONT COLOR="<? echo $font ?>"><? echo $raum['name']; ?></FONT></td>
     <td style="padding: 5px"><FONT COLOR="<? echo $font ?>"><? echo $groupaktor['aktorValue']; ?></FONT></td>
   </tr>
-	<? } ?>
+	<? 
+	}
+	}	?>
 
 
 
@@ -180,6 +195,33 @@ while( $groups = fetch( $sql_groups ) )
 </div>
 
 
+<div data-role="popup" id="popup-device-<? echo $groups['id'] ?>" class="ui-content" data-theme="d">
+	<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		<table>
+  <tr>
+    <td><b>Device</b></td>
+    <td><b>Raum</b></td>
+  </tr>
+	<?
+	$sql_groupaktor2 = query( "SELECT deviceID FROM groupaktor WHERE groupID='" . $groups['id'] ."'" );
+	
+	while( $groupaktor2 = fetch( $sql_groupaktor2 ) ){
+		if ($groupaktor2['deviceID'] != 0) {
+		$sql_device = query( "SELECT name,room FROM devices where id='" . $groupaktor2['deviceID'] ."'" );
+		$device = fetch( $sql_device );
+		
+		$sql_raum = query( "SELECT id,name FROM rooms where id='" . $device['room'] ."'" );
+		$raum = fetch( $sql_raum );
+		?>
+		<tr>
+		<td style="padding: 5px"><? echo $device['name']; ?></td>
+		<td style="padding: 5px"><? echo $raum['name']; ?></td>
+		</tr>
+<?  	}
+	} ?>
+
+</table>
+</div>
 
 
 	
@@ -187,8 +229,18 @@ while( $groups = fetch( $sql_groups ) )
   		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider"><? echo $groups['name']?></li>			
 			
-			<li><a href="#popup-<? echo $groups['id'] ?>"  data-inline="true" data-rel="popup" data-position-to="window">Aktoren: </a></li> 
-			<li><a href="#">Geräte: </a></li> 
+			<li><a href="#popup-aktor-<? echo $groups['id'] ?>"  data-inline="true" data-rel="popup" data-position-to="window">Aktoren: </a></li> 
+			<li><a href="#popup-device-<? echo $groups['id'] ?>"  data-inline="true" data-rel="popup" data-position-to="window">Geräte: </a></li> 
+			<li>
+			
+			<label for="flip-group-<?php echo $groups['id'] ?>"><STRONG>Aktiv</STRONG></label>
+			<div style="position: absolute ;right:10px;top:0">
+			<select name="flip-group-<?php echo $groups['id'] ?>" id="flip-group-<?php echo $groups['id'] ?>" data-role="slider" data-mini="true">
+				<option value="off" <? if($groups['status'] != 'Yes'){ echo "selected=\"selected\"";}; ?>>Aus</option>
+				<option value="on" <? if($groups['status'] == 'Yes'){ echo "selected=\"selected\"";}; ?>>An</option>
+			</select>		
+			</div>
+			</li>
 			<li>
 			<label for="flip-<? echo $groups['id']?>"><b>Schalten:</b></label>
 			<div style="position: absolute ;right:10px;top:0px">

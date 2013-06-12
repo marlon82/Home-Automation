@@ -17,6 +17,11 @@ switch( $_GET['function'] ){
 		//echo "GroupdID:" . $_GET['ID'];
 		change_timer_state($_GET['ID']);
 		break;
+			
+	case 'ChangeGroupState':
+		//echo "GroupdID:" . $_GET['ID'];
+		change_group_state($_GET['ID']);
+		break;
 		
 	case 'test':
 		echo "Dies war ein Test!";

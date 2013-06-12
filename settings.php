@@ -109,6 +109,17 @@ $('#aktor').change(function(e) {
 	<p>Sender 101:								"1,0,1,KEY_ENTER" oder "1,0,1,$enter" oder "0101"</p>
 </div>
 
+<div data-role="popup" id="popup-TimerSensorHelp" class="ui-content" data-theme="d">
+	<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+	<p>Hilfe:</p>
+	<p></p>
+	<p>Ein Aktor oder eine Gruppe wird nur dann geschaltet wenn der Sensor Wert passt.</p>
+	<p></p>
+	<p>Sensor Wert: z.B.: >20  --> nur schalten wenn größer 20</p>
+	<p>oder</p>
+	<p>Sensor Wert: z.B.: <20  --> nur schalten wenn kleiner 20</p>
+</div>
+
 
 
 <div  data-role="sidebar" id="left-sidebar"> 
@@ -472,16 +483,19 @@ for( $i = 0; $i <= 64; $i++ )
 			<form action="index.php?page=settings&aktion=editAktor&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
 				<fieldset>
 					<div data-role="fieldcontain">
-					
+						<li data-role="fieldcontain">
 						    <label for="aktorname">Aktor Name:</label>
      						<input data-clear-btn="true" name="aktorname" id="aktorname" value="<?php echo $row['name']; ?>" type="text">
-     						
+     					</li>
+						<li data-role="fieldcontain">	
      						<label for="xs1name">XS1 Name:</label>
      						<input disabled="disabled" name="xs1name" id="xs1name" value= "<?php echo $row['iName']; ?>" type="text"> 
-     						
+     					</li>
+						<li data-role="fieldcontain">	
      						<label for="verbrauchWatt">Verbrauch (W):</label>
      						<input data-clear-btn="true" name="verbrauchWatt" id="verbrauchWatt" value="<?php echo $row['verbrauchWatt']; ?>" type="text">
-     						
+     					</li>
+						<li data-role="fieldcontain">	
      						<label for="room" class="select">Räume:</label>
 							<select name="room" id="room" data-native-menu="false">
     							<option>Räume:</option>
@@ -503,7 +517,8 @@ for( $i = 0; $i <= 64; $i++ )
     							?>
 
 							</select>
-							
+						</li>
+						<li data-role="fieldcontain">	
 							<label for="typ" class="select">Typ:</label>
 							<select name="typ" id="typ" data-native-menu="false">
     							<option>Typ:</option>
@@ -526,8 +541,7 @@ for( $i = 0; $i <= 64; $i++ )
     								}
     							?>		
 							</select>
-
-						
+						</li>
 					</div>
 				<div class="ui-body ui-body-c">
 				<fieldset class="ui-grid-a">
@@ -597,13 +611,15 @@ for( $i = 0; $i <= 64; $i++ )
 			<form action="index.php?page=settings&aktion=editSensor&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
 				<fieldset>
 					<div data-role="fieldcontain">
-					
+						<li data-role="fieldcontain">
 						    <label for="sensorname">Sensor Name:</label>
      						<input data-clear-btn="true" name="sensorname" id="sensorname" value="<?php echo $row['name']; ?>" type="text">
-     						
+     					</li>
+						<li data-role="fieldcontain">	
      						<label for="xs1name">XS1 Name:</label>
      						<input disabled="disabled" name="xs1name" id="xs1name" value= "<?php echo $row['iName']; ?>" type="text"> 
-     						
+     					</li>
+						<li data-role="fieldcontain">	
      						<label for="room" class="select">Räume:</label>
 							<select name="room" id="room" data-native-menu="false">
 							<option>Räume:</option>
@@ -624,7 +640,8 @@ for( $i = 0; $i <= 64; $i++ )
     								}
     							?>							
 							</select>
-							
+						</li>
+						<li data-role="fieldcontain">	
 							<label for="hcType" class="select">Typ:</label>
 							<select name="hcType" id="hcType" data-native-menu="false">
     							<option>Typ:</option>
@@ -647,8 +664,7 @@ for( $i = 0; $i <= 64; $i++ )
 										}
     							?>								
 							</select>
-
-						
+						</li>
 					</div>
 				<div class="ui-body ui-body-c">
 				<fieldset class="ui-grid-a">
@@ -904,16 +920,19 @@ for( $i = 0; $i <= 64; $i++ )
 			<form action="index.php?page=settings&aktion=editDevice&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
 				<fieldset>
 					<div data-role="fieldcontain">
-					
+						<li data-role="fieldcontain">
 						    <label for="devicename">Geräte Name:</label>
      						<input data-clear-btn="true" name="devicename" id="devicename" value="<?php echo $row['name']; ?>" type="text">
-     						
+     					</li>
+						<li data-role="fieldcontain">	
      						<label for="verbrauchWatt">Verbrauch (W):</label>
      						<input data-clear-btn="true" name="verbrauchWatt" id="verbrauchWatt" value="<?php echo $row['verbrauchWatt']; ?>" type="text">
-     						     						
+     					</li>
+						<li data-role="fieldcontain">	     						
      						<label for="ip">IP Adresse:</label>
      						<input data-clear-btn="true" name="ip" id="ip" value="<?php echo $row['ip']; ?>" type="text">
-     						
+     					</li>
+						<li data-role="fieldcontain">	
      						<label for="room" class="select">Räume:</label>
 							<select name="room" id="room" data-native-menu="false">
     							<option>Räume:</option>
@@ -935,7 +954,8 @@ for( $i = 0; $i <= 64; $i++ )
     							?>
 
 							</select>
-							
+						</li>
+						<li data-role="fieldcontain">	
 							<label for="typ" class="select">Typ:</label>
 							<select name="typ" id="typ" data-native-menu="false">
 								<option>Typ:</option>
@@ -959,8 +979,7 @@ for( $i = 0; $i <= 64; $i++ )
     							?>		
 							   							
 							</select>
-
-						
+						</li>						
 					</div>
 				<div class="ui-body ui-body-c">
 				<fieldset class="ui-grid-a">
@@ -1040,7 +1059,7 @@ for( $i = 0; $i <= 64; $i++ )
 		<?php
 		}
 		if($_GET['step'] == 2){
-		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup, suninfo, duration FROM timer WHERE id = '" . $_GET['id'] . "'" );
+		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup, suninfo, SensorID, SensorValue FROM timer WHERE id = '" . $_GET['id'] . "'" );
 		$row = fetch( $sql );
 		?>
 		<div id="cont">
@@ -1173,8 +1192,55 @@ for( $i = 0; $i <= 64; $i++ )
 							</fieldset>
 						</li>
 						<li data-role="fieldcontain">	
-						    <label for="timerlaufzeit">Laufzeit (in sec):</label>
-     						<input data-clear-btn="true" name="timerlaufzeit" id="timerlaufzeit" value="<?php echo $row['duration']; ?>" type="text">
+							<?
+							
+							$YesNo = $row['SensorID'];
+							if ($YesNo != ''){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							
+							<label for="flipSensor">mit Sensor Steuerung: (<a href="#popup-TimerSensorHelp"  data-inline="true" data-rel="popup" data-position-to="window">hilfe</a>)</label>
+							<select name="flipSensor" id="flipSensor" data-role="slider">
+								<option value="No" <?php echo $ValueNo; ?>>No</option>
+								<option value="Yes" <?php echo $ValueYes; ?>>Yes</option>
+							</select>
+							
+						</li>
+						<li data-role="fieldcontain">	     
+							 <label for="TimerSensorID" class="select">Sensor:</label>
+							<select name="TimerSensorID" id="TimerSensorID" data-native-menu="false">
+    							<option>Sensor:</option>
+								<?php
+    							
+								$sensID = $row['SensorID'];
+												
+								$sql_sens = query( "SELECT iid, name, room FROM sensoren");	
+								while ( $sensor = fetch($sql_sens))
+									{
+										$sql_room = query( "SELECT name FROM rooms WHERE id='" . $sensor['room'] . "'");	
+										$room = fetch($sql_room);
+										
+										if($sensID == $sensor['iid']){
+										?>
+											<option value="<?php echo $sensor['iid'] ?>" selected="selected"><?php echo $sensor['name'] . " (" . $room['name'] . ")"; ?></option>
+										<?php
+										}else{
+										?>
+											<option value="<?php echo $sensor['iid'] ?>"><?php echo $sensor['name'] . " (" . $room['name'] . ")"; ?></option>
+										<?php
+										}
+    								}
+    							?>
+							</select>
+						</li>
+						<li data-role="fieldcontain">	
+						    <label for="SensorValue">Sensor Wert:</label>
+     						<input data-clear-btn="true" name="SensorValue" id="SensorValue" value="<?php echo $row['SensorValue']; ?>" type="text">
      					</li>
 						<li data-role="fieldcontain">	
 							<?
@@ -1226,7 +1292,7 @@ for( $i = 0; $i <= 64; $i++ )
 			if ($type == 'group' ) {
 				$isGroup = 'Yes';
 			}	
-			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $typeID . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "', Monday = '" . $_POST['checkbox-h-Montag'] . "', Tuesday = '" . $_POST['checkbox-h-Dienstag'] . "', Wednesday = '" . $_POST['checkbox-h-Mittwoch'] . "', Thursday = '" . $_POST['checkbox-h-Donnerstag'] . "', Friday = '" . $_POST['checkbox-h-Freitag'] . "', Saturday = '" . $_POST['checkbox-h-Samstag'] . "', Sunday = '" . $_POST['checkbox-h-Sonntag'] . "', isGroup = '" . $isGroup . "', suninfo = '" . $_POST['suninfo'] ."', duration = '" . $_POST['timerlaufzeit'] ."' WHERE id = '" . $id . "'" );
+			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $typeID . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "', Monday = '" . $_POST['checkbox-h-Montag'] . "', Tuesday = '" . $_POST['checkbox-h-Dienstag'] . "', Wednesday = '" . $_POST['checkbox-h-Mittwoch'] . "', Thursday = '" . $_POST['checkbox-h-Donnerstag'] . "', Friday = '" . $_POST['checkbox-h-Freitag'] . "', Saturday = '" . $_POST['checkbox-h-Samstag'] . "', Sunday = '" . $_POST['checkbox-h-Sonntag'] . "', isGroup = '" . $isGroup . "', suninfo = '" . $_POST['suninfo'] ."', SensorID = '" . $_POST['TimerSensorID'] ."', SensorValue = '" . $_POST['SensorValue'] ."' WHERE id = '" . $id . "'" );
 			?>
 			<div id="cont1">
 			<p>Der Timer wurde geändert</p>
@@ -1733,7 +1799,9 @@ for( $i = 0; $i <= 64; $i++ )
 													 '" . $_POST['checkbox-h-Samstag'] . "',
 													 '" . $_POST['checkbox-h-Sonntag'] . "',	
 													 '" . $isGroup . "',			
-													 '" . $_POST['suninfo'] . "')" );			
+													 '" . $_POST['suninfo'] . "',			
+													 '" . $_POST['TimerSensorID'] . "',			
+													 '" . $_POST['SensorValue'] . "')" );			
 		?>
 		<div class="boxWhite">
 			<p class="center">Timer wurde hinzugefügt</p>
@@ -1828,6 +1896,35 @@ for( $i = 0; $i <= 64; $i++ )
 					</fieldset>
 					</li>
 					<li data-role="fieldcontain">	
+							<label for="flipSensor">mit Sensor Steuerung: (<a href="#popup-TimerSensorHelp"  data-inline="true" data-rel="popup" data-position-to="window">hilfe</a>)</label>
+							<select name="flipSensor" id="flipSensor" data-role="slider">
+								<option value="No" selected="selected">No</option>
+								<option value="Yes">Yes</option>
+							</select>
+							
+					</li>
+					<li data-role="fieldcontain">	     
+							 <label for="TimerSensorID" class="select">Sensor:</label>
+							<select name="TimerSensorID" id="TimerSensorID" data-native-menu="false">
+    							<option>Sensor:</option>
+								<?php
+    							$sql_sens = query( "SELECT iid, name, room FROM sensoren");	
+								while ( $sensor = fetch($sql_sens))
+									{
+										$sql_room = query( "SELECT name FROM rooms WHERE id='" . $sensor['room'] . "'");	
+										$room = fetch($sql_room);
+										?>
+											<option value="<?php echo $sensor['iid'] ?>"><?php echo $sensor['name'] . " (" . $room['name'] . ")"; ?></option>
+										<?php
+    								}
+    							?>
+							</select>
+						</li>
+						<li data-role="fieldcontain">	
+						    <label for="SensorValue">Sensor Wert:</label>
+     						<input data-clear-btn="true" name="SensorValue" id="SensorValue" value="" type="text">
+     					</li>
+					<li data-role="fieldcontain">	
 						<label for="flipAktiv">Timer enabled:</label>
 						<select name="flipAktiv" id="flipAktiv" data-role="slider">
 							<option value="No">No</option>
@@ -1852,7 +1949,7 @@ for( $i = 0; $i <= 64; $i++ )
 			$groupname = $_POST['groupname'];
 			$groupstatus = $_POST['flipAktiv'];
 			$aktoren = $_POST['Aktoren'];
-			
+			$devices = $_POST['Geraete'];
 			//var_dump($_POST['Aktoren']);
 			
 $typ = array("schalter","rolladen","dimmer"); 
@@ -1932,6 +2029,13 @@ for($x = 0; $x < count($typ); $x++) {
 ?>
 <input type="hidden" name="groupname" value="<? echo $groupname ?>">
 <input type="hidden" name="groupstatus" value="<? echo $groupstatus ?>">
+<?
+for($i = 0; $i < count($devices); $i++) {
+	$deviceVal = $deviceVal . $devices[$i] . "," ;
+}
+$deviceVal = substr($deviceVal, 0, -1);
+?>
+<input type="hidden" name="devices" value="<? echo $deviceVal ?>">
 <button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
 				</fieldset>
 </form>
@@ -1977,6 +2081,12 @@ foreach($aktorenValues as $key => $value)
 	$sql = query( $befehl);	
 	//echo $befehl . "<br />";	
 } 
+$devices = $_POST['devices'];
+$devices = explode(",", $devices);
+for($i=0;$i<=count($devices)-1;$i++) 
+{
+	$sql = query( "INSERT INTO groupaktor VALUES( '', '0', '" . $devices[$i] . "', '" . $row['id'] . "', '')" );
+}
 	
 ?>
 <p class="center">Gruppe wurde hinzugefügt</p>

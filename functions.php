@@ -448,6 +448,19 @@ function change_timer_state($ID)
 	}
 }
 
+function change_group_state($ID)
+{
+	$sql = query( "SELECT id,status FROM groups WHERE id = '" . $ID . "'" );
+	$group = fetch( $sql );
+	if($group['status'] != 'Yes')
+	{
+	$sql = query( "UPDATE groups SET status = 'Yes' WHERE id = '" . $ID . "'" );
+	}elseif($group['status'] == 'Yes')
+	{
+	$sql = query( "UPDATE groups SET status = '' WHERE id = '" . $ID . "'" );
+	}
+}
+
 function getLocalIp()
 { return gethostbyname(trim(`hostname`)); }
 

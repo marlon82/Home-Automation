@@ -43,7 +43,7 @@ while($row = fetch( $sql )){
 
 function timer(){
 
-	$sql = query( "SELECT id,name,aktor,value,hour,minute,enabled,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,isGroup FROM timer ORDER BY  `timer`.`id` ASC ");
+	$sql = query( "SELECT id,name,aktor,value,hour,minute,enabled,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,isGroup,SensorID,SensorValue FROM timer ORDER BY  `timer`.`id` ASC ");
 																			
 	while( $timer = fetch( $sql ) )
 	{	//nur wenn timer aktiv
@@ -76,9 +76,43 @@ function timer(){
 			//Gruppen
 				$sqlg = query( "SELECT id,aktorID,deviceID,groupID,aktorValue FROM groupaktor WHERE groupID = '" . $timer['aktor'] . "'");
 				while( $group = fetch( $sqlg ) )
-					{				
+					{
+					if ($timer['SensorID'] != '')
+					{
+						echo "Timer:" . $timer['name'];
+						extract(ReadXS1(sensor, $timer['SensorID']));
+						if($utime && $number && $value){
+							$SensVal = $value;
+							echo "   Sensor Aktuell: " . $SensVal . "\n";
+							if (strpos($timer['SensorValue'], '>') !== FALSE)
+							{	//Sensor Wert großer
+								list($SensorSign, $SensorValue) = explode('>', $timer['SensorValue']);
+								echo "   nur schalten wenn Sensor groesser gleich " . $SensorValue . "\n";
+								if ( $SensVal >= $SensorValue ){ 
+									echo "   --> schalten\n";
+									$SensorStart = True;
+								}else{
+									echo "   --> NICHT schalten\n";
+									$SensorStart = False;
+								}
+							}else{
+								//Sensor Wert Kleiner
+								list($SensorSign, $SensorValue) = explode('<', $timer['SensorValue']);
+								echo "   nur schalten wenn Sensor kleiner gleich " . $SensorValue . "\n";
+								if ( $SensVal <= $SensorValue ){ 
+									echo "   --> schalten\n";
+									$SensorStart = True;
+								}else{ 
+									echo "   --> NICHT schalten\n";
+									$SensorStart = False;
+								}
+							}
+						}
+					}else{
+						$SensorStart = True;
+					}					
 					//echo $start . $today['weekday'];
-					if (($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) {
+					if ((($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) && ($SensorStart)) {
 						$sqla = query( "SELECT iid,name FROM aktor WHERE id = '" . $group['aktorID'] . "'" );
 						$aktor = fetch( $sqla );
 						//echo "start   iid:" . $aktor['iid'];
@@ -90,7 +124,42 @@ function timer(){
 			}else{
 			//Aktoren
 				//echo $start . $today['weekday'];
-				if (($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) {
+				
+				if ($timer['SensorID'] != '')
+				{
+					echo "Timer:" . $timer['name'];
+					extract(ReadXS1(sensor, $timer['SensorID']));
+					if($utime && $number && $value){
+						$SensVal = $value;
+						echo "   Sensor Aktuell: " . $SensVal . "\n";
+						if (strpos($timer['SensorValue'], '>') !== FALSE)
+						{	//Sensor Wert großer
+							list($SensorSign, $SensorValue) = explode('>', $timer['SensorValue']);
+							echo "   nur schalten wenn Sensor groesser gleich " . $SensorValue . "\n";
+							if ( $SensVal >= $SensorValue ){ 
+								echo "   --> schalten\n";
+								$SensorStart = True;
+							}else{
+								echo "   --> NICHT schalten\n";
+								$SensorStart = False;
+							}
+						}else{
+							//Sensor Wert Kleiner
+							list($SensorSign, $SensorValue) = explode('<', $timer['SensorValue']);
+							echo "   nur schalten wenn Sensor kleiner gleich " . $SensorValue . "\n";
+							if ( $SensVal <= $SensorValue ){ 
+								echo "   --> schalten\n";
+								$SensorStart = True;
+							}else{ 
+								echo "   --> NICHT schalten\n";
+								$SensorStart = False;
+							}
+						}
+					}
+				}else{
+					$SensorStart = True;
+				}
+				if ((($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) && ($SensorStart)) {
 					$sqla = query( "SELECT iid,name FROM aktor WHERE id = '" . $timer['aktor'] . "'" );
 					$aktor = fetch( $sqla );
 					//echo "start   iid:" . $aktor['iid'];

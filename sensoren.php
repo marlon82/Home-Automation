@@ -86,7 +86,7 @@ while( $room = fetch( $sqlr ) )
 		
 		$sensors[$i] = $sensor['id'];
 		?>
-		<div style="float: left; border-radius:10px; height:400px; width:32%; margin-left:10px; margin-bottom:12px">
+		<div style="float: left; border-radius:10px; height:280px; width:38%; margin-left:10px; margin-bottom:12px">
 			<ul data-role="listview" data-inset="true">
 				<li data-role="list-divider"><? echo $room['name'];?></li>
 		<?
