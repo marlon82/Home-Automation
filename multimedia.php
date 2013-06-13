@@ -112,7 +112,7 @@ while( $multimedia = fetch($sqlDevices)) {
 	
 	if ($multimedia['type'] == 'samsungbluray') {  
 		$Show = True;
-		$IconSource = "./icons/samsung_receiver.jpg";
+		$IconSource = "./icons/samsung_receiver.png";
 	
 		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Lauter</a>\n";
 		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Leiser</a>\n";
@@ -132,7 +132,7 @@ while( $multimedia = fetch($sqlDevices)) {
 	
 	if ($multimedia['type'] == 'enigma2') { 
 		$Show = True;
-		$IconSource = "./icons/dreambox.png";
+		$IconSource = "./icons/dream.png";
 	
 		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Lauter</a>\n";
 		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Leiser</a>\n";
