@@ -185,8 +185,10 @@ $('#aktor').change(function(e) {
 	<div data-role="collapsible"  data-theme="d" data-content-theme="d">
     	<h2>TV Macros</h2>
     	<ul data-role="listview">
-        	<li <?php if($_GET['aktion'] == 'addTVMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addTVMacro">hinzufügen</a></li>
-        	<li <?php if($_GET['aktion'] == 'editTVMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editTVMacro" selected="selected">bearbeiten</a></li>
+        	<li <?php if($_GET['aktion'] == 'addTVMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addTVMacro">Macro hinzufügen</a></li>
+        	<li <?php if($_GET['aktion'] == 'editTVMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editTVMacro" selected="selected">Macro bearbeiten</a></li>
+        	<li <?php if($_GET['aktion'] == 'mapTVMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=mapTVMacro" selected="selected">Mapping hinzufügen</a></li>
+        	<li <?php if($_GET['aktion'] == 'editMapTVMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editMapTVMacro" selected="selected">Mapping editieren</a></li>
     	</ul>
 
 	</div> 
@@ -813,6 +815,132 @@ for( $i = 0; $i <= 64; $i++ )
 									
 		//include('dreambox.php');
 		break;		
+			
+		
+		
+		case 'editMapTVMacro':
+		if(!$_GET['step']){
+		?>
+		<div id="cont">
+		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+  		<ul data-role="listview" data-inset="true" data-theme="d">
+    		<li data-role="list-divider">Devices mit Macro Mapping</li>
+    	<?php
+		
+		$sql = query( "SELECT id,DeviceID FROM devicemacro");
+		while( $device = fetch($sql))
+		{
+			$DevicesWithMacro[] = $device['DeviceID'];
+		}
+		$DevicesWithMacro = array_unique($DevicesWithMacro);
+		$DevicesWithMacro = array_values($DevicesWithMacro);
+		for($i=0;$i<=count($DevicesWithMacro)-1;$i++)
+		{
+			$sql_device = query( "SELECT id,name FROM devices WHERE id ='" . $DevicesWithMacro[$i] . "'");
+			$device = fetch($sql_device)
+			?>																						
+			<li><a href="?page=settings&aktion=editMapTVMacro&step=2&id=<?php echo $DevicesWithMacro[$i]; ?>"><?php echo $device['name'] ?> <span style="float:right;position:absolute;right:40px;"></span></a></li>
+			<?php
+		}
+		?>
+		</ul>
+		</div>
+   
+		<?php
+		}
+		if($_GET['step'] == 2){
+		$sql = query( "SELECT id, DeviceID, MacroID FROM devicemacro WHERE DeviceID = '" . $_GET['id'] . "'" );
+		$Device = fetch( $sql );
+		$DeviceID = $Device['DeviceID'];
+		?>
+		<div id="cont">
+			<form action="index.php?page=settings&aktion=editMapTVMacro&step=3&id=<?php echo $DeviceID ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+			<fieldset>
+						<li data-role="fieldcontain">		
+     						<label for="device" class="select">Device:</label>
+							<select name="device" id="device" data-native-menu="false">
+								<?php
+								?>
+								<option>Bitte wählen...</option>
+								<optgroup label="device">
+								<?php
+    							$sql2 = query( "SELECT id,name,room FROM devices");					
+								while( $row2 = fetch( $sql2 ) )
+								{
+									$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+									$RoomName = fetch($sql);
+									$DevID = $row2['id'];
+									if ($DeviceID == $DevID){
+									?>
+											<option value="<?php echo $row2['id']; ?>" selected="selected"><?php echo $row2['name'] . " (" . $RoomName['name'] . ")"; ?></option>
+    								<?php
+									}else {
+									?>
+											<option value="<?php echo $row2['id']; ?>"><?php echo $row2['name'] . " (" . $RoomName['name'] . ")"; ?></option>
+    								<?php
+									}
+									
+    							}
+								?>
+							</select>	
+						</li>
+					
+						<div data-role="fieldcontain">
+						<fieldset data-role="controlgroup">
+						<legend>Macros:</legend>
+							<?php
+								
+    						$sql_macros = query( "SELECT id,name,value FROM tvmacros");
+							while($macros = fetch($sql_macros))
+							{
+								$sql_DevMac = query( "SELECT MacroID FROM devicemacro WHERE DeviceID='" . $DeviceID . "'");	
+								while ($DevMacros = fetch($sql_DevMac))
+								{
+									if($macros['id'] == $DevMacros['MacroID']){ $checked = "checked";}
+								}
+								?>
+								<input type="checkbox" name="Macros[]" id="<?php echo $macros['id'] ?>"  <? echo $checked ?> value="<?php echo $macros['id'] ?>" class="custom" />
+	   							<label for="<?php echo $macros['id'] ?>"><?php echo $macros['name']; ?></label>
+    							<?php
+    							$checked = "";
+    						}
+    						?>
+						</fieldset>
+						</div>			
+
+				<div class="ui-body ui-body-c">
+				<fieldset class="ui-grid-a">
+					<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
+					<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
+	    		</fieldset>
+				</div>
+			</fieldset>
+			</form>
+		</div>		
+		<?php
+		
+		}
+		if($_GET['step'] == 3){
+			if( $_POST['delete'] ){
+			?>
+			<div id="cont1">
+			<p>Der Raum wurde gelöscht</p>
+			</div>
+			<?php
+			$sql = query( "DELETE FROM rooms WHERE id = '" . $_GET['id'] . "'" );	
+			}
+			if( $_POST['submit'] ){
+			?>
+			<div id="cont1">
+			<p>Der Raum wurde geändert</p>
+			</div>
+			<?php
+			$sql = query( "UPDATE rooms SET name = '" . $_POST['roomname'] . "', icon = 'glyphish-icons/" . $_POST['roomicon'] . "' WHERE id = '" . $_GET['id'] . "'" );	
+			}
+		}
+									
+		//include('dreambox.php');
+		break;		
 
 		
 		
@@ -1391,6 +1519,71 @@ for( $i = 0; $i <= 64; $i++ )
 		<?php
 		}
 		break;
+		
+	
+		case 'mapTVMacro':
+		
+		if( $_POST['submit'] ){
+		$DeviceID = $_POST['device'];
+		$Macros = $_POST['Macros'];
+		for($i=0;$i<=count($Macros)-1;$i++) 
+		{
+			$sql = query( "INSERT INTO devicemacro VALUES( '', '" . $DeviceID . "', '" . $Macros[$i] . "')" );
+		}		
+		
+		?>
+		<div class="boxWhite">
+			<p class="center">Device und Macros wurden verknüft</p>
+		</div>
+																									
+		<?php
+		
+		}else{
+		?>
+		<div id="cont">
+			<form action="index.php?page=settings&aktion=mapTVMacro" method="post" class="ui-body ui-body-c ui-corner-all">
+				<fieldset>
+					<li data-role="fieldcontain">	
+     						<label for="device" class="select">Devices:</label>
+							<select name="device" id="device" data-native-menu="false">
+    							<option>Devices:</option>
+    							<?php
+    							$sql_device = query( "SELECT id,name FROM devices");	
+								while( $devices = fetch( $sql_device ) )
+									{
+										?>
+											<option value="<?php echo $devices['id'] ?>"><?php echo $devices['name'] ?></option>
+										<?php
+    								}
+    							?>
+							</select>
+					</li>
+					
+					<div data-role="fieldcontain">
+					<fieldset data-role="controlgroup">
+					<legend>Macros:</legend>
+								<?php
+    							$sql_macros = query( "SELECT id,name,value FROM tvmacros");
+								while( $Macro = fetch( $sql_macros ) )
+									{
+									?>
+											<input type="checkbox" name="Macros[]" id="Macro-<?php echo $Macro['id']; ?>"  value="<?php echo $Macro['id']; ?>" class="custom" />
+	   										<label for="Macro-<?php echo $Macro['id']; ?>"><?php echo $Macro['name']; ?></label>
+    								<?php
+    								}
+    							?>	
+    							
+					</fieldset>
+					</div>		
+					
+					<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
+				</fieldset>
+			</form>
+		</div>
+		<?php
+		}
+		break;
+		
 		
 		case 'editConfig':
 		if( $_POST['submit'] ){
@@ -2366,19 +2559,16 @@ if($_GET['group'] && $_GET['step'] == 1){
 					<li data-role="fieldcontain">
 						<?
 						$sql_group = query( "SELECT name FROM groups WHERE id='" . $_GET['group'] ."'" );
-						$group = fetch( $sql_group )
+						$group = fetch( $sql_group );
+						$GroupID = $_GET['group'];
 						?>
 						<label for="groupname">Gruppen Name:</label>
      					<input data-clear-btn="true" name="groupname" id="groupname" value="<? echo $group['name']; ?>" type="text">
 					</li>
-					
 
-
-	
-					
 					<div data-role="fieldcontain">
-    <fieldset data-role="controlgroup">
-	   <legend>Aktoren:</legend>
+					<fieldset data-role="controlgroup">
+						<legend>Aktoren:</legend>
 								<?php
     							$sql_aktoren = query( "SELECT id,name,type,room FROM aktor");
     							$i = 0;					
@@ -2393,18 +2583,11 @@ if($_GET['group'] && $_GET['step'] == 1){
 									
 									$sql_groupaktor = query( "SELECT * FROM groupaktor WHERE groupID='" . $_GET['group'] ."' ORDER BY aktorID ASC" );
 									
-									//$groupaktor = fetch( $sql_groupaktor );
 									while( $groupaktor = fetch( $sql_groupaktor ) ){
-										//echo "Gruppe Aktor ID: " . $groupaktor['aktorID']. "<br/>";
-										//echo "aktor ID: " . $aktoren['id']. "<br/>";
 										if($groupaktor['aktorID'] == $aktoren['id']){
-											//echo "checeddkojg<br/>";
 											$checked = "checked";
 										}
 									}
-									
-										
-										
 									
 									?>
 											
@@ -2416,9 +2599,37 @@ if($_GET['group'] && $_GET['step'] == 1){
     								
     							?>	
     							
-						    </fieldset>
-</div>	
-
+					</fieldset>
+					</div>	
+					
+					<div data-role="fieldcontain">
+					<fieldset data-role="controlgroup">
+					<legend>Geräte:</legend>
+								<?php
+    							$sql2 = query( "SELECT id,name,type,room FROM devices");
+								while( $row2 = fetch( $sql2 ) )
+								{
+									$sql_groupdevice = query( "SELECT DeviceID FROM groupaktor WHERE groupID='" . $GroupID ."' ORDER BY aktorID ASC" );
+									while( $groupdevice = fetch( $sql_groupdevice ) ){
+										if($groupdevice['DeviceID'] == $row2['id']){
+											$checked = "checked";
+										}
+									}
+									
+									$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+									$RoomName = fetch($sql);
+									$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
+									?>
+											
+											<input type="checkbox" name="Geraete[]" id="Geraet-<?php echo $row2['id'] ?>" <? echo $checked ?> value="<?php echo $row2['id'] ?>" class="custom" />
+	   										<label for="Geraet-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
+    								<?php
+    								$checked = "";
+								}
+    							?>	
+    							
+					</fieldset>
+					</div>
 
 				
 
