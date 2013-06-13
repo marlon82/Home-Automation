@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 29, 2013 at 04:28 PM
+-- Generation Time: Jun 13, 2013 at 03:46 PM
 -- Server version: 5.5.27
 -- PHP Version: 5.4.7
 
@@ -57,6 +57,19 @@ CREATE TABLE IF NOT EXISTS `config` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `devicemacro`
+--
+
+CREATE TABLE IF NOT EXISTS `devicemacro` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `DeviceID` int(11) DEFAULT NULL,
+  `MacroID` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `devices`
 --
 
@@ -93,19 +106,6 @@ CREATE TABLE IF NOT EXISTS `devicetypes` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `group`
---
-
-CREATE TABLE IF NOT EXISTS `group` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `aktiv` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `groupaktor`
 --
 
@@ -116,7 +116,20 @@ CREATE TABLE IF NOT EXISTS `groupaktor` (
   `groupID` int(11) DEFAULT NULL,
   `aktorValue` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `groups`
+--
+
+CREATE TABLE IF NOT EXISTS `groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -131,6 +144,22 @@ CREATE TABLE IF NOT EXISTS `logsensoren` (
   `zeit` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `logverbrauch`
+--
+
+CREATE TABLE IF NOT EXISTS `logverbrauch` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `iid` int(5) DEFAULT NULL,
+  `kwh` varchar(11) CHARACTER SET utf8 NOT NULL,
+  `typ` varchar(20) CHARACTER SET utf8 NOT NULL,
+  `zeitEin` int(11) DEFAULT NULL,
+  `date` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -186,6 +215,23 @@ CREATE TABLE IF NOT EXISTS `timer` (
   `Friday` varchar(255) DEFAULT NULL,
   `Saturday` varchar(255) DEFAULT NULL,
   `Sunday` varchar(255) DEFAULT NULL,
+  `isGroup` varchar(255) DEFAULT NULL,
+  `suninfo` varchar(11) DEFAULT NULL,
+  `SensorID` int(11) DEFAULT NULL,
+  `SensorValue` varchar(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tvmacros`
+--
+
+CREATE TABLE IF NOT EXISTS `tvmacros` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `value` varchar(4000) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
