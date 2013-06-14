@@ -1610,6 +1610,9 @@ for( $i = 0; $i <= 64; $i++ )
 		$sql1 = query( "INSERT INTO config VALUES( '', 'ShowDayGraph', '" . $_POST['flipDayGraph'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'ShowWeekGraph', '" . $_POST['flipWeekGraph'] . "')");
 		$sql1 = query( "INSERT INTO config VALUES( '', 'ShowMonthGraph', '" . $_POST['flipMonthGraph'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'GlobalEnergy', '" . $_POST['flipGlobalEnergy'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'EnergySensor', '" . $_POST['EnergySensor'] . "')");
+		$sql1 = query( "INSERT INTO config VALUES( '', 'EnergyPrice', '" . $_POST['EnergyPrice'] . "')");
 		
 		}else{		
 		?>
@@ -1706,6 +1709,60 @@ for( $i = 0; $i <= 64; $i++ )
 								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
 							</select>	
 							
+					</li>
+					<li data-role="list-divider">Energie</li>
+					<li data-role="fieldcontain">			
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='EnergyPrice'");
+							$config = fetch( $sql);
+							?>
+							<label for="EnergyPrice">Energie Preis:</label>
+     						<input data-clear-btn="true" name="EnergyPrice" id="EnergyPrice" value="<? echo $config['value']; ?>" type="text">
+					</li>
+					<li data-role="fieldcontain">
+							<?
+							$sql = query( "SELECT value FROM config WHERE options='GlobalEnergy'");
+							$config = fetch( $sql);
+							$YesNo = $config['value'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							<label for="flipGlobalEnergy">Globaler Energiezähler:</label>
+							<select name="flipGlobalEnergy" id="flipGlobalEnergy" data-role="slider">
+								<option value="No" <? echo $ValueNo; ?>>No</option>
+								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
+							</select>								
+					</li>
+					<li data-role="fieldcontain">
+					<label for="EnergySensor" class="select">Energiesensor:</label>
+							<select name="EnergySensor" id="EnergySensor" data-native-menu="false">
+    							<option>Energiesensor</option>
+    							<?php
+								$sql = query( "SELECT value FROM config WHERE options='EnergySensor'");
+								$config = fetch( $sql);
+    							$sql2 = query( "SELECT id,name,hcType FROM sensoren");					
+								while( $row2 = fetch( $sql2 ) )
+									{
+									if (($row2['hcType'] == 'energiezaehler') || ($row2['hcType'] == 'zaehler')){
+										if ($config['value'] == $row2['id']){
+											?>
+												<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['name'] ?></option>
+											<?php										
+										}else{
+											?>
+												<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
+											<?php
+										}
+									}
+    								}
+    							?>
+
+							</select>	
 					</li>
 					<li data-role="list-divider">Footer</li>
 					<li data-role="fieldcontain">

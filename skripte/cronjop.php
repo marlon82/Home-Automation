@@ -208,14 +208,28 @@ function update_sensoren(){
 
 function update_sensoren_min(){
 
-	$sql = query( "SELECT id, iid FROM sensoren");
+	$sql = query( "SELECT id, iid, hcType FROM sensoren");
 																			
 	while( $row = fetch( $sql ) )
 	{
 		extract(ReadXS1(sensor, $row['iid']));	
-		if($utime && $number && $value){																															
-			//$sql1 = query( "INSERT INTO logsensoren VALUES( '', '" . $number . "', '" . $value . "' , '" . $utime . "')" );
+		if($utime && $number && $value){																						
 			$sql1 = query( "UPDATE sensoren SET value = '" . $value . "' WHERE id = '" . $row['iid'] . "'" );		
+		}									
+	}
+}
+
+function update_energie_sensoren_5min(){
+
+	$sql = query( "SELECT id, iid, hcType FROM sensoren");
+																			
+	while( $row = fetch( $sql ) )
+	{
+		if (($row['hcType'] == 'energiezaehler') || ($row['hcType'] == 'zaehler')) {
+			extract(ReadXS1(sensor, $row['iid']));	
+			if($utime && $number && $value){																						
+				$sql1 = query( "INSERT INTO logsensoren VALUES( '', '" . $number . "', '" . $value . "' , '" . $utime . "')" );	
+			}
 		}									
 	}
 }
@@ -335,7 +349,6 @@ while( $row = fetch( $sqlRooms )){
 	GenGraph($yAchse,$xAchse,$filename,$min_wert,$max_wert);
 	}
 }
-
 
 function update_sensoren_graph_month(){
 
@@ -475,6 +488,7 @@ switch( $_GET['func'] ){
 	
 	case '5min':
 	update_geraete();
+	update_energie_sensoren_5min;
 	break;
 
 	case 'timer':
