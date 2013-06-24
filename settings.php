@@ -1502,7 +1502,7 @@ for( $i = 0; $i <= 64; $i++ )
 		}else{
 		?>
 		<div id="cont">
-			<form action="index.php?page=settings&aktion=addRoom" method="post" class="ui-body ui-body-c ui-corner-all">
+			<form action="index.php?page=settings&aktion=addTVMacro" method="post" class="ui-body ui-body-c ui-corner-all">
 				<fieldset>
 					<div data-role="fieldcontain">
 						<label for="macroname">Macro Name:</label>

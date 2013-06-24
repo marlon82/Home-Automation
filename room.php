@@ -407,8 +407,6 @@ while( $row = fetch( $sql ) )
 			$filename = "sensor_graph/" . $row['iname'] . "_day.png";
 			?>
 			<p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>
-				
-		
 		<?php
 		}
 		?>

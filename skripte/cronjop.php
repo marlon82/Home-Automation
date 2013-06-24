@@ -10,7 +10,7 @@ function update_geraete(){
 $defaultIP = "0.0.0.0";
 //$sqlbefehl = "SELECT id,ip,zeitEin FROM `devices` WHERE ip NOT like '" . $defaultIP . "'";
 
-$sqlbefehl = "SELECT id,ip,zeitEin,zeitHeute FROM `devices` WHERE ip NOT like '" . $defaultIP . "' AND ip NOT like ''";
+$sqlbefehl = "SELECT id,ip,zeitEin,zeitHeute,isOnline FROM `devices` WHERE ip NOT like '" . $defaultIP . "' AND ip NOT like ''";
 //SELECT id,ip,zeitEin FROM `devices` WHERE ip NOT like '0.0.0.0' AND ip NOT like ''
 $sql = query($sqlbefehl);
 //var_dump($sql);
@@ -19,13 +19,15 @@ while($row = fetch( $sql )){
 	//var_dump($row);
 	$result = ping($row['ip']);
 	//var_dump($result);
-	if($result){ 
+	if($result){
+		$sqlOnline = query("UPDATE devices SET isOnline = 'Yes' WHERE id = '" . $row['id'] . "'");
 		if($row['zeitEin'] == "0"){
 			$sql1 = query("UPDATE devices SET zeitEin = '" . time() . "' WHERE id = '" . $row['id'] . "'");
 			// update Zeit Ein heute
 			
 			}
 	}else{ 
+		$sqlOnline = query("UPDATE devices SET isOnline = '' WHERE id = '" . $row['id'] . "'");
 		if($row['zeitEin'] != "0"){
 			$zeitHeute = time() - $row['zeitEin'];
 			var_dump($zeitHeute);

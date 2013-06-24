@@ -75,6 +75,10 @@ margin-top:15px;
   height:500px;
 }
 
+div.Buttons {
+ float:left;
+}
+
 div.Multimedia img{
 margin-top:10px;
 float:left;
@@ -88,13 +92,57 @@ float:right;
 }
 </style>
 
+<script>	
+function SamsungKey(Device,Key)
+{
+	//alert("Device:"+Device+"     Key:"+Key);
+	var jqxhr = $.get("setFunctions.php?function=SamsungSendKey&Device=" + Device +"&Key=" + Key, function() {})
+}	
+	
+function OnkyoSendKey(Device,Key)
+{
+	//alert("Device:"+Device+"     Key:"+Key);
+	var jqxhr = $.get("setFunctions.php?function=OnkyoSendKey&Device=" + Device +"&Key=" + Key, function() {})
+}	
+
+function decimalToHex(d, padding) {
+    var hex = Number(d).toString(16);
+    padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
+
+    while (hex.length < padding) {
+        hex = "0" + hex;
+    }
+
+    return hex;
+}
 
 
-<?php
+$(document).ready( function () {
+
+<?
 
 include('functions.php');
 
-$sqlDevices = query( "SELECT id,name,type,ip,room FROM devices WHERE type = 'samsungtv' OR type = 'samsungbluray' OR type = 'onkyoavrec' OR type = 'enigma2'" );
+$sqlDevicesMultimedia = query( "SELECT id,name,type,ip,room FROM devices WHERE type = 'onkyoavrec'" );
+while( $multimedia = fetch($sqlDevicesMultimedia)) {
+		echo "$(\"#slider-Onkyo-Vol-" . $multimedia['id'] . "\").on(\"slidestop\", function( event, ui ) {\n";
+		echo "	var Value = $(\"#slider-Onkyo-Vol-" . $multimedia['id'] . "\").val();\n";
+		echo "	var Device = \"" . $multimedia['ip'] . "\";\n";
+		echo "	var HexValue = decimalToHex(Value);\n";
+		echo "	//alert(\"Device: \" + Device + \"     Value: \" + Value + \"     HexValue: \" + HexValue);\n";
+		echo "	var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1MVL\" + HexValue + \"#\", function() {})\n";
+		echo "});\n";
+}
+
+?>
+
+});	
+
+</script>
+
+<?php
+
+$sqlDevices = query( "SELECT id,name,type,ip,room,isOnline FROM devices WHERE type = 'samsungtv' OR type = 'samsungbluray' OR type = 'onkyoavrec' OR type = 'enigma2'" );
 
 while( $multimedia = fetch($sqlDevices)) {
 	$sqlRoom = query( "SELECT name FROM rooms WHERE id = '" . $multimedia['room'] . "'" );
@@ -104,40 +152,43 @@ while( $multimedia = fetch($sqlDevices)) {
 		$Show = True;
 		$IconSource = "./icons/samsung_tv.png";
 	
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Lauter</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Leiser</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Channel Up</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Cannel Down</a>\n";		
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','VOLUP')\">Lauter</a>\n";
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','VOLDOWN')\">Leiser</a>\n";
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','CHUP')\">Channel Up</a>\n";
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','CHDOWN')\">Cannel Down</a>\n";		
 	}
 	
 	if ($multimedia['type'] == 'samsungbluray') {  
 		$Show = True;
 		$IconSource = "./icons/samsung_receiver.png";
 	
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Lauter</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Leiser</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Channel Up</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Cannel Down</a>\n";	
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','CHUP')\">Channel Up</a>\n";
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','CHDOWN')\">Cannel Down</a>\n";
 	}
 	
 	if ($multimedia['type'] == 'onkyoavrec'){  
 		$Show = True;
 		$IconSource = "./icons/onkyo_av_receiver.png";
-	
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Lauter</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Leiser</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Channel Up</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Cannel Down</a>\n";
+		
+		//Volume Slider
+		$SliderValueHex = Onkyo_get_status($multimedia['ip'],'!1MVLQSTN#');
+		$SliderValueHex = substr($SliderValueHex, 5, 2);
+		$SliderValue = hexdec($SliderValueHex);
+		//echo "SliderValue:" . $SliderValue . "(" . dechex($SliderValue) . ")";
+		$Buttons[] = "<li>\n" . "<label for=\"slider-Onkyo-Vol-" . $multimedia['id'] . "\">Volume</label>" . "<input name=\"slider-Onkyo-Vol-" . $multimedia['id'] . "\" id=\"slider-Onkyo-Vol-" . $multimedia['id'] . "\" data-highlight=\"true\" min=\"0\" max=\"100\" step=\"1\" value=\"" . $SliderValue . "\" type=\"range\">" . "</li>";
+
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"OnkyoSendKey('" . $multimedia['ip'] . "','!1MVLUP#')\">Lauter</a>\n";
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"OnkyoSendKey('" . $multimedia['ip'] . "','!1MVLDOWN#')\">Leiser</a>\n";
 	}
 	
 	if ($multimedia['type'] == 'enigma2') { 
 		$Show = True;
 		$IconSource = "./icons/dream.png";
 	
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Lauter</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Leiser</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Channel Up</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $groups['id'] . "\" data-inline=\"true\" data-mini=\"true\">Cannel Down</a>\n";		
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\">Lauter</a>\n";
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\">Leiser</a>\n";
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\">Channel Up</a>\n";
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\">Cannel Down</a>\n";		
 	}
 	
 	$sql_devMacro = query("SELECT MacroID FROM devicemacro WHERE deviceID ='" . $multimedia['id'] . "'");
@@ -145,22 +196,21 @@ while( $multimedia = fetch($sqlDevices)) {
 	while ($DevMacros = fetch($sql_devMacro)){
 		$sql_Macros = query("SELECT id,name,value FROM tvmacros WHERE id ='" . $DevMacros['MacroID'] . "'");
 		$Macro = fetch($sql_Macros);
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $Macro['id'] . "\" data-inline=\"true\" data-mini=\"true\">". $Macro['name'] . "</a>\n";
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $Macro['id'] . "\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','". $Macro['value'] . "')\">". $Macro['name'] . "</a>\n";
 	}		
 	
 	if ($Show){
 		?>
 		<div class="Multimedia">
-		<img width="200" height="120" src="<? echo $IconSource; ?>" alt="Multimedia">
+		<img width="30%" height="120" src="<? echo $IconSource; ?>" alt="Multimedia">
 
-		<table border="0">
+		<table border="0" width="60%">
 			<tr>
 				<td>Status:</td>
 				<td>
 				<?
-				$DeviceOnline = ping($multimedia['ip']);
 				$isOnline = False;
-				if ($DeviceOnline){
+				if ($multimedia['isOnline']){
 					$isOnline = True;
 				}
 				?>
@@ -184,10 +234,12 @@ while( $multimedia = fetch($sqlDevices)) {
 			</tr>
 		</table>
 		<?
+		echo "<div class=\"Buttons\">";
 		for ($i=0;$i<count($Buttons);$i++){
 			echo $Buttons[$i];
 		}
 		$Buttons="";
+		echo "</div>";
 		?>
 		</div>
 		<?

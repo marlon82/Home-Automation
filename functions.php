@@ -29,6 +29,9 @@ while( $config = fetch( $sql_config ) )
 			case 'XS1Pass':
 				$XS1['pw'] = $config['value'];
 				break;
+			case 'EnergyPrice':
+				$StromPreis = $config['value'];
+				break;
 		}
 	}
 
@@ -464,24 +467,7 @@ function change_group_state($ID)
 function getLocalIp()
 { return gethostbyname(trim(`hostname`)); }
 
-function samsung_send_key($tvip, $SendKey)
-{    
-	//echo $SendKey;
-	
-    //$tvip = "192.168.1.100"; //IP Address of TV
-    $myip = getLocalIp();
-    $mymac = "00-0c-29-3e-b1-4f"; //Used for the access control/validation, but not after that AFAIK
-    $appstring = "iphone..iapp.samsung"; //What the iPhone app reports
-    $tvappstring = "iphone.UD40D6310.iapp.samsung"; //Might need changing to match your TV type
-    $remotename = "Home Automation"; //What gets reported when it asks for permission/also shows in General->Wireless Remote Control menu
-    //echo "Content-type: text/html\n\n";
-    flush();
-    $sock = socket_create(AF_INET, SOCK_STREAM, getprotobyname('tcp'));
-	$result = socket_connect($sock, $tvip, '55000');
-    if( $result === false)
-	   die ("Could not create socket: \n");
-
-    //Normal remote keys
+//Normal remote keys
     //KEY_0
     //KEY_1
     //KEY_2
@@ -544,10 +530,22 @@ function samsung_send_key($tvip, $SendKey)
     //KEY_PROGUP
     //KEY_PROG_UP
 
-	if(!isset($SendKey)){
-		$SendKey = 'CHAN_UP';
-	}
+function samsung_send_key($tvip, $SendKey)
+{    
+	//echo $SendKey;
 	
+    $myip = getLocalIp();
+    $mymac = "00-0c-29-3e-b1-4f"; //Used for the access control/validation, but not after that AFAIK
+    $appstring = "iphone..iapp.samsung"; //What the iPhone app reports
+    $tvappstring = "iphone.UD40D6310.iapp.samsung"; //Might need changing to match your TV type
+    $remotename = "Home Automation"; //What gets reported when it asks for permission/also shows in General->Wireless Remote Control menu
+    //echo "Content-type: text/html\n\n";
+    flush();
+    $sock = socket_create(AF_INET, SOCK_STREAM, getprotobyname('tcp'));
+	$result = socket_connect($sock, $tvip, '55000');
+    if( $result === false)
+	   die ("Could not create socket: \n");
+
 	
 	$ipencoded = base64_encode($myip);
 	$macencoded = base64_encode($mymac);
@@ -568,23 +566,30 @@ function samsung_send_key($tvip, $SendKey)
 
     //Preceding sections all first time only
 
-    if (isset($SendKey)) {
-       //Send remote key
-       $key = "KEY_" . $SendKey;
-       $messagepart3 = chr(0x00) . chr(0x00) . chr(0x00) . chr(strlen(base64_encode($key))) . chr(0x00) . base64_encode($key);
-       $part3 = chr(0x00) . chr(strlen($tvappstring)) . chr(0x00) . $tvappstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
-       socket_write($sock,$part3,strlen($part3));
-       //echo $part3;
-       //echo "\n";
-    } else if (isset($_REQUEST["text"])) {
-       //Send text, e.g. in YouTube app's search, N.B. NOT BBC iPlayer app.
-       $text = $_REQUEST["text"];
-       $messagepart3 = chr(0x01) . chr(0x00) . chr(strlen(base64_encode($text))) . chr(0x00) . base64_encode($text);
-       $part3 = chr(0x01) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
-       socket_write($sock,$part3,strlen($part3));
-	   //echo $part3;
-       //echo "\n";   
-    }
+	$SendKeys = explode(",",$SendKey);
+	foreach($SendKeys as $Send_Key){
+		if (isset($Send_Key)) {
+			//Send remote key
+			$key = "KEY_" . $Send_Key;
+			$messagepart3 = chr(0x00) . chr(0x00) . chr(0x00) . chr(strlen(base64_encode($key))) . chr(0x00) . base64_encode($key);
+			$part3 = chr(0x00) . chr(strlen($tvappstring)) . chr(0x00) . $tvappstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
+			socket_write($sock,$part3,strlen($part3));
+			//echo $part3;
+			//echo "\n";
+			sleep(1);
+		} else if (isset($_REQUEST["text"])) {
+			//Send text, e.g. in YouTube app's search, N.B. NOT BBC iPlayer app.
+			$text = $_REQUEST["text"];
+			$messagepart3 = chr(0x01) . chr(0x00) . chr(strlen(base64_encode($text))) . chr(0x00) . base64_encode($text);
+			$part3 = chr(0x01) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
+			socket_write($sock,$part3,strlen($part3));
+			//echo $part3;
+			//echo "\n";   
+		}
+	}
+	
+	
+    
 
     socket_close($sock);
 
@@ -619,6 +624,43 @@ function Onkyo_send_key($device,$key){
 	}
 }
 
+function Onkyo_get_status($device,$key){
+
+	$port = "60128";
+	$fp = stream_socket_client("tcp://".$device.":".$port, $errno, $errstr, 5);
+
+    if (strpos($key,'#') != FALSE){ // strips "#" from the end of a command (indicating that a response is wanted) 
+        $key = substr($key,0,strpos($key,'#'));}
+      
+	// this is a "fake"-implementation of the command "!1NPRQSTN" (question Network-Preset)
+	// that was somehow "forgotten" in the ISCP-protocol - so we record the switches in $_SESSION["NPR"] (see send_key)
+	// and "fake" this command.
+	if($key=="!1NPRQSTN"){if(isset($_SESSION["NPR"])) return $_SESSION["NPR"]; else {$_SESSION["NPR"]="na"; return "na";}}  //fake-question (was not implemented in protocol)
+	//adjust if "na" ist shown often
+	$timeout=1.2;  //default 1.2 seconds - according to protocol even 0.05 should be enough, but wasn't ;-)
+	// stream_set_timeout($fp, 5);  
+	$start = microtime(1); 
+	$oft=0;
+	Onkyo_send_key($device,$key);
+	do {
+		//   if ($oft==0 OR ($oft==1 AND $nu>timeout/2)) {send_key($key, $fp, $debug);$oft++;} //experimental: try twice as sometimes message won't be received
+		$status = "";
+		$status = fread($fp, 80);
+		$info = stream_get_meta_data($fp);
+		$status = substr($status, strpos($status, "!"));
+		$status = substr($status, 0, strlen($status)-3);
+		$nu=microtime(1)-$start;
+	} while (($nu<$timeout) AND (substr($status,2,3)!=substr($key,2,3))); //loop until timeout OR matching message (receiver sends a lot of unsolicited messages - so we watch for messages of the same type as our sent message)
+	if ($nu>=$timeout OR $info['timed_out']) { //if stopped by timeout put "na" into the session-string (of same type as sent message) and return 
+		$_SESSION[substr($status,2,3)] = "na";
+		return "na"; 
+	}
+	else{ //if matching messages found, put received message into the session-string (of same type as sent message) and return 
+		$_SESSION[substr($status,2,3)] = $status;
+		
+		return $status;
+	} 
+}
 
 function rechneVerbrauch($id,$type,$zeitEin, $zeitAus)
 {
@@ -651,8 +693,6 @@ function rechneVerbrauch($id,$type,$zeitEin, $zeitAus)
 	return $verbrauch;
 }
 
-
-
 function rechneVerbrauchHeute( $id,$type,$zeitHeute )
 {
 	global $verbrauch;
@@ -678,7 +718,6 @@ function rechneVerbrauchHeute( $id,$type,$zeitHeute )
 	return $verbrauch;
 	
 }
-
 
 function verbrauchAktuell()
 {
@@ -717,7 +756,6 @@ function verbrauchAktuell()
 	return $verbrauch;
 		
 }
-
 
 function verbrauchHeute()
 {
@@ -815,7 +853,6 @@ function verbrauchTimestamp( $timestamp )
 	return $verbrauch;
 	
 }
-
 
 function verbrauchGestern()
 {

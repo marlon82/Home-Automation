@@ -89,7 +89,7 @@ while( $multimedia = fetch( $sql_Devices ) )
 <!-- #$-:Please do not edit lines starting with "#$" -->
 <!-- #$VERSION:2.3 -->
 <!-- #$AUTHOR:marlon.scheid -->
-<area shape="circle" coords="43,74,15" alt="Power" href="http://" />
+<area shape="circle" coords="43,74,15" alt="Power" href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','POWEROFF')" />
 <area shape="rect" coords="72,63,108,85" alt="TV"  nohref="nohref" />
 <area shape="rect" coords="26,106,62,132" alt="1"  href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','1')" />
 <area shape="rect" coords="73,106,108,131" alt="2"  href="#" onClick="SamsungKey('<?php echo $multimedia['ip']; ?>','2')" />
@@ -229,33 +229,52 @@ while( $multimedia = fetch( $sql_Devices ) )
 <!-- #$-:Please do not edit lines starting with "#$" -->
 <!-- #$VERSION:2.3 -->
 <!-- #$AUTHOR:marlon.scheid -->
-<area shape="circle" coords="41,40,12" alt="Power" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','KEY_1')" />
-<area shape="circle" coords="168,40,12" alt="Source"  nohref="nohref" />
-<area shape="circle" coords="43,258,10" alt="Top Menu"  nohref="nohref" />
-<area shape="circle" coords="44,322,11" alt="Setup"  nohref="nohref" />
-<area shape="circle" coords="104,358,11" alt="Home"  nohref="nohref" />
-<area shape="circle" coords="164,322,11" alt="Return"  nohref="nohref" />
-<area shape="circle" coords="164,259,10" alt="Menu"  nohref="nohref" />
-<area shape="circle" coords="103,291,19" alt="Enter"  nohref="nohref" />
-<area shape="circle" coords="83,40,11" alt="Zone 2"  nohref="nohref" />
-<area shape="circle" coords="37,383,12" alt="Fast Backward"  nohref="nohref" />
-<area shape="circle" coords="75,386,10" alt="Backward"  nohref="nohref" />
-<area shape="circle" coords="132,385,10" alt="FastForward"  nohref="nohref" />
-<area shape="circle" coords="171,383,13" alt="Chapter forward"  nohref="nohref" />
-<area shape="circle" coords="55,470,12" alt="1"  nohref="nohref" />
-<area shape="circle" coords="104,472,11" alt="2"  nohref="nohref" />
-<area shape="circle" coords="154,470,11" alt="3"  nohref="nohref" />
-<area shape="circle" coords="55,501,12" alt="4"  nohref="nohref" />
-<area shape="circle" coords="104,502,11" alt="5"  nohref="nohref" />
-<area shape="circle" coords="154,501,12" alt="6"  nohref="nohref" />
-<area shape="circle" coords="55,531,12" alt="7"  nohref="nohref" />
-<area shape="circle" coords="104,532,12" alt="8"  nohref="nohref" />
-<area shape="circle" coords="154,531,11" alt="9"  nohref="nohref" />
-<area shape="circle" coords="55,562,12" alt="Dimmer"  nohref="nohref" />
-<area shape="circle" coords="105,562,12" alt="0"  nohref="nohref" />
-<area shape="circle" coords="154,561,12" alt="Sleep"  nohref="nohref" />
-<area shape="rect" coords="155,172,182,202" alt="Volume Up"  nohref="nohref" />
-<area shape="rect" coords="154,202,182,232" alt="Volume Down"  nohref="nohref" />
+<area shape="circle" coords="41,40,12" alt="Power" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')" />
+<area shape="circle" coords="168,40,12" alt="Source"   href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="43,258,10" alt="Top Menu" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="44,322,11" alt="Setup" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1OSDSETUP')"/>
+<area shape="circle" coords="104,358,11" alt="Home" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1OSDHOME')"/>
+<area shape="circle" coords="164,322,11" alt="Return" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1OSDEXIT')"/>
+<area shape="circle" coords="164,259,10" alt="Menu" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1OSDMENU')"/>
+<area shape="circle" coords="103,291,19" alt="Enter" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1OSDENTER')"/>
+<area shape="circle" coords="83,40,11" alt="Zone 2" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="37,383,12" alt="Fast Backward" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="75,386,10" alt="Backward" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="132,385,10" alt="FastForward" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="171,383,13" alt="Chapter forward" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="55,470,12" alt="1" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="104,472,11" alt="2" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="154,470,11" alt="3" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="55,501,12" alt="4" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="104,502,11" alt="5" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="154,501,12" alt="6" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="55,531,12" alt="7" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="104,532,12" alt="8" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="154,531,11" alt="9" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="55,562,12" alt="Dimmer" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="105,562,12" alt="0" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="circle" coords="154,561,12" alt="Sleep" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="rect" coords="155,172,182,202" alt="Volume Up" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1MVLUP#')"/>
+<area shape="rect" coords="154,202,182,232" alt="Volume Down" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1MVLDOWN#')"/>
+<area shape="poly" coords="65,260,83,273,80,281,79,286,79,292,82,300,83,307,65,320,57,305,55,288,60,268" alt="Left" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1OSDLEFT#')"/>
+<area shape="poly" coords="76,252,88,265,95,264,100,261,110,264,116,269,135,255,123,245,107,243,96,242,82,247,82,248" alt="Up" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1OSDUP#')"/>
+<area shape="poly" coords="127,276,139,261,149,274,152,294,148,312,143,321,127,308,130,296,131,287" alt="Rigth" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1OSDRIGHT#')"/>
+<area shape="poly" coords="86,312,96,315,104,317,110,316,117,312,134,326,126,333,109,337,96,338,86,336,73,327" alt="Down" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1OSDDOWN#')"/>
+<area shape="rect" coords="26,64,56,79" alt="bddvd" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1SLI10#')"/>
+<area shape="rect" coords="69,62,98,80" alt="cblsat" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1SLI01#')"/>
+<area shape="rect" coords="112,64,141,81" alt="game" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1SLI02#')"/>
+<area shape="rect" coords="155,64,182,80" alt="pc" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1SLI05#')"/>
+<area shape="rect" coords="70,90,98,108" alt="aux" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1SLI03#')"/>
+<area shape="rect" coords="111,91,140,107" alt="am" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1SLI25#')"/>
+<area shape="rect" coords="154,91,181,108" alt="fm" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1SLI24#')"/>
+<area shape="rect" coords="70,118,98,133" alt="tvcd" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1SLI23#')"/>
+<area shape="rect" coords="112,118,140,134" alt="net" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1SLI2B#')"/>
+<area shape="rect" coords="154,119,182,135" alt="usb" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1SLI2C#')"/>
+<area shape="rect" coords="154,147,182,162" alt="muting" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1AMTTG#')"/>
+<area shape="rect" coords="112,146,140,161" alt="display" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','!1DIFTG#')"/>
+<area shape="rect" coords="28,92,57,107" alt="modecustom" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="rect" coords="27,118,56,135" alt="modereceiver" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
+<area shape="rect" coords="27,145,55,162" alt="modetv" href="#" onClick="OnkyoKey('<?php echo $multimedia['ip']; ?>','')"/>
 </map>
 			<a href="#demo-links" data-rel="close" data-role="button" data-theme="c" data-icon="delete" data-inline="true">Close panel</a>
 		</div><!-- /content wrapper for padding -->
