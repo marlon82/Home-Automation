@@ -576,7 +576,7 @@ function samsung_send_key($tvip, $SendKey)
 			socket_write($sock,$part3,strlen($part3));
 			//echo $part3;
 			//echo "\n";
-			sleep(1);
+			usleep(200000);
 		} else if (isset($_REQUEST["text"])) {
 			//Send text, e.g. in YouTube app's search, N.B. NOT BBC iPlayer app.
 			$text = $_REQUEST["text"];
@@ -587,6 +587,7 @@ function samsung_send_key($tvip, $SendKey)
 			//echo "\n";   
 		}
 	}
+
 	
 	
     
@@ -601,14 +602,11 @@ function Onkyo_send_key($device,$key){
 	$fp = stream_socket_client("tcp://".$device.":".$port, $errno, $errstr, 5);
 	if (!$fp) {
 		if($errno == "110" OR $errno == "113") {
-			echo "<html><center><div style='color:red; font-size:15px; font-family:Verdana,sans-serif;'>
-			No receiver found at $ip:$port<br>
-           Please check if IP and Port settings are correct and the device is switched on!<p style='color:#888;font-size:12px;'>
-           To switch on the device via Ethernet, you have to set 'Setup/Network Setup/NetworkControl' to ON<br>
-           (Remember that this setting uses &sim;20 W Power at Standby instead of &sim;2 W with NetworkControl OFF)</p></div></center></html>\n";} 
+		
+		}
 		else{ 
-			echo "<html><center><div style='color:red; font-size:15px; font-family:Verdana,sans-serif;'>
-				Error connecting to $device:$port<br>$errstr ($errno)</div></center></html>\n";}
+			
+		}
 	}
 	else
 	{

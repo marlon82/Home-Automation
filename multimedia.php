@@ -142,7 +142,7 @@ while( $multimedia = fetch($sqlDevicesMultimedia)) {
 
 <?php
 
-$sqlDevices = query( "SELECT id,name,type,ip,room,isOnline FROM devices WHERE type = 'samsungtv' OR type = 'samsungbluray' OR type = 'onkyoavrec' OR type = 'enigma2'" );
+$sqlDevices = query( "SELECT id,name,type,ip,room,zeitEin FROM devices WHERE type = 'samsungtv' OR type = 'samsungbluray' OR type = 'onkyoavrec' OR type = 'enigma2'" );
 
 while( $multimedia = fetch($sqlDevices)) {
 	$sqlRoom = query( "SELECT name FROM rooms WHERE id = '" . $multimedia['room'] . "'" );
@@ -151,19 +151,11 @@ while( $multimedia = fetch($sqlDevices)) {
 	if ($multimedia['type'] == 'samsungtv') { 
 		$Show = True;
 		$IconSource = "./icons/samsung_tv.png";
-	
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','VOLUP')\">Lauter</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','VOLDOWN')\">Leiser</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','CHUP')\">Channel Up</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','CHDOWN')\">Cannel Down</a>\n";		
 	}
 	
 	if ($multimedia['type'] == 'samsungbluray') {  
 		$Show = True;
 		$IconSource = "./icons/samsung_receiver.png";
-	
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','CHUP')\">Channel Up</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','CHDOWN')\">Cannel Down</a>\n";
 	}
 	
 	if ($multimedia['type'] == 'onkyoavrec'){  
@@ -171,32 +163,37 @@ while( $multimedia = fetch($sqlDevices)) {
 		$IconSource = "./icons/onkyo_av_receiver.png";
 		
 		//Volume Slider
-		$SliderValueHex = Onkyo_get_status($multimedia['ip'],'!1MVLQSTN#');
-		$SliderValueHex = substr($SliderValueHex, 5, 2);
+		if ($multimedia['zeitEin'] != '0'){
+			$SliderValueHex = Onkyo_get_status($multimedia['ip'],'!1MVLQSTN#');
+			$SliderValueHex = substr($SliderValueHex, 5, 2);
+		}else{
+			$SliderValueHex = '00';
+		}		
 		$SliderValue = hexdec($SliderValueHex);
-		//echo "SliderValue:" . $SliderValue . "(" . dechex($SliderValue) . ")";
+		
 		$Buttons[] = "<li>\n" . "<label for=\"slider-Onkyo-Vol-" . $multimedia['id'] . "\">Volume</label>" . "<input name=\"slider-Onkyo-Vol-" . $multimedia['id'] . "\" id=\"slider-Onkyo-Vol-" . $multimedia['id'] . "\" data-highlight=\"true\" min=\"0\" max=\"100\" step=\"1\" value=\"" . $SliderValue . "\" type=\"range\">" . "</li>";
-
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"OnkyoSendKey('" . $multimedia['ip'] . "','!1MVLUP#')\">Lauter</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\" onClick=\"OnkyoSendKey('" . $multimedia['ip'] . "','!1MVLDOWN#')\">Leiser</a>\n";
 	}
 	
 	if ($multimedia['type'] == 'enigma2') { 
 		$Show = True;
 		$IconSource = "./icons/dream.png";
-	
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\">Lauter</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\">Leiser</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\">Channel Up</a>\n";
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button\" data-inline=\"true\" data-mini=\"true\">Cannel Down</a>\n";		
 	}
 	
 	$sql_devMacro = query("SELECT MacroID FROM devicemacro WHERE deviceID ='" . $multimedia['id'] . "'");
 		
 	while ($DevMacros = fetch($sql_devMacro)){
-		$sql_Macros = query("SELECT id,name,value FROM tvmacros WHERE id ='" . $DevMacros['MacroID'] . "'");
+		$sql_Macros = query("SELECT id,name,value FROM tvmacros WHERE id ='" . $DevMacros['MacroID'] . "' ORDER BY name ASC");
 		$Macro = fetch($sql_Macros);
-		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $Macro['id'] . "\" data-inline=\"true\" data-mini=\"true\" onClick=\"SamsungKey('" . $multimedia['ip'] . "','". $Macro['value'] . "')\">". $Macro['name'] . "</a>\n";
+		if ($multimedia['type'] == 'samsungtv') {
+		$devLink = 'SamsungKey';
+		}elseif ($multimedia['type'] == 'samsungbluray') {
+		$devLink = 'SamsungKey';
+		}elseif ($multimedia['type'] == 'onkyoavrec'){ 
+		$devLink = 'OnkyoSendKey';
+		}elseif ($multimedia['type'] == 'enigma2') {
+		$devLink = 'unknown';
+		}
+		$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $Macro['id'] . "\" data-inline=\"true\" data-mini=\"true\" onClick=\"" . $devLink . "('" . $multimedia['ip'] . "','". $Macro['value'] . "')\">". $Macro['name'] . "</a>\n";
 	}		
 	
 	if ($Show){
@@ -210,7 +207,7 @@ while( $multimedia = fetch($sqlDevices)) {
 				<td>
 				<?
 				$isOnline = False;
-				if ($multimedia['isOnline']){
+				if ($multimedia['zeitEin'] != '0'){
 					$isOnline = True;
 				}
 				?>

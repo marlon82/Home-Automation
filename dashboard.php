@@ -23,7 +23,9 @@ float:left;
 .point{
 float:left;
 }
-
+div.Buttons {
+ float:left;
+}
 #container{
 position:absolute;
 float:right;
@@ -317,6 +319,8 @@ while( $multimedia = fetch( $sql_Devices ) )
 
 <?
 //SensorPanels
+
+echo "\n\n\n";
 $sql_sensors = query( "SELECT id,name,iname,hcType,value,room FROM sensoren" );
 
 while( $sensors = fetch( $sql_sensors ) )
@@ -352,6 +356,53 @@ while( $sensors = fetch( $sql_sensors ) )
 	?>
 </div>
 <?
+}
+
+//ViruelleBefehle PopUp
+
+echo "\n\n\n";
+$sql = query( "SELECT id,DeviceID FROM devicemacro");
+while( $device = fetch($sql))
+{
+		$DevicesWithMacro[] = $device['DeviceID'];
+}
+$DevicesWithMacro = array_unique($DevicesWithMacro);
+$DevicesWithMacro = array_values($DevicesWithMacro);
+for($i=0;$i<=count($DevicesWithMacro)-1;$i++)
+{
+	$sql_device = query( "SELECT id,name,type,ip,room,zeitEin FROM devices WHERE id ='" . $DevicesWithMacro[$i] . "'");
+	$device = fetch($sql_device)
+
+	?>
+	<div data-role="popup" id="popup-device-<? echo $device['id'] ?>" class="ui-content" data-theme="d">
+		<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		<?
+		$sql_devMacro = query("SELECT MacroID FROM devicemacro WHERE deviceID ='" . $device['id'] . "'");
+	
+		while ($DevMacros = fetch($sql_devMacro)){
+			$sql_Macros = query("SELECT id,name,value FROM tvmacros WHERE id ='" . $DevMacros['MacroID'] . "'");
+			$Macro = fetch($sql_Macros);
+			
+			if ($device['type'] == 'samsungtv') {
+			$devLink = 'SamsungKey';
+			}elseif ($device['type'] == 'samsungbluray') {
+			$devLink = 'SamsungKey';
+			}elseif ($device['type'] == 'onkyoavrec'){ 
+			$devLink = 'OnkyoKey';
+			}elseif ($device['type'] == 'enigma2') {
+			$devLink = 'unknown';
+			}
+			$Buttons[] = "<a href=\"#\" data-role=\"button\" id=\"button-" . $Macro['id'] . "\" data-inline=\"true\" data-mini=\"true\" onClick=\"" . $devLink . "('" . $device['ip'] . "','". $Macro['value'] . "')\">". $Macro['name'] . "</a>\n";
+		}		
+		echo "<div class=\"Buttons\">";
+		for ($x=0;$x<count($Buttons);$x++){
+			echo $Buttons[$x];
+		}
+		$Buttons="";
+		echo "</div>\n";
+		?>
+	</div>
+	<?
 }
 ?>
 
@@ -404,12 +455,25 @@ while( $sensors = fetch( $sql_sensors ) )
     
     <div style="float: left; border-radius:10px; height:260px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
-			<li data-role="list-divider">Virtuelle Befehle DEMO</li>
-			<li><a href="index.html">TV</a></li> 
-			<li><a href="index.html">DVD</a></li>
-			<li><a href="index.html">HTPC</a></li>
-			<li><a href="index.html">TV/USB</a></li>
-			<li><a href="index.html">TV/Dreambox</a></li>
+			<li data-role="list-divider">Virtuelle Befehle</li>	
+			<?
+			
+			$sql = query( "SELECT id,DeviceID FROM devicemacro");
+			while( $device = fetch($sql))
+			{
+				$DevicesWithMacro[] = $device['DeviceID'];
+			}
+			$DevicesWithMacro = array_unique($DevicesWithMacro);
+			$DevicesWithMacro = array_values($DevicesWithMacro);
+			for($i=0;$i<=count($DevicesWithMacro)-1;$i++)
+			{
+				$sql_device = query( "SELECT id,name,type,ip,room,zeitEin FROM devices WHERE id ='" . $DevicesWithMacro[$i] . "'");
+				$device = fetch($sql_device)
+				?>
+				<li><a href="#popup-device-<? echo $device['id'] ?>"  data-inline="true" data-rel="popup" data-position-to="window"><? echo $device['name']; ?></a></li>
+				<?
+			}
+			?>
 		</ul>		
     </div>
 

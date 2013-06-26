@@ -183,12 +183,12 @@ $('#aktor').change(function(e) {
 	</div> 
 
 	<div data-role="collapsible"  data-theme="d" data-content-theme="d">
-    	<h2>TV Macros</h2>
+    	<h2>Macros</h2>
     	<ul data-role="listview">
-        	<li <?php if($_GET['aktion'] == 'addTVMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addTVMacro">Macro hinzufügen</a></li>
-        	<li <?php if($_GET['aktion'] == 'editTVMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editTVMacro" selected="selected">Macro bearbeiten</a></li>
-        	<li <?php if($_GET['aktion'] == 'mapTVMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=mapTVMacro" selected="selected">Mapping hinzufügen</a></li>
-        	<li <?php if($_GET['aktion'] == 'editMapTVMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editMapTVMacro" selected="selected">Mapping editieren</a></li>
+        	<li <?php if($_GET['aktion'] == 'addMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addMacro">Macro hinzufügen</a></li>
+        	<li <?php if($_GET['aktion'] == 'editMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editMacro" selected="selected">Macro bearbeiten</a></li>
+        	<li <?php if($_GET['aktion'] == 'mapMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=mapMacro" selected="selected">Mapping hinzufügen</a></li>
+        	<li <?php if($_GET['aktion'] == 'editmapMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editmapMacro" selected="selected">Mapping editieren</a></li>
     	</ul>
 
 	</div> 
@@ -818,7 +818,7 @@ for( $i = 0; $i <= 64; $i++ )
 			
 		
 		
-		case 'editMapTVMacro':
+		case 'editmapMacro':
 		if(!$_GET['step']){
 		?>
 		<div id="cont">
@@ -839,7 +839,7 @@ for( $i = 0; $i <= 64; $i++ )
 			$sql_device = query( "SELECT id,name FROM devices WHERE id ='" . $DevicesWithMacro[$i] . "'");
 			$device = fetch($sql_device)
 			?>																						
-			<li><a href="?page=settings&aktion=editMapTVMacro&step=2&id=<?php echo $DevicesWithMacro[$i]; ?>"><?php echo $device['name'] ?> <span style="float:right;position:absolute;right:40px;"></span></a></li>
+			<li><a href="?page=settings&aktion=editmapMacro&step=2&id=<?php echo $DevicesWithMacro[$i]; ?>"><?php echo $device['name'] ?> <span style="float:right;position:absolute;right:40px;"></span></a></li>
 			<?php
 		}
 		?>
@@ -854,7 +854,7 @@ for( $i = 0; $i <= 64; $i++ )
 		$DeviceID = $Device['DeviceID'];
 		?>
 		<div id="cont">
-			<form action="index.php?page=settings&aktion=editMapTVMacro&step=3&id=<?php echo $DeviceID ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+			<form action="index.php?page=settings&aktion=editmapMacro&step=3&id=<?php echo $DeviceID ?>" method="post" class="ui-body ui-body-c ui-corner-all">
 			<fieldset>
 						<li data-role="fieldcontain">		
      						<label for="device" class="select">Device:</label>
@@ -922,20 +922,40 @@ for( $i = 0; $i <= 64; $i++ )
 		}
 		if($_GET['step'] == 3){
 			if( $_POST['delete'] ){
+			$sql_mappings = query("SELECT id,DeviceId FROM devicemacro ORDER BY id DESC");
+			while($mappings = fetch($sql_mappings))
+			{
+				if ($mappings['DeviceId'] == $_POST['device']){
+					$sql = query( "DELETE FROM devicemacro WHERE id = '" . $mappings['id'] . "'" );
+				}
+			}
+				
 			?>
 			<div id="cont1">
-			<p>Der Raum wurde gelöscht</p>
+			<p>Das Mapping wurde gelöscht</p>
 			</div>
 			<?php
-			$sql = query( "DELETE FROM rooms WHERE id = '" . $_GET['id'] . "'" );	
 			}
 			if( $_POST['submit'] ){
-			?>
-			<div id="cont1">
-			<p>Der Raum wurde geändert</p>
-			</div>
-			<?php
-			$sql = query( "UPDATE rooms SET name = '" . $_POST['roomname'] . "', icon = 'glyphish-icons/" . $_POST['roomicon'] . "' WHERE id = '" . $_GET['id'] . "'" );	
+				$sql_mappings = query("SELECT id,DeviceId FROM devicemacro ORDER BY id DESC");
+				while($mappings = fetch($sql_mappings))
+				{
+					if ($mappings['DeviceId'] == $_POST['device']){
+						$sql = query( "DELETE FROM devicemacro WHERE id = '" . $mappings['id'] . "'" );
+					}
+				}
+				$DeviceID = $_POST['device'];
+				$Macros = $_POST['Macros'];
+				for($i=0;$i<=count($Macros)-1;$i++) 
+				{
+					$sql = query( "INSERT INTO devicemacro VALUES( '', '" . $DeviceID . "', '" . $Macros[$i] . "')" );
+				}		
+				
+				?>
+				<div id="cont1">
+				<p>Das Mapping wurde geändert</p>
+				</div>
+				<?
 			}
 		}
 									
@@ -945,20 +965,20 @@ for( $i = 0; $i <= 64; $i++ )
 		
 		
 		
-		case 'editTVMacro':
+		case 'editMacro':
 		if(!$_GET['step']){
 		?>
 		<div id="cont">
 		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true" data-theme="d">
-    		<li data-role="list-divider">Räume</li>
+    		<li data-role="list-divider">Macros</li>
     	<?php
 		$sql = query( "SELECT id,name,value FROM tvmacros");
 																			
 									while( $macro = fetch( $sql ) )
 									{
 										?>																						
-										<li><a href="?page=settings&aktion=editTVMacro&step=2&id=<?php echo $macro['id']; ?>"><?php echo $macro['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $macro['value'] . ")"; ?></span></a></li>																			
+										<li><a href="?page=settings&aktion=editMacro&step=2&id=<?php echo $macro['id']; ?>"><?php echo $macro['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $macro['value'] . ")"; ?></span></a></li>																			
 										<?php
 									}
 									?>
@@ -972,10 +992,10 @@ for( $i = 0; $i <= 64; $i++ )
 		$macro = fetch( $sql );
 		?>
 		<div id="cont">
-			<form action="index.php?page=settings&aktion=editTVMacro&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+			<form action="index.php?page=settings&aktion=editMacro&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
 				<fieldset>
 					<div data-role="fieldcontain">
-					    <label for="macroname">TV Macro Name:</label>
+					    <label for="macroname">Macro Name:</label>
      					<input data-clear-btn="true" name="macroname" id="macroname" value="<?php echo $macro['name']; ?>" type="text">					
 					</div>
 					<div data-role="fieldcontain">
@@ -998,7 +1018,7 @@ for( $i = 0; $i <= 64; $i++ )
 			if( $_POST['delete'] ){
 			?>
 			<div id="cont1">
-			<p>Das TV Macro wurde gelöscht</p>
+			<p>Das Macro wurde gelöscht</p>
 			</div>
 			<?php
 			$sql = query( "DELETE FROM tvmacros WHERE id = '" . $_GET['id'] . "'" );	
@@ -1006,7 +1026,7 @@ for( $i = 0; $i <= 64; $i++ )
 			if( $_POST['submit'] ){
 			?>
 			<div id="cont1">
-			<p>Das TV Macro wurde geändert</p>
+			<p>Das Macro wurde geändert</p>
 			</div>
 			<?php
 			$sql = query( "UPDATE tvmacros SET name = '" . $_POST['macroname'] . "', value = '" . $_POST['macrovalue'] . "'" );	
@@ -1489,12 +1509,12 @@ for( $i = 0; $i <= 64; $i++ )
 		}
 		break;	
 	
-		case 'addTVMacro':
+		case 'addMacro':
 		
 		if( $_POST['submit'] ){
 		?>
 		<div class="boxWhite">
-			<p class="center">TV Macro wurde hinzugefügt</p>
+			<p class="center">Macro wurde hinzugefügt</p>
 		</div>
 																									
 		<?php	
@@ -1502,7 +1522,7 @@ for( $i = 0; $i <= 64; $i++ )
 		}else{
 		?>
 		<div id="cont">
-			<form action="index.php?page=settings&aktion=addTVMacro" method="post" class="ui-body ui-body-c ui-corner-all">
+			<form action="index.php?page=settings&aktion=addMacro" method="post" class="ui-body ui-body-c ui-corner-all">
 				<fieldset>
 					<div data-role="fieldcontain">
 						<label for="macroname">Macro Name:</label>
@@ -1521,7 +1541,7 @@ for( $i = 0; $i <= 64; $i++ )
 		break;
 		
 	
-		case 'mapTVMacro':
+		case 'mapMacro':
 		
 		if( $_POST['submit'] ){
 		$DeviceID = $_POST['device'];
@@ -1541,7 +1561,7 @@ for( $i = 0; $i <= 64; $i++ )
 		}else{
 		?>
 		<div id="cont">
-			<form action="index.php?page=settings&aktion=mapTVMacro" method="post" class="ui-body ui-body-c ui-corner-all">
+			<form action="index.php?page=settings&aktion=mapMacro" method="post" class="ui-body ui-body-c ui-corner-all">
 				<fieldset>
 					<li data-role="fieldcontain">	
      						<label for="device" class="select">Devices:</label>
