@@ -171,8 +171,8 @@ float:left;
 #container{
 position:absolute;
 float:right;
-right:10px;
-top:15px;
+right:110px;
+top:12px;
 height:20px;
 
  }

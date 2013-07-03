@@ -201,9 +201,10 @@ while( $groups = fetch( $sql_groups ) )
   <tr>
     <td><b>Device</b></td>
     <td><b>Raum</b></td>
+    <td><b>Macro</b></td>
   </tr>
 	<?
-	$sql_groupaktor2 = query( "SELECT deviceID FROM groupaktor WHERE groupID='" . $groups['id'] ."'" );
+	$sql_groupaktor2 = query( "SELECT deviceID,macroID FROM groupaktor WHERE groupID='" . $groups['id'] ."'" );
 	
 	while( $groupaktor2 = fetch( $sql_groupaktor2 ) ){
 		if ($groupaktor2['deviceID'] != 0) {
@@ -212,10 +213,14 @@ while( $groups = fetch( $sql_groups ) )
 		
 		$sql_raum = query( "SELECT id,name FROM rooms where id='" . $device['room'] ."'" );
 		$raum = fetch( $sql_raum );
+		
+		$sql_macro = query( "SELECT id,name,value FROM tvmacros where id='" . $groupaktor2['macroID'] ."'" );
+		$macro = fetch( $sql_macro );
 		?>
 		<tr>
 		<td style="padding: 5px"><? echo $device['name']; ?></td>
 		<td style="padding: 5px"><? echo $raum['name']; ?></td>
+		<td style="padding: 5px"><? echo $macro['name']; ?></td>
 		</tr>
 <?  	}
 	} ?>
