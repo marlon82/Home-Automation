@@ -2372,6 +2372,7 @@ for( $i = 0; $i <= 64; $i++ )
 				$sql = query( "INSERT INTO groups VALUES( '', '" . $_POST['groupname'] . "', '" . $_POST['groupstatus'] . "')" );
 				$groupID = query("SELECT id FROM groups ORDER BY id DESC LIMIT 0,1 "); 
 				$row = mysql_fetch_assoc($groupID);
+				$GrID = $row['id'];
 				//var_dump($row);
 
 				//aktoren	
@@ -2381,7 +2382,7 @@ for( $i = 0; $i <= 64; $i++ )
 					if ($key[0] == 'Aktor'){
 						$befehl= "INSERT INTO groupaktor VALUES( '', '" . $key[1] . "',
 																		 '0', 
-																		 '" . $GroupID . "',
+																		 '" . $GrID . "',
 																		 '" . $value . "',
 																		 '')";
 						$sql = query( $befehl);	
@@ -2395,7 +2396,7 @@ for( $i = 0; $i <= 64; $i++ )
 					$dev = explode("-", $macros[$x]);
 					$befehl= "INSERT INTO groupaktor VALUES( '', '',
 																	 '" . $dev[0] . "', 
-																	 '" . $GroupID . "',
+																	 '" . $GrID . "',
 																	 '',
 																	 '" . $dev[1]  . "')";
 					$sql = query( $befehl);	
@@ -2766,7 +2767,6 @@ case 'editGroup':
 									$sql2 = query( "SELECT id,name,type,room FROM devices");
 									while( $row2 = fetch( $sql2 ) )
 									{
-										echo $GroupID;
 										$sql_groupdevice = query( "SELECT deviceID FROM groupaktor WHERE groupID='" . $GroupID ."'" );
 										while( $groupdevice = fetch( $sql_groupdevice ) ){
 											if($groupdevice['deviceID'] == $row2['id']){

@@ -143,6 +143,7 @@
 		<li class="sec"></li>
 	</div>
 	<h1>RaspberryPi</h1>
+	<a href="javascript:history.go(0)" data-icon="refresh">refresh</a>
 </div><!-- /header -->
 
 
