@@ -2349,17 +2349,9 @@ for( $i = 0; $i <= 64; $i++ )
 								</fieldset>
 				</form>
 				</div>
-							   
-								
-
-
-
-
-							
+							   							
 				<?php
 
-							
-								
 			}
 
 			if($_GET['step'] == "3"){	
@@ -2369,7 +2361,7 @@ for( $i = 0; $i <= 64; $i++ )
 				$macros = $_POST['Macros'];
 				//var_dump($macros);
 				
-				$GroupID = $_GET['group'];
+				//$GroupID = $_GET['group'];
 				
 				$delete = array_pop($aktorenValues);
 				$delete = array_pop($aktorenValues);
