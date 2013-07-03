@@ -2216,540 +2216,626 @@ for( $i = 0; $i <= 64; $i++ )
 		if( $_POST['submit'] ){
 		
 			if($_GET['step'] == "2"){
-			$groupname = $_POST['groupname'];
-			$groupstatus = $_POST['flipAktiv'];
-			$aktoren = $_POST['Aktoren'];
-			$devices = $_POST['Geraete'];
-			//var_dump($_POST['Aktoren']);
+				$groupname = $_POST['groupname'];
+				$groupstatus = $_POST['flipAktiv'];
+				$aktoren = $_POST['Aktoren'];
+				$devices = $_POST['Geraete'];
+				//var_dump($_POST['Aktoren']);
 			
-$typ = array("schalter","rolladen","dimmer"); 
-$typid = array("1","2","3"); 
-//$aktoren = array("1","2","3","4");
-$initial = true;
-$lastGroup = false;
-?>
-<div id="cont">
-<form action="index.php?page=settings&aktion=addGroup&step=3" method="post" class="ui-body ui-body-c ui-corner-all">
-<fieldset>	
+				$typ = array("schalter","rolladen","dimmer");
+				$typDev = array("samsungtv","samsungbluray","onkyoavrec","enigma2"); 
+				$typid = array("1","2","3"); 
+				$typidDev = array("19","20","21","22"); 
+				$initial = true;
+				$lastGroup = false;
+				?>
+				<div id="cont">
+				<form action="index.php?page=settings&aktion=addGroup&step=3" method="post" class="ui-body ui-body-c ui-corner-all">
+				<fieldset>	
 
-<?php
-for($x = 0; $x < count($typ); $x++) {
-	for($i = 0; $i < count($aktoren); $i++) { 
-  		if($i == 0){
-			?>
-			
-			<div id="cont-inner">
-  				<ul data-role="listview" data-inset="true" data-theme="d">
-    			<li data-role="list-divider"><?php echo $typ[$x]; ?></li>
-    			
-    	<?php 
-    	}
-		
-		$sql = query( "SELECT name FROM aktor WHERE id = '" . $aktoren[$i] . "' AND type = '" . $typid[$x] . "'" );	
-		if ( mysql_num_rows($sql) == 0 ) {
-  			// nichts gefunden
-		} else {
-  			$row = mysql_fetch_assoc($sql);
-  			?>
-    		<li>
-    		<?php
-			$sqltype = query( "SELECT id,devtype,devtypename FROM deviceTypes WHERE id = '" . $typid[$x] . "'" );
-			$devtype = fetch( $sqltype );
-    		if($devtype['devtypename'] == "Dimmer"){
-    		?>
-    			<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
-    			<input name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-highlight="true" min="0" max="100" step="5" value="0" type="range">
-    		<?php
-    		}
-    		if($devtype['devtypename'] == "Schalter"){
-    		?>
-    			<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
-    			<select name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-role="slider">
-        			<option value="0">Aus</option>
-        			<option value="100">An</option>
-    			</select>
-    		<?php
-    		}
-    		if($devtype['devtypename'] == "Rolladen"){
-    		?>
-    			<fieldset data-role="controlgroup" data-type="horizontal">
-				<legend><?php echo $row['name'] ?></legend>
-					<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-h-<?php echo $aktoren[$i] ?>" value="100">
-					<label for="Aktor-h-<?php echo $aktoren[$i] ?>">Hoch</label>
-					<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-r-<?php echo $aktoren[$i] ?>" value="0">
-					<label for="Aktor-r-<?php echo $aktoren[$i] ?>">Runter</label>
-				</fieldset>
-    		<?php
-    		}
-    		?>    					
-    		</li>
-			</li>
-		<?php		
-		}  	
-		if($i == (count($aktoren) -1) ){
-		?>
-			</ul>
-			</div>  
+				<?php
+				for($x = 0; $x < count($typ); $x++) {
+					for($i = 0; $i < count($aktoren); $i++) { 
+						if($i == 0){
+							?>
+							
+							<div id="cont-inner">
+								<ul data-role="listview" data-inset="true" data-theme="d">
+								<li data-role="list-divider"><?php echo $typ[$x]; ?></li>
+								
+						<?php 
+						}
+						
+						$sql = query( "SELECT name FROM aktor WHERE id = '" . $aktoren[$i] . "' AND type = '" . $typid[$x] . "'" );	
+						if ( mysql_num_rows($sql) == 0 ) {
+							// nichts gefunden
+						} else {
+							$row = mysql_fetch_assoc($sql);
+							?>
+							<li>
+							<?php
+							$sqltype = query( "SELECT id,devtype,devtypename FROM deviceTypes WHERE id = '" . $typid[$x] . "'" );
+							$devtype = fetch( $sqltype );
+							if($devtype['devtypename'] == "Dimmer"){
+							?>
+								<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
+								<input name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-highlight="true" min="0" max="100" step="5" value="0" type="range">
+							<?php
+							}
+							if($devtype['devtypename'] == "Schalter"){
+							?>
+								<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
+								<select name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-role="slider">
+									<option value="0">Aus</option>
+									<option value="100">An</option>
+								</select>
+							<?php
+							}
+							if($devtype['devtypename'] == "Rolladen"){
+							?>
+								<fieldset data-role="controlgroup" data-type="horizontal">
+								<legend><?php echo $row['name'] ?></legend>
+									<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-h-<?php echo $aktoren[$i] ?>" value="100">
+									<label for="Aktor-h-<?php echo $aktoren[$i] ?>">Hoch</label>
+									<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-r-<?php echo $aktoren[$i] ?>" value="0">
+									<label for="Aktor-r-<?php echo $aktoren[$i] ?>">Runter</label>
+								</fieldset>
+							<?php
+							}
+							?>    					
+							</li>
+							</li>
+						<?php		
+						}  	
+						if($i == (count($aktoren) -1) ){
+						?>
+							</ul>
+							</div>  
 
-			<br />				 			
-  		<?php
-  		}
-	}
-}
-?>
-<input type="hidden" name="groupname" value="<? echo $groupname ?>">
-<input type="hidden" name="groupstatus" value="<? echo $groupstatus ?>">
-<?
-for($i = 0; $i < count($devices); $i++) {
-	$deviceVal = $deviceVal . $devices[$i] . "," ;
-}
-$deviceVal = substr($deviceVal, 0, -1);
-?>
-<input type="hidden" name="devices" value="<? echo $deviceVal ?>">
-<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
-				</fieldset>
-</form>
-</div>
-			   
-     			
-
-
-
-
-			
-<?php
-
-   			
-     			
-}
-
-if($_GET['step'] == "3"){	
-
-//var_dump($_POST);	
-$aktorenValues = $_POST;
-
-$delete = array_pop($aktorenValues);
-$delete = array_pop($aktorenValues);
-$delete = array_pop($aktorenValues);
-//var_dump($aktorenValues);	
-//print_r($aktorenValues);
-
-$sql = query( "INSERT INTO groups VALUES( '', '" . $_POST['groupname'] . "', '" . $_POST['groupstatus'] . "')" );
-$groupID = query("SELECT id FROM groups ORDER BY id DESC LIMIT 0,1 "); 
-$row = mysql_fetch_assoc($groupID);
-//var_dump($row);
-
-foreach($aktorenValues as $key => $value) 
-{
-	$key = explode("-", $key);
-	//echo $key[1] . " => " . $value . "<br />";
-	$befehl= "INSERT INTO groupaktor VALUES( '', '" . $key[1] . "',
-													 '0', 
-													 '" . $row['id'] . "',
-													 '" . $value . "')";
-													 
-	$sql = query( $befehl);	
-	//echo $befehl . "<br />";	
-} 
-$devices = $_POST['devices'];
-$devices = explode(",", $devices);
-for($i=0;$i<=count($devices)-1;$i++) 
-{
-	$sql = query( "INSERT INTO groupaktor VALUES( '', '0', '" . $devices[$i] . "', '" . $row['id'] . "', '')" );
-}
-	
-?>
-<p class="center">Gruppe wurde hinzugefügt</p>
-<?
-
-
-/*$sql = query( "INSERT INTO groupaktor VALUES( '', '" . $_POST['devicename'] . "',
-													 '" . $_POST['room'] . "',
-													 '0',
-													 '" . $_POST['ip']  . "',
-													 '" . $_POST['typ']  . "',
-													 '" . $_POST['logging'] . "',
-													 '" . $_POST['verbrauch'] . "',
-													 '0',
-													 '0',
-													 '0',
-													 '" . $_POST['verbrauchWatt'] . "')" );		*/		
-			}else{		
-		?>
-		<!-- <div class="boxWhite">
-			<p class="center">Gruppe wurde hinzugefügt</p>
-		</div>
-		-->
-
-
-
-
-																						
-		<?php
-		}
-		//$aktoren = $_POST;	
-		//list($hour, $minute) = explode(':', $_POST['time']);
-		//$sql = query( "INSERT INTO groups VALUES( '', '" . $_POST['groupname'] . "', '" . $_POST['flipAktiv'] . "')" );
-		//var_dump($aktoren);			
-		}else{
-		?>
-		<div id="cont">
-			<form action="index.php?page=settings&aktion=addGroup&step=2" method="post" class="ui-body ui-body-c ui-corner-all">
-				<fieldset>
-					<div data-role="fieldcontain">
-						<li data-role="fieldcontain">
-							<label for="groupname">Gruppen Name:</label>
-							<input data-clear-btn="true" name="groupname" id="groupname" value="" type="text">
-						</li>
-					
-					<div data-role="fieldcontain">
-					<fieldset data-role="controlgroup">
-					<legend>Aktoren:</legend>
-								<?php
-    							$sql2 = query( "SELECT id,name,type,room FROM aktor");
-    							$i = 0;					
-								while( $row2 = fetch( $sql2 ) )
-									{
-									$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
-									$RoomName = fetch($sql);
-									$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row2['type']. "'" );
-									$devtype = fetch( $sqldt );
-									$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $devtype['devtypename'] .")";
-									?>
-											
-											<input type="checkbox" name="Aktoren[]" id="Aktor-<?php echo $row2['id'] ?>"  value="<?php echo $row2['id'] ?>" class="custom" />
-	   										<label for="Aktor-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
-    								<?php
-    								}
-    							?>	
-    							
-					</fieldset>
-					</div>	
-
-
-					
-					<div data-role="fieldcontain">
-					<fieldset data-role="controlgroup">
-					<legend>Geräte:</legend>
-								<?php
-    							$sql2 = query( "SELECT id,name,type,room FROM devices");
-    							$i = 0;					
-								while( $row2 = fetch( $sql2 ) )
-									{
-									$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
-									$RoomName = fetch($sql);
-									//$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row2['type']. "'" );
-									//$devtype = fetch( $sqldt );
-									$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
-									?>
-											
-											<input type="checkbox" name="Geraete[]" id="Geraet-<?php echo $row2['id'] ?>"  value="<?php echo $row2['id'] ?>" class="custom" />
-	   										<label for="Geraet-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
-    								<?php
-    								}
-    							?>	
-    							
-					</fieldset>
-					</div>
+							<br />				 			
+						<?php
+						}
+					}
+				}
 				
+				for($x = 0; $x < count($typDev); $x++) {
+					for($i = 0; $i < count($devices); $i++) {
+						$sql_devType = query("SELECT id,type FROM devices WHERE id='" . $devices[$i] . "'");
+						$devType = fetch($sql_devType);
+						
+						if($devType['type'] ==  $typDev[$x]){
+							$sql_devName = query("SELECT id,name FROM devices WHERE id='" . $devices[$i] . "'");
+							$devName = fetch($sql_devName);
+							?>
+														
+							<div id="cont-inner">
+								<ul data-role="listview" data-inset="true" data-theme="d">
+								<li data-role="list-divider"><?php echo $devName['name']; ?></li>
+								<div data-role="fieldcontain">
+								<fieldset data-role="controlgroup">
+							<?php 
+							
+							$sql_devMacro = query( "SELECT id,DeviceID,MacroID FROM devicemacro WHERE DeviceID='" . $devices[$i] . "'");					
+							while($devMacro = fetch($sql_devMacro)){
+								$sql_Macro = query("SELECT id,name FROM tvmacros WHERE id='" . $devMacro['MacroID'] . "'");
+								$Macro = fetch($sql_Macro);
+								?>
+								<input type="checkbox" name="Macros[]" id="<?php echo $devMacro['DeviceID'] ?>-<?php echo $devMacro['MacroID'] ?>" value="<?php echo $devMacro['DeviceID'] ?>-<?php echo $devMacro['MacroID'] ?>" class="custom" />
+								<label for="<?php echo $devMacro['DeviceID'] ?>-<?php echo $devMacro['MacroID'] ?>"><?php echo $Macro['name']; ?></label>
+								<?php
+							}
+							
+							?>
+								</fieldset>
+								</div>	
+								</ul>
+							</div>
+							<br/>				 			
+							<?php								
+						}
+					}
+				}
+				?>
+				<input type="hidden" name="groupname" value="<? echo $groupname ?>">
+				<input type="hidden" name="groupstatus" value="<? echo $groupstatus ?>">
+				<?
+				for($i = 0; $i < count($devices); $i++) {
+					$deviceVal = $deviceVal . $devices[$i] . "," ;
+				}
+				$deviceVal = substr($deviceVal, 0, -1);
+				?>
+				<input type="hidden" name="devices" value="<? echo $deviceVal ?>">
+				<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
+								</fieldset>
+				</form>
+				</div>
+							   
+								
 
-					<li data-role="fieldcontain">	
-						<label for="flipAktiv">Gruppe enabled:</label>
-						<select name="flipAktiv" id="flipAktiv" data-role="slider">
-							<option value="No">No</option>
-							<option value="Yes" selected="selected">Yes</option>
-						</select>	
-					</li>	
-					</div>
-					<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
-				</fieldset>
-			</form>
-		</div>
-		<?php
-		}
-		break;	
+
+
+
+							
+				<?php
+
+							
+								
+			}
+
+			if($_GET['step'] == "3"){	
+
+				//var_dump($_POST);	
+				$aktorenValues = $_POST;
+				$macros = $_POST['Macros'];
+				//var_dump($macros);
+				
+				$GroupID = $_GET['group'];
+				
+				$delete = array_pop($aktorenValues);
+				$delete = array_pop($aktorenValues);
+				$delete = array_pop($aktorenValues);
+				//var_dump($aktorenValues);	
+				//print_r($aktorenValues);
+
+				$sql = query( "INSERT INTO groups VALUES( '', '" . $_POST['groupname'] . "', '" . $_POST['groupstatus'] . "')" );
+				$groupID = query("SELECT id FROM groups ORDER BY id DESC LIMIT 0,1 "); 
+				$row = mysql_fetch_assoc($groupID);
+				//var_dump($row);
+
+				//aktoren	
+				foreach($aktorenValues as $key => $value) 
+				{
+					$key = explode("-", $key);
+					if ($key[0] == 'Aktor'){
+						$befehl= "INSERT INTO groupaktor VALUES( '', '" . $key[1] . "',
+																		 '0', 
+																		 '" . $GroupID . "',
+																		 '" . $value . "',
+																		 '')";
+						$sql = query( $befehl);	
+					}
+				} 
+				
+				$DevCount = count($macros);
+				//echo "count: " . $DevCount;
+				//geraete
+				for($x = 0; $x < count($macros); $x++) {
+					$dev = explode("-", $macros[$x]);
+					$befehl= "INSERT INTO groupaktor VALUES( '', '',
+																	 '" . $dev[0] . "', 
+																	 '" . $GroupID . "',
+																	 '',
+																	 '" . $dev[1]  . "')";
+					$sql = query( $befehl);	
+				}
+					
+				?>
+				<p class="center">Gruppe wurde hinzugefügt</p>
+				<?
+
+			}else{		
+				?>
+				<!-- <div class="boxWhite">
+					<p class="center">Gruppe wurde hinzugefügt</p>
+				</div>
+				-->
+
+
+
+
+																								
+				<?php
+			}
+			//$aktoren = $_POST;	
+			//list($hour, $minute) = explode(':', $_POST['time']);
+			//$sql = query( "INSERT INTO groups VALUES( '', '" . $_POST['groupname'] . "', '" . $_POST['flipAktiv'] . "')" );
+			//var_dump($aktoren);			
+			}else{
+				?>
+				<div id="cont">
+					<form action="index.php?page=settings&aktion=addGroup&step=2" method="post" class="ui-body ui-body-c ui-corner-all">
+						<fieldset>
+							<div data-role="fieldcontain">
+								<li data-role="fieldcontain">
+									<label for="groupname">Gruppen Name:</label>
+									<input data-clear-btn="true" name="groupname" id="groupname" value="" type="text">
+								</li>
+							
+							<div data-role="fieldcontain">
+							<fieldset data-role="controlgroup">
+							<legend>Aktoren:</legend>
+										<?php
+										$sql2 = query( "SELECT id,name,type,room FROM aktor");
+										$i = 0;					
+										while( $row2 = fetch( $sql2 ) )
+											{
+											$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+											$RoomName = fetch($sql);
+											$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row2['type']. "'" );
+											$devtype = fetch( $sqldt );
+											$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $devtype['devtypename'] .")";
+											?>
+													
+													<input type="checkbox" name="Aktoren[]" id="Aktor-<?php echo $row2['id'] ?>"  value="<?php echo $row2['id'] ?>" class="custom" />
+													<label for="Aktor-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
+											<?php
+											}
+										?>	
+										
+							</fieldset>
+							</div>	
+
+
+							
+							<div data-role="fieldcontain">
+							<fieldset data-role="controlgroup">
+							<legend>Geräte:</legend>
+										<?php
+										$sql2 = query( "SELECT id,name,type,room FROM devices");
+										$i = 0;					
+										while( $row2 = fetch( $sql2 ) )
+											{
+											$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+											$RoomName = fetch($sql);
+											//$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row2['type']. "'" );
+											//$devtype = fetch( $sqldt );
+											$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
+											?>
+													
+													<input type="checkbox" name="Geraete[]" id="Geraet-<?php echo $row2['id'] ?>"  value="<?php echo $row2['id'] ?>" class="custom" />
+													<label for="Geraet-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
+											<?php
+											}
+										?>	
+										
+							</fieldset>
+							</div>
+						
+
+							<li data-role="fieldcontain">	
+								<label for="flipAktiv">Gruppe enabled:</label>
+								<select name="flipAktiv" id="flipAktiv" data-role="slider">
+									<option value="No">No</option>
+									<option value="Yes" selected="selected">Yes</option>
+								</select>	
+							</li>	
+							</div>
+							<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
+						</fieldset>
+					</form>
+				</div>
+				<?php
+			}
+			break;	
 	
 case 'editGroup':
 
 		if( $_POST['submit'] ){
 		
 			if($_GET['step'] == "2"){
-			$groupname = $_POST['groupname'];
-			$groupstatus = $_POST['flipAktiv'];
-			$aktoren = $_POST['Aktoren'];
-			
-			//var_dump($_POST['Aktoren']);
-
-$typ = array("schalter","rolladen","dimmer"); 
-$typid = array("1","2","3"); 
-//$aktoren = array("1","2","3","4");
-$initial = true;
-$lastGroup = false;
-?>
-<div id="cont">
-<form action="index.php?page=settings&aktion=editGroup&group=<? echo $_GET['group'] ?>&step=3" method="post" class="ui-body ui-body-c ui-corner-all">
-<fieldset>	
-
-<?php
-for($x = 0; $x < count($typ); $x++) {
-	for($i = 0; $i < count($aktoren); $i++) { 
-  		if($i == 0){
-			?>
-			
-			<div id="cont-inner">
-  				<ul data-role="listview" data-inset="true" data-theme="d">
-    			<li data-role="list-divider"><?php echo $typ[$x]; ?></li>
-    			
-    	<?php 
-    	} 	 
-		$sql = query( "SELECT name FROM aktor WHERE id = '" . $aktoren[$i] . "' AND type = '" . $typid[$x] . "'" );	
-		if ( mysql_num_rows($sql) == 0 ) {
-  			// nichts gefunden
-		} else {
-  			$row = mysql_fetch_assoc($sql);
-  			?>
-    		<li>
-    		<?php
-			$sqltype = query( "SELECT id,devtype,devtypename FROM deviceTypes WHERE id = '" . $typid[$x] . "'" );
-			$devtype = fetch( $sqltype );
-    		if($devtype['devtypename'] == "Dimmer"){
-    		?>
-    			<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
-    			<input name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-highlight="true" min="0" max="100" value="0" type="range">
-    		<?php
-    		}
-    		if($devtype['devtypename'] == "Schalter"){
-    		?>
-    			<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
-    			<select name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-role="slider">
-        			<option value="0">Aus</option>
-        			<option value="100">An</option>
-    			</select>
-    		<?php
-    		}
-    		if($devtype['devtypename'] == "Rolladen"){
-    		?>
-    			<fieldset data-role="controlgroup" data-type="horizontal">
-				<legend><?php echo $row['name'] ?></legend>
-					<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-h-<?php echo $aktoren[$i] ?>" value="100">
-					<label for="Aktor-h-<?php echo $aktoren[$i] ?>">Hoch</label>
-					<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-r-<?php echo $aktoren[$i] ?>" value="0">
-					<label for="Aktor-r-<?php echo $aktoren[$i] ?>">Runter</label>
-				</fieldset>
-    		<?php
-    		}
-    		?>    					
-    		</li>
-			</li>
-		<?php		
-		}  	
-		if($i == (count($aktoren) -1) ){
-		?>
-			</ul>
-			</div>  
-
-			<br />				 			
-  		<?php
-  		}
-	}
-}
-?>
-<input type="hidden" name="groupname" value="<? echo $groupname ?>">
-<input type="hidden" name="groupstatus" value="<? echo $groupstatus ?>">
-<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
-				</fieldset>
-</form>
-</div>
-			   
-     			
-
-
-
-
-			
-<?php
-
-   			
-     			
-}
-
-
-if($_GET['step'] == "3"){	
-
-//var_dump($_POST);	
-$aktorenValues = $_POST;
-
-$delete = array_pop($aktorenValues);
-$delete = array_pop($aktorenValues);
-$delete = array_pop($aktorenValues);
-//var_dump($aktorenValues);	
-//print_r($aktorenValues);
-$befehl = "UPDATE groups Set name = '" . $_POST['groupname'] . "' WHERE id = " . $_GET['group']; 
-$sql = query($befehl);
-
-$loeschen = "DELETE FROM groupaktor WHERE groupID = " . $_GET['group'];
-$sql = mysql_query($loeschen);
-
-//$groupID = query("SELECT id FROM groups ORDER BY id DESC LIMIT 0,1 "); 
-//$row = mysql_fetch_assoc($groupID);
-//var_dump($row);
-
-foreach($aktorenValues as $key => $value) 
-{
-	$key = explode("-", $key);
-	//echo $key[1] . " => " . $value . "<br />";
-	$befehl= "INSERT INTO groupaktor VALUES( '', '" . $key[1] . "',
-													 '0', 
-													 '" . $_GET['group'] . "',
-													 '" . $value . "')";
-													 
-	$sql = query( $befehl);	
-	//echo $befehl . "<br />";	
-} 
-	
-?>
-<p class="center">Gruppe wurde bearbeitet</p>
-<?
-
-
-/*$sql = query( "INSERT INTO groupaktor VALUES( '', '" . $_POST['devicename'] . "',
-													 '" . $_POST['room'] . "',
-													 '0',
-													 '" . $_POST['ip']  . "',
-													 '" . $_POST['typ']  . "',
-													 '" . $_POST['logging'] . "',
-													 '" . $_POST['verbrauch'] . "',
-													 '0',
-													 '0',
-													 '0',
-													 '" . $_POST['verbrauchWatt'] . "')" );		*/		
-			}
-}
-
-if($_GET['group'] && $_GET['step'] == 1){
-?>
-		<div id="cont">
-			<form action="index.php?page=settings&aktion=editGroup&group=<? echo $_GET['group'] ?>&step=2" method="post" class="ui-body ui-body-c ui-corner-all">
-				<fieldset>
-					<div data-role="fieldcontain">
-					
-					<li data-role="fieldcontain">
-						<?
-						$sql_group = query( "SELECT name FROM groups WHERE id='" . $_GET['group'] ."'" );
-						$group = fetch( $sql_group );
-						$GroupID = $_GET['group'];
-						?>
-						<label for="groupname">Gruppen Name:</label>
-     					<input data-clear-btn="true" name="groupname" id="groupname" value="<? echo $group['name']; ?>" type="text">
-					</li>
-
-					<div data-role="fieldcontain">
-					<fieldset data-role="controlgroup">
-						<legend>Aktoren:</legend>
-								<?php
-    							$sql_aktoren = query( "SELECT id,name,type,room FROM aktor");
-    							$i = 0;					
-								while( $aktoren = fetch( $sql_aktoren ) )
-									{
-									$sql_room = query( "SELECT id,name FROM rooms WHERE id='" . $aktoren['room'] ."'" );
-									$room = fetch($sql_room);
-									
-									$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $aktoren['type']. "'" );
-									$devtype = fetch( $sqldt );
-									$RowName = $aktoren['name'] . " (" . $room['name'] . " / " . $devtype['devtypename'] .")";
-									
-									$sql_groupaktor = query( "SELECT * FROM groupaktor WHERE groupID='" . $_GET['group'] ."' ORDER BY aktorID ASC" );
-									
-									while( $groupaktor = fetch( $sql_groupaktor ) ){
-										if($groupaktor['aktorID'] == $aktoren['id']){
-											$checked = "checked";
-										}
-									}
-									
-									?>
-											
-											<input type="checkbox" name="Aktoren[]" id="Aktor-<?php echo $aktoren['id'] ?>"  <? echo $checked ?> value="<?php echo $aktoren['id'] ?>" class="custom" />
-	   										<label for="Aktor-<?php echo $aktoren['id'] ?>"><?php echo $RowName; ?></label>
-    								<?php
-    								$checked = "";
-    								}
-    								
-    							?>	
-    							
-					</fieldset>
-					</div>	
-					
-					<div data-role="fieldcontain">
-					<fieldset data-role="controlgroup">
-					<legend>Geräte:</legend>
-								<?php
-    							$sql2 = query( "SELECT id,name,type,room FROM devices");
-								while( $row2 = fetch( $sql2 ) )
-								{
-									$sql_groupdevice = query( "SELECT DeviceID FROM groupaktor WHERE groupID='" . $GroupID ."' ORDER BY aktorID ASC" );
-									while( $groupdevice = fetch( $sql_groupdevice ) ){
-										if($groupdevice['DeviceID'] == $row2['id']){
-											$checked = "checked";
-										}
-									}
-									
-									$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
-									$RoomName = fetch($sql);
-									$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
-									?>
-											
-											<input type="checkbox" name="Geraete[]" id="Geraet-<?php echo $row2['id'] ?>" <? echo $checked ?> value="<?php echo $row2['id'] ?>" class="custom" />
-	   										<label for="Geraet-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
-    								<?php
-    								$checked = "";
-								}
-    							?>	
-    							
-					</fieldset>
-					</div>
-
+				$groupname = $_POST['groupname'];
+				$groupstatus = $_POST['flipAktiv'];
+				$aktoren = $_POST['Aktoren'];
+				$devices = $_POST['Geraete'];
 				
+				//var_dump($_POST['Aktoren']);
+				//var_dump($_POST['Geraete']);
 
-					<li data-role="fieldcontain">	
-						<label for="flipAktiv">Gruppe enabled:</label>
-						<select name="flipAktiv" id="flipAktiv" data-role="slider">
-							<option value="No">No</option>
-							<option value="Yes" selected="selected">Yes</option>
-						</select>	
-					</li>	
-					</div>
-					<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
+				$typ = array("schalter","rolladen","dimmer");
+				$typDev = array("samsungtv","samsungbluray","onkyoavrec","enigma2"); 
+				$typid = array("1","2","3"); 
+				$typidDev = array("19","20","21","22"); 
+				//$aktoren = array("1","2","3","4");
+				$initial = true;
+				$lastGroup = false;
+				?>
+				<div id="cont">
+				<form action="index.php?page=settings&aktion=editGroup&group=<? echo $_GET['group'] ?>&step=3" method="post" class="ui-body ui-body-c ui-corner-all">
+				<fieldset>	
+
+				<?php
+				for($x = 0; $x < count($typ); $x++) {
+					for($i = 0; $i < count($aktoren); $i++) { 
+						if($i == 0){
+							?>
+							
+							<div id="cont-inner">
+								<ul data-role="listview" data-inset="true" data-theme="d">
+								<li data-role="list-divider"><?php echo $typ[$x]; ?></li>
+								
+						<?php 
+						} 	 
+						$sql = query( "SELECT name FROM aktor WHERE id = '" . $aktoren[$i] . "' AND type = '" . $typid[$x] . "'" );	
+						if ( mysql_num_rows($sql) == 0 ) {
+							// nichts gefunden
+						} else {
+							$row = mysql_fetch_assoc($sql);
+							?>
+							<li>
+							<?php
+							$sqltype = query( "SELECT id,devtype,devtypename FROM deviceTypes WHERE id = '" . $typid[$x] . "'" );
+							$devtype = fetch( $sqltype );
+							if($devtype['devtypename'] == "Dimmer"){
+							?>
+								<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
+								<input name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-highlight="true" min="0" max="100" value="0" type="range">
+							<?php
+							}
+							if($devtype['devtypename'] == "Schalter"){
+							?>
+								<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
+								<select name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-role="slider">
+									<option value="0">Aus</option>
+									<option value="100">An</option>
+								</select>
+							<?php
+							}
+							if($devtype['devtypename'] == "Rolladen"){
+							?>
+								<fieldset data-role="controlgroup" data-type="horizontal">
+								<legend><?php echo $row['name'] ?></legend>
+									<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-h-<?php echo $aktoren[$i] ?>" value="100">
+									<label for="Aktor-h-<?php echo $aktoren[$i] ?>">Hoch</label>
+									<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-r-<?php echo $aktoren[$i] ?>" value="0">
+									<label for="Aktor-r-<?php echo $aktoren[$i] ?>">Runter</label>
+								</fieldset>
+							<?php
+							}
+							?>    					
+							</li>
+							</li>
+						<?php		
+						}  	
+						if($i == (count($aktoren) -1) ){
+						?>
+							</ul>
+							</div>  
+
+							<br />				 			
+						<?php
+						}
+					}
+				}
+								
+				for($x = 0; $x < count($typDev); $x++) {
+					for($i = 0; $i < count($devices); $i++) {
+						$sql_devType = query("SELECT id,type FROM devices WHERE id='" . $devices[$i] . "'");
+						$devType = fetch($sql_devType);
+						
+						if($devType['type'] ==  $typDev[$x]){
+							$sql_devName = query("SELECT id,name FROM devices WHERE id='" . $devices[$i] . "'");
+							$devName = fetch($sql_devName);
+							?>
+														
+							<div id="cont-inner">
+								<ul data-role="listview" data-inset="true" data-theme="d">
+								<li data-role="list-divider"><?php echo $devName['name']; ?></li>
+								<div data-role="fieldcontain">
+								<fieldset data-role="controlgroup">
+							<?php 
+							
+							$sql_devMacro = query( "SELECT id,DeviceID,MacroID FROM devicemacro WHERE DeviceID='" . $devices[$i] . "'");					
+							while($devMacro = fetch($sql_devMacro)){
+								$sql_Macro = query("SELECT id,name FROM tvmacros WHERE id='" . $devMacro['MacroID'] . "'");
+								$Macro = fetch($sql_Macro);
+								?>
+								<input type="checkbox" name="Macros[]" id="<?php echo $devMacro['DeviceID'] ?>-<?php echo $devMacro['MacroID'] ?>" value="<?php echo $devMacro['DeviceID'] ?>-<?php echo $devMacro['MacroID'] ?>" class="custom" />
+								<label for="<?php echo $devMacro['DeviceID'] ?>-<?php echo $devMacro['MacroID'] ?>"><?php echo $Macro['name']; ?></label>
+								<?php
+							}
+							
+							?>
+								</fieldset>
+								</div>	
+								</ul>
+							</div>
+							<br/>				 			
+							<?php								
+						}
+					}
+				}
+
+				?>
+				<input type="hidden" name="groupname" value="<? echo $groupname ?>">
+				<input type="hidden" name="groupstatus" value="<? echo $groupstatus ?>">
+				<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
 				</fieldset>
-			</form>
-		</div>
-<?
-}
-if(!isset($_GET["group"])){
-?>
-<div id="cont">
-<ul data-role="listview" data-split-icon="gear" data-split-theme="d" data-inset="true">
-<li data-role="list-divider">Gruppen bearbeiten</li>	
+				</form>
+				</div>
+				
+				<?php
+			}
+			
+			if($_GET['step'] == "3"){	
 
-<?
+				//var_dump($_POST);	
+				$aktorenValues = $_POST;
+				
+				$macros = $_POST['Macros'];
+				//var_dump($macros);
+				
+				$GroupID = $_GET['group'];
+				
+				$delete = array_pop($aktorenValues);
+				$delete = array_pop($aktorenValues);
+				$delete = array_pop($aktorenValues);
+				//var_dump($aktorenValues);	
+				//print_r($aktorenValues);
+				$befehl = "UPDATE groups Set name = '" . $_POST['groupname'] . "' WHERE id = " . $GroupID; 
+				$sql = query($befehl);
 
-$sql_groups = query( "SELECT id, name, status FROM groups" );
+				$loeschen = "DELETE FROM groupaktor WHERE groupID = " . $GroupID;
+				$sql = mysql_query($loeschen);
 
-while( $groups = fetch( $sql_groups ) )
-{
-?>
-    <li><a href="#">		        
-        <h2><? echo $groups['name']; ?></h2>
-        </a>
-        <a href="index.php?page=settings&aktion=editGroup&group=<? echo $groups['id']; ?>&step=1" >bearbeiten</a>
-    </li>
-<?
-}
-?>
-</ul>
-</div>
-<?
-}	
-break;	
+				//aktoren	
+				foreach($aktorenValues as $key => $value) 
+				{
+					$key = explode("-", $key);
+					if ($key[0] == 'Aktor'){
+						$befehl= "INSERT INTO groupaktor VALUES( '', '" . $key[1] . "',
+																		 '0', 
+																		 '" . $GroupID . "',
+																		 '" . $value . "',
+																		 '')";
+						$sql = query( $befehl);	
+					}
+				} 
+				
+				$DevCount = count($macros);
+				//echo "count: " . $DevCount;
+				//geraete
+				for($x = 0; $x < count($macros); $x++) {
+					$dev = explode("-", $macros[$x]);
+					$befehl= "INSERT INTO groupaktor VALUES( '', '',
+																	 '" . $dev[0] . "', 
+																	 '" . $GroupID . "',
+																	 '',
+																	 '" . $dev[1]  . "')";
+					$sql = query( $befehl);	
+				}
+					
+				?>
+				<p class="center">Gruppe wurde bearbeitet</p>
+				<?
+			}
+		}
+		
+		if( $_POST['delete'] ){
+			$GroupID = $_GET['group'];
+			$loeschen_GroupAktor = "DELETE FROM groupaktor WHERE groupID = " . $GroupID;
+			$sql = mysql_query($loeschen_GroupAktor);
+			$loeschen_Group = "DELETE FROM groups WHERE id = " . $GroupID;
+			$sql = mysql_query($loeschen_Group);
+			
+			?>
+			<p class="center">Gruppe wurde gelöscht</p>
+			<?
+		}
+
+		if($_GET['group'] && $_GET['step'] == 1){
+			?>
+			<div id="cont">
+				<form action="index.php?page=settings&aktion=editGroup&group=<? echo $_GET['group'] ?>&step=2" method="post" class="ui-body ui-body-c ui-corner-all">
+					<fieldset>
+						<div data-role="fieldcontain">
+						
+						<li data-role="fieldcontain">
+							<?
+							$sql_group = query( "SELECT name FROM groups WHERE id='" . $_GET['group'] ."'" );
+							$group = fetch( $sql_group );
+							$GroupID = $_GET['group'];
+							?>
+							<label for="groupname">Gruppen Name:</label>
+							<input data-clear-btn="true" name="groupname" id="groupname" value="<? echo $group['name']; ?>" type="text">
+						</li>
+
+						<div data-role="fieldcontain">
+						<fieldset data-role="controlgroup">
+							<legend>Aktoren:</legend>
+									<?php
+									$sql_aktoren = query( "SELECT id,name,type,room FROM aktor");
+									$i = 0;		
+									$GroupID = $_GET['group'];									
+									while( $aktoren = fetch( $sql_aktoren ) )
+										{
+										$sql_room = query( "SELECT id,name FROM rooms WHERE id='" . $aktoren['room'] ."'" );
+										$room = fetch($sql_room);
+										
+										$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $aktoren['type']. "'" );
+										$devtype = fetch( $sqldt );
+										$RowName = $aktoren['name'] . " (" . $room['name'] . " / " . $devtype['devtypename'] .")";
+										
+										$sql_groupaktor = query( "SELECT * FROM groupaktor WHERE groupID='" . $_GET['group'] ."' ORDER BY aktorID ASC" );
+										
+										while( $groupaktor = fetch( $sql_groupaktor ) ){
+											if($groupaktor['aktorID'] == $aktoren['id']){
+												$checked = "checked";
+											}
+										}
+										
+										?>
+												
+												<input type="checkbox" name="Aktoren[]" id="Aktor-<?php echo $aktoren['id'] ?>"  <? echo $checked ?> value="<?php echo $aktoren['id'] ?>" class="custom" />
+												<label for="Aktor-<?php echo $aktoren['id'] ?>"><?php echo $RowName; ?></label>
+										<?php
+										$checked = "";
+										}
+										
+									?>	
+									
+						</fieldset>
+						</div>	
+						
+						<div data-role="fieldcontain">
+						<fieldset data-role="controlgroup">
+						<legend>Geräte:</legend>
+									<?php
+									$GroupID = $_GET['group'];	
+									$sql2 = query( "SELECT id,name,type,room FROM devices");
+									while( $row2 = fetch( $sql2 ) )
+									{
+										echo $GroupID;
+										$sql_groupdevice = query( "SELECT deviceID FROM groupaktor WHERE groupID='" . $GroupID ."'" );
+										while( $groupdevice = fetch( $sql_groupdevice ) ){
+											if($groupdevice['deviceID'] == $row2['id']){
+												$checked = "checked";
+											}
+										}
+										
+										$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+										$RoomName = fetch($sql);
+										$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
+										?>
+												
+												<input type="checkbox" name="Geraete[]" id="Geraet-<?php echo $row2['id'] ?>" <? echo $checked ?> value="<?php echo $row2['id'] ?>" class="custom" />
+												<label for="Geraet-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
+										<?php
+										$checked = "";
+									}
+									?>	
+									
+						</fieldset>
+						</div>
+
+						<li data-role="fieldcontain">	
+							<label for="flipAktiv">Gruppe enabled:</label>
+							<select name="flipAktiv" id="flipAktiv" data-role="slider">
+								<option value="No">No</option>
+								<option value="Yes" selected="selected">Yes</option>
+							</select>	
+						</li>	
+						</div>
+						<div class="ui-block-a"><button type="submit" name="delete" value="Submit">Delete</button></div>
+						<div class="ui-block-c"><button type="submit" name="submit" value="submit-value">Submit</button></div>
+					</fieldset>
+				</form>
+			</div>
+		<?
+		}
+		if(!isset($_GET["group"])){
+			?>
+			<div id="cont">
+			<ul data-role="listview" data-inset="true" data-theme="d" >
+			<li data-role="list-divider">Gruppen bearbeiten</li>	
+
+			<?
+
+			$sql_groups = query( "SELECT id, name, status FROM groups" );
+
+			while( $groups = fetch( $sql_groups ) )
+			{
+			?>
+				<li>
+					<a href="index.php?page=settings&aktion=editGroup&group=<? echo $groups['id']; ?>&step=1" ><h2><? echo $groups['name']; ?></h2></a>
+				</li>
+			<?
+			}
+			?>
+			</ul>
+			</div>
+			<?
+		}	
+		break;	
 	
 		default:
 		//include('dashboard.php');
