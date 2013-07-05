@@ -543,57 +543,57 @@ function samsung_send_key($tvip, $SendKey)
     flush();
     $sock = socket_create(AF_INET, SOCK_STREAM, getprotobyname('tcp'));
 	$result = socket_connect($sock, $tvip, '55000');
-    if( $result === false)
-	   die ("Could not create socket: \n");
+    if( $result === false){
+	   echo "Could not create socket\n";
+	}else{
+		$ipencoded = base64_encode($myip);
+		$macencoded = base64_encode($mymac);
+		$messagepart1 = chr(0x64) . chr(0x00) . chr(strlen($ipencoded)) . chr(0x00) . $ipencoded . chr(strlen($macencoded)) . chr(0x00) . $macencoded .
+							chr(strlen(base64_encode($remotename))) . chr(0x00) . base64_encode($remotename);
+							
+		$part1 = chr(0x00) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart1)) . chr(0x00) . $messagepart1;
 
-	
-	$ipencoded = base64_encode($myip);
-	$macencoded = base64_encode($mymac);
-    $messagepart1 = chr(0x64) . chr(0x00) . chr(strlen($ipencoded)) . chr(0x00) . $ipencoded . chr(strlen($macencoded)) . chr(0x00) . $macencoded .
-                     	chr(strlen(base64_encode($remotename))) . chr(0x00) . base64_encode($remotename);
-						
-    $part1 = chr(0x00) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart1)) . chr(0x00) . $messagepart1;
+		socket_write($sock, $part1, strlen($part1));
+		//echo $part1;
+		//echo "\n";
 
-    socket_write($sock, $part1, strlen($part1));
-    //echo $part1;
-    //echo "\n";
+		$messagepart2 = chr(0xc8) . chr(0x00);
+		$part2 = chr(0x00) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart2)) . chr(0x00) . $messagepart2;
+		socket_write($sock, $part2, strlen($part2));
+		//echo $part2;
+		//echo "\n";
 
-    $messagepart2 = chr(0xc8) . chr(0x00);
-    $part2 = chr(0x00) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart2)) . chr(0x00) . $messagepart2;
-    socket_write($sock, $part2, strlen($part2));
-    //echo $part2;
-    //echo "\n";
+		//Preceding sections all first time only
 
-    //Preceding sections all first time only
-
-	$SendKeys = explode(",",$SendKey);
-	foreach($SendKeys as $Send_Key){
-		if (isset($Send_Key)) {
-			//Send remote key
-			$key = "KEY_" . $Send_Key;
-			$messagepart3 = chr(0x00) . chr(0x00) . chr(0x00) . chr(strlen(base64_encode($key))) . chr(0x00) . base64_encode($key);
-			$part3 = chr(0x00) . chr(strlen($tvappstring)) . chr(0x00) . $tvappstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
-			socket_write($sock,$part3,strlen($part3));
-			//echo $part3;
-			//echo "\n";
-			usleep(200000);
-		} else if (isset($_REQUEST["text"])) {
-			//Send text, e.g. in YouTube app's search, N.B. NOT BBC iPlayer app.
-			$text = $_REQUEST["text"];
-			$messagepart3 = chr(0x01) . chr(0x00) . chr(strlen(base64_encode($text))) . chr(0x00) . base64_encode($text);
-			$part3 = chr(0x01) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
-			socket_write($sock,$part3,strlen($part3));
-			//echo $part3;
-			//echo "\n";   
+		$SendKeys = explode(",",$SendKey);
+		foreach($SendKeys as $Send_Key){
+			if (isset($Send_Key)) {
+				//Send remote key
+				$key = "KEY_" . $Send_Key;
+				$messagepart3 = chr(0x00) . chr(0x00) . chr(0x00) . chr(strlen(base64_encode($key))) . chr(0x00) . base64_encode($key);
+				$part3 = chr(0x00) . chr(strlen($tvappstring)) . chr(0x00) . $tvappstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
+				socket_write($sock,$part3,strlen($part3));
+				//echo $part3;
+				//echo "\n";
+				usleep(200000);
+			} else if (isset($_REQUEST["text"])) {
+				//Send text, e.g. in YouTube app's search, N.B. NOT BBC iPlayer app.
+				$text = $_REQUEST["text"];
+				$messagepart3 = chr(0x01) . chr(0x00) . chr(strlen(base64_encode($text))) . chr(0x00) . base64_encode($text);
+				$part3 = chr(0x01) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
+				socket_write($sock,$part3,strlen($part3));
+				//echo $part3;
+				//echo "\n";   
+			}
 		}
+
+		
+		
+		
+
+		socket_close($sock);
+		
 	}
-
-	
-	
-    
-
-    socket_close($sock);
-
     //echo "\n\n";
 }
 

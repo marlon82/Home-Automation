@@ -4,24 +4,23 @@ include('functions.php');
 include('config.php');
 
 if( $_GET['id']){
-//$aktor = set_channel( $_GET['kanal']);
-echo "aktor";
-$aktor = setAktor($_GET['id'], $_GET['value'],  $_GET['function']);
+	//$aktor = set_channel( $_GET['kanal']);
+	echo "aktor";
+	$aktor = setAktor($_GET['id'], $_GET['value'],  $_GET['function']);
 }
 
 if( $_GET['group']){
-
-	$sql_groupaktor = query( "SELECT aktorID,aktorValue,deviceID,macroID FROM groupaktor WHERE groupID='" . $_GET['group'] ."'" );
-	//$aktor = fetch( $sql1 );
-	
-
+	$sql_groupaktor = query( "SELECT id,aktorID,aktorValue,deviceID,macroID FROM groupaktor WHERE groupID='" . $_GET['group'] ."'" );
+		
 	while( $groupaktor = fetch( $sql_groupaktor ) ){
-	
+		
+		//echo "				groupaktor ID:" .  $groupaktor['id'];
+		
 		//aktoren
 		if ($groupaktor['aktorID'] != '0'){
 			$sql_aktor = query( "SELECT iid,name,room FROM aktor where id='" . $groupaktor['aktorID'] ."'" );
 			$aktor = fetch( $sql_aktor );
-			
+			//echo "		schalte aktor";
 			$aktor = setAktor($aktor['iid'], $groupaktor['aktorValue'],  $_GET['function']);
 			usleep(800000);		
 		}
@@ -33,6 +32,7 @@ if( $_GET['group']){
 			$sql_macro = query( "SELECT value FROM tvmacros where id='" . $groupaktor['macroID'] ."'" );
 			$macro = fetch( $sql_macro );
 			
+			//echo "		schalte geraet";
 			switch($device['type']){
 				case 'samsungtv':
 					samsung_send_key($device['ip'], $macro['value']);

@@ -8,8 +8,10 @@
 	<title>Home Automation</title> 
 	<link rel="stylesheet" href="./jquery/jquery.mobile-1.3.1.css" />
 	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
 	<script src="./jquery/jquery.mobile-1.3.1.js"></script>
 	<script src="./skripte/time.js"></script>
+	<script src="./skripte/jquery.ui.touch-punch.min.js"></script>
 	<!-- <script src="slider.js"></script> -->
 	<?php
 

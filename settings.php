@@ -46,6 +46,7 @@ margin-top:15px;
 
 $(document).ready(function() {
 
+
 //
 $('#suninfo').change(function(e) {
     var state = ($(this).val() == 'off') ? 'enable' : 'disable';
@@ -68,7 +69,25 @@ $('#aktor').change(function(e) {
 	}
     
 });	
+
+$(function() {
+		$("#sortable ul").sortable({ opacity: 0.6, cursor: 'move', update: function() {
+			var order = $(this).sortable("serialize") + '&action=updateRecordsListings'; 
+			//alert(order);
+			$.post("updateDB.php", order, function(theResponse){
+				$("#sorted").html(theResponse);
+			});  															 
+		}								  
+		});
+	
+	$( "#sortable ul" ).bind( "sortstop", function(event, ui) {
+      $('#sortable ul').listview('refresh');
+    });
+	});
+	
+
 });
+
 
 </script>
 
@@ -119,8 +138,6 @@ $('#aktor').change(function(e) {
 	<p>oder</p>
 	<p>Sensor Wert: z.B.: <20  --> nur schalten wenn kleiner 20</p>
 </div>
-
-
 
 <div  data-role="sidebar" id="left-sidebar"> 
 
@@ -178,6 +195,7 @@ $('#aktor').change(function(e) {
     	<ul data-role="listview">
         	<li <?php if($_GET['aktion'] == 'addGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addGroup">hinzufügen</a></li>
         	<li <?php if($_GET['aktion'] == 'editGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editGroup" selected="selected">bearbeiten</a></li>
+        	<li <?php if($_GET['aktion'] == 'sortGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=sortGroup" selected="selected">sortierung</a></li>
     	</ul>
 
 	</div> 
@@ -2384,6 +2402,7 @@ for( $i = 0; $i <= 64; $i++ )
 																		 '0', 
 																		 '" . $GrID . "',
 																		 '" . $value . "',
+																		 '',
 																		 '')";
 						$sql = query( $befehl);	
 					}
@@ -2398,7 +2417,8 @@ for( $i = 0; $i <= 64; $i++ )
 																	 '" . $dev[0] . "', 
 																	 '" . $GrID . "',
 																	 '',
-																	 '" . $dev[1]  . "')";
+																	 '" . $dev[1]  . "'),
+																	 '')";
 					$sql = query( $befehl);	
 				}
 					
@@ -2669,6 +2689,7 @@ case 'editGroup':
 																		 '0', 
 																		 '" . $GroupID . "',
 																		 '" . $value . "',
+																		 '',
 																		 '')";
 						$sql = query( $befehl);	
 					}
@@ -2683,7 +2704,8 @@ case 'editGroup':
 																	 '" . $dev[0] . "', 
 																	 '" . $GroupID . "',
 																	 '',
-																	 '" . $dev[1]  . "')";
+																	 '" . $dev[1]  . "',
+																	 '')";
 					$sql = query( $befehl);	
 				}
 					
@@ -2828,6 +2850,103 @@ case 'editGroup':
 			<?
 		}	
 		break;	
+		
+case 'sortGroup':
+
+		if( $_POST['submit'] ){
+			$GroupID = $_POST['groupid'];
+			var_dump($GroupID);
+			
+			$OrderList = $_POST['GroupOrderList'];
+			var_dump($OrderList);
+			
+			$neworderarray = $_POST['neworder'];
+			var_dump($neworderarray);
+			//loop through the list of ids and update your db
+			foreach($neworderarray as $order=>$id){    
+				echo "order:" . $order . "    id:" .$id . "</br>";
+			}
+				
+			?>
+			<p class="center">Gruppen sortierung wurde bearbeitet</p>
+			<?
+		}
+		
+		if($_GET['group'] && $_GET['step'] == 1){
+			?>
+			<div id="cont">
+				<form action="index.php?page=settings&aktion=sortGroup&group=<? echo $_GET['group'] ?>&step=2" method="post" class="ui-body ui-body-c ui-corner-all" id="GroupSortForm">
+					<fieldset>
+						<div data-role="fieldcontain">
+							<div data-role="content" data-theme="c" id="sortable">
+							<ul data-role="listview" data-inset="true" data-theme="d">
+							  <li data-role="list-divider">Reihenfolge</li>
+										<?php
+										$GroupID = $_GET['group'];			
+										$sql_eintraege = query( "SELECT id,aktorID,aktorValue,deviceID,macroID FROM groupaktor WHERE groupID='" . $GroupID . "' ORDER BY sortOrder ASC");
+										$x=0;
+										while( $eintraege = fetch( $sql_eintraege ) )
+										{
+											$text = '';
+											//aktor
+											if ($eintraege['aktorID'] != 0){
+												$sql_aktor = query( "SELECT name,room FROM aktor WHERE id='" . $eintraege['aktorID'] . "'");
+												$aktor = fetch($sql_aktor);
+												$sql_room = query( "SELECT name FROM rooms WHERE id='" . $aktor['room'] . "'");
+												$room = fetch($sql_room);
+												$text = $eintraege['id'] .". " . $aktor['name'] . " (" . $room['name'] .")";
+											}
+											//device
+											if ($eintraege['deviceID'] != 0){
+												$sql_device = query( "SELECT name,room FROM devices WHERE id='" . $eintraege['deviceID'] . "'");
+												$device = fetch($sql_device);
+												$sql_room = query( "SELECT name FROM rooms WHERE id='" . $device['room'] . "'");
+												$room = fetch($sql_room);
+												$text = $eintraege['id'] .". " . $device['name'] . " (" . $room['name'] .")";
+											}
+											?>
+											 <li id="recordsArray_<?php echo $eintraege['id']; ?>"><?php echo $text ?></li>
+											<?php
+											$x++;
+										}									
+										?>	
+							</ul>
+							</div>
+							<!-- sorted table -->
+							<div data-role="content" data-theme="c" id="sorted">
+								<p>&nbsp; </p>	
+							</div>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		<?
+		}
+		if(!isset($_GET["group"])){
+			?>
+			<div id="cont">
+			<ul data-role="listview" data-inset="true" data-theme="d" >
+			<li data-role="list-divider">Gruppen Sortierung bearbeiten</li>	
+
+			<?
+
+			$sql_groups = query( "SELECT id, name, status FROM groups" );
+
+			while( $groups = fetch( $sql_groups ) )
+			{
+			?>
+				<li>
+					<a href="index.php?page=settings&aktion=sortGroup&group=<? echo $groups['id']; ?>&step=1" ><h2><? echo $groups['name']; ?></h2></a>
+				</li>
+			<?
+			}
+			?>
+			</ul>
+			</div>
+			<?
+		}	
+		break;			
+		
 	
 		default:
 		//include('dashboard.php');
