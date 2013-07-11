@@ -21,21 +21,21 @@ $width = 100/7; /// dividing 100% space among 7 items. If data is coming form DB
 ?>
         <style>
            /**** Trying to style h1 and paragraph *******/
-               .nav-glyphish-example .ui-btn .ui-btn-inner { padding-top: 40px !important; }
-    .nav-glyphish-example .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: none !important; border-radius: none !important; }
-    #dashboard1 .ui-icon { background:  url(glyphish-icons/81-dashboard.png) no-repeat }
-    #haus .ui-icon { background:  url(glyphish-icons/53-house.png) 50% 50% no-repeat }
-    #tv .ui-icon { background:  url(glyphish-icons/70-tv.png) 50% 50% no-repeat; }
-    #zap .ui-icon { background:  url(glyphish-icons/64-zap.png) 50% 50% no-repeat}
-    #coffee .ui-icon { background:  url(glyphish-icons/100-coffee.png) 50% 50% no-repeat;  background-size: 20px 24px; }
-    #skull .ui-icon { background:  url(glyphish-icons/21-skull.png) 50% 50% no-repeat;  background-size: 22px 24px; }
-    #watch .ui-icon { background:  url(glyphish-icons/78-stopwatch.png) 50% 50% no-repeat;  background-size: 22px 24px; }
-    #music .ui-icon { background:  url(glyphish-icons/65-note.png) 50% 50% no-repeat;  background-size: 22px 24px; }
-    #weather .ui-icon { background:  url(glyphish-icons/25-weather.png) 50% 50% no-repeat;  background-size: 22px 24px; }
-    #raspberry .ui-icon { background:  url(glyphish-icons/raspberrypi.png) 50% 50% no-repeat;  background-size: 22px 24px; }
-    #settings .ui-icon { background:  url(glyphish-icons/19-gear.png) 50% 50% no-repeat; }
-    #group .ui-icon { background:  url(glyphish-icons/123-id-card.png) 50% 50% no-repeat; }
-    #sensor .ui-icon { background:  url(glyphish-icons/16-line-chart.png) 50% 50% no-repeat; }
+				.nav-glyphish-example .ui-btn .ui-btn-inner { padding-top: 40px !important; }
+				.nav-glyphish-example .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: none !important; border-radius: none !important; }
+				#dashboard1 .ui-icon { background:  url(glyphish-icons/81-dashboard.png) no-repeat }
+				#haus .ui-icon { background:  url(glyphish-icons/53-house.png) 50% 50% no-repeat }
+				#tv .ui-icon { background:  url(glyphish-icons/70-tv.png) 50% 50% no-repeat; }
+				#zap .ui-icon { background:  url(glyphish-icons/64-zap.png) 50% 50% no-repeat}
+				#coffee .ui-icon { background:  url(glyphish-icons/100-coffee.png) 50% 50% no-repeat;  background-size: 20px 24px; }
+				#skull .ui-icon { background:  url(glyphish-icons/21-skull.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+				#watch .ui-icon { background:  url(glyphish-icons/78-stopwatch.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+				#music .ui-icon { background:  url(glyphish-icons/65-note.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+				#weather .ui-icon { background:  url(glyphish-icons/25-weather.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+				#raspberry .ui-icon { background:  url(glyphish-icons/raspberrypi.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+				#settings .ui-icon { background:  url(glyphish-icons/19-gear.png) 50% 50% no-repeat; }
+				#group .ui-icon { background:  url(glyphish-icons/123-id-card.png) 50% 50% no-repeat; }
+				#sensor .ui-icon { background:  url(glyphish-icons/16-line-chart.png) 50% 50% no-repeat; }
     
 
 

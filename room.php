@@ -1,18 +1,9 @@
 <div data-role="page2" id="dashboard">
 
+<?
+include("header.php");
+?>
 
-<div data-role="header" data-position="fixed" data-theme="b">
-	<a href="index.php?page=dashboard" data-icon="home" rel="external">Home</a>
-			<div id="container">
-		<li class="hours"></li>
-		<li class="point">:</li>
-		<li class="min"></li>
-		<li class="point">:</li>
-		<li class="sec"></li>
-	</div>
-	<h1>Räume</h1>
-	<a href="javascript:history.go(0)" data-icon="refresh">refresh</a>
-</div><!-- /header -->
 
 <div data-role="panel" id="defaultpanel" data-theme="b">
 	<div class="panel-content" data-theme="b">
@@ -96,8 +87,6 @@ if($_GET['room']){
 <script>
 function aktor(url)
 {
-//var jqxhr = $.get('http://192.168.1.22/web/zap?sRef=1:0:1:2EE3:441:1:C00000:0:0:0:', function() {
-//http://192.168.1.130/homecontrol/kanal.php?kanal=1:0:1:2EE3:441:1:C00000:0:0:0:
 var jqxhr = $.get("aktor.php?link=" + url, function() {})
 }
 
@@ -111,8 +100,6 @@ function changeElement(id) {
 <?php
 
 echo "$(document).ready( function () {\n";
-
-
 
 $sqld = query( "SELECT id,devtypename FROM deviceTypes WHERE devtype = 'dimmer'" );
 $devtype = fetch( $sqld );
@@ -146,23 +133,10 @@ for ($i=1; $holen =  fetch($sql); $i++) {
 	echo "var singleValues = $(\"#flip-" . $holen['iid'] . "\").val();\n";
 	echo "var url = \"$link\";\n";
 	echo "var url_komplett = \"aktor.php\" +  url + singleValues;\n";
-//echo "alert(url_komplett);\n";
 	echo "var jqxhr = $.get(url_komplett, function() {\n";
 	echo "})\n";
 	echo "changeElement(\"flip-" . $holen['iid'] . "-schalten-css\")\n";
 	echo "});\n";	
-	
-	/*   Ausführen mit PHP
-	$link = '&action=setAktor&id=' . $holen['iid'] . '&value=';
-	
-	echo "$(\"#flip-" . $holen['iid'] . "\").on(\"slidestop\", function( event, ui ) { \n";
-	echo "var singleValues = $(\"#flip-" . $holen['iid'] . "\").val();\n";
-	echo "var link = \"$link\";\n";
-	echo "var test = \"index.php?page=room&room=1\" + link + singleValues;\n";
-	echo "window.location= \"index.php?page=room&room=1\" + link + singleValues;\n";
-	echo "});\n";
-	*/
-	
 }	
 
 $sqld = query( "SELECT id,devtypename FROM deviceTypes WHERE devtype = 'rolladen'" );
@@ -176,7 +150,6 @@ for ($i=1; $holen =  fetch($sql); $i++) {
 	echo "var singleValues = 1;\n";
 	echo "var url = \"$link\";\n";
 	echo "var url_komplett = \"aktor.php\" +  url + singleValues;\n";
-	//echo "alert(url_komplett);\n";
 	echo "var jqxhr = $.get(url_komplett, function() {\n";
 	echo "})\n";
 	echo "changeElement(\"Hoch-" . $holen['iid'] . "-schalten-css\")\n";
@@ -187,7 +160,6 @@ for ($i=1; $holen =  fetch($sql); $i++) {
 	echo "var singleValues = 2;\n";
 	echo "var url = \"$link\";\n";
 	echo "var url_komplett = \"aktor.php\" +  url + singleValues;\n";
-	//echo "alert(url_komplett);\n";
 	echo "var jqxhr = $.get(url_komplett, function() {\n";
 	echo "})\n";
 	echo "changeElement(\"Runter-" . $holen['iid'] . "-schalten-css\")\n";

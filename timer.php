@@ -1,17 +1,10 @@
 <div data-role="page" id="dashboard">
 
-<div data-role="header" data-position="fixed" data-theme="b">
-	<a href="index.php?page=dashboard" data-icon="home" rel="external">Home</a>
-	<div id="container">
-		<li class="hours"></li>
-		<li class="point">:</li>
-		<li class="min"></li>
-		<li class="point">:</li>
-		<li class="sec"></li>
-	</div>
-	<h1>Timer</h1>
-	<a href="javascript:history.go(0)" data-icon="refresh">refresh</a>
-</div><!-- /header -->
+
+<?
+include("header.php");
+?>
+
 
 
 

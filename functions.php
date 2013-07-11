@@ -61,6 +61,10 @@ function set_channel($sref){
 	var_dump($xml);
 }
 
+function enigma2_send_key($deviceIP, $key){
+
+}
+
 
 function get_epgdetails($sref){
 	global $dreamIP;
@@ -241,21 +245,26 @@ function fetch( $query )
 }
 function ReadXS1($aktion, $id) 
 {
-
-    global $XS1;
+	global $XS1;
 	  	  
 	if (strcmp($aktion,'sensor')==0){
-	    $actionCmd = 'get_state_sensor'; }
+	    $actionCmd = 'get_state_sensor'; 
+		$Url = $XS1['ip']."control?callback=cname&cmd=".$actionCmd."&number=".$id;
+	}
+	elseif (strcmp($aktion,'allActuators')==0){
+	    $actionCmd = 'get_list_actuators'; 
+		$Url = $XS1['ip']."control?callback=cname&cmd=".$actionCmd;
+	}	
 	else{
-	    $actionCmd = 'get_state_actuator'; }
-	
-	  $Url = $XS1['ip']."control?callback=cname&cmd=".$actionCmd."&number=".$id;
+	    $actionCmd = 'get_state_actuator'; 
+		$Url = $XS1['ip']."control?callback=cname&cmd=".$actionCmd."&number=".$id;
+	}
 	  $jsonData = file_get_contents($Url);
 
 	  // Remove "cname(" and ")"
 	  $json = substr($jsonData, strpos($jsonData,'{'));
 	  $json = substr($json, 0, strrpos($json,'}')+1); 
-	 
+		
 	  //echo $json; echo "<br><br>";  //json string
 	  
 	  $json = json_decode($json);
@@ -263,17 +272,20 @@ function ReadXS1($aktion, $id)
 	  $number = $json->{$aktion}->{'number'};		
 	  $value = $json->{$aktion}->{'value'};
 	  $name = $json->{$aktion}->{'name'};
+	  //echo $name;
 	  $type = $json->{$aktion}->{'type'};
 	  $unit = $json->{$aktion}->{'unit'};
 	  $utime = $json->{$aktion}->{'utime'};
+	  $id = $json->{$aktion}->{'id'};
+	  $function = $json->{$aktion}->{'function'};
 	  
-	  if( $actionCmd == 'get_state_sensor')
-	  {
+	  if( $actionCmd == 'get_state_sensor'){
 	  	$state = $json->{$aktion}->{'state'};
 	  	return compact('number', 'value', 'name', 'type', 'unit', 'utime', 'state');
-	  }
-	  else
-	  {
+	  }elseif( $actionCmd == 'get_list_actuators'){
+		//echo $function;
+	  	return compact('id,name,function'); 
+	  }else{
 	  	$newvalue = $json->{$aktion}->{'newvalue'};
 	  	return compact('number', 'value', 'name', 'type', 'unit', 'utime', 'newvalue'); 
 	  }
@@ -348,10 +360,6 @@ function setAktor($id, $value, $funktion )
 		// Doppeltes Einschalten verhindern
 		if( $zeitEin == 0 )
 			$sql = query( "UPDATE aktor SET zeitEin = '" . time() . "' WHERE iid = '" . $id . "'" );
-		
-		// Logging
-		//$sql = query( "INSERT INTO logAktor VALUES( '', '" . $id . "', '" . time() . "', '', '', '', '')" );
-		
 	}
 	
 	elseif( $value == 'off' || $value == 0 )
@@ -575,7 +583,7 @@ function samsung_send_key($tvip, $SendKey)
 				socket_write($sock,$part3,strlen($part3));
 				//echo $part3;
 				//echo "\n";
-				usleep(200000);
+				usleep(500000);
 			} else if (isset($_REQUEST["text"])) {
 				//Send text, e.g. in YouTube app's search, N.B. NOT BBC iPlayer app.
 				$text = $_REQUEST["text"];
@@ -610,15 +618,18 @@ function Onkyo_send_key($device,$key){
 	}
 	else
 	{
-
-		$length=strlen($key); 
-		$length=$length+1;
-		$total=$length+16;
-		$code=chr($length);
-		// total eiscp packet to send 
-		$line="ISCP\x00\x00\x00\x10\x00\x00\x00$code\x01\x00\x00\x00".$key."\x0D";
-		fwrite($fp, $line); 
-		return $line;
+		$SendKeys = explode(",",$key);
+		foreach($key as $Send_Key){
+			$length=strlen($Send_Key); 
+			$length=$length+1;
+			$total=$length+16;
+			$code=chr($length);
+			// total eiscp packet to send 
+			$line="ISCP\x00\x00\x00\x10\x00\x00\x00$code\x01\x00\x00\x00".$Send_Key."\x0D";
+			fwrite($fp, $line); 
+			usleep(500000);
+			return $line;
+		}
 	}
 }
 

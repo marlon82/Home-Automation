@@ -15,7 +15,7 @@ if ($action == "updateRecordsListings"){
 			$listingCounter = $listingCounter + 1;	
 		}
 		
-		echo '<pre>neue Sortierung wurde gespeichert</pre>';
+		echo '<h4>die neue Sortierung wurde gespeichert</h4>';
 		//echo '<pre>';
 		//print_r($updateRecordsArray);
 		//echo '</pre>';

@@ -41,7 +41,10 @@ if( $_GET['group']){
 					samsung_send_key($device['ip'], $macro['value']);
 					break;						
 				case 'onkyoavrec':
-					Onkyo_Send_Key($device['ip'], $macro['value']);
+					Onkyo_send_key($device['ip'], $macro['value']);
+					break;				
+				case 'enigma2':
+					enigma2_send_key($device['ip'], $macro['value']);
 					break;
 			}
 			usleep(700000);	

@@ -72,9 +72,9 @@ $('#aktor').change(function(e) {
 
 $(function() {
 		$("#sortable ul").sortable({ opacity: 0.6, cursor: 'move', update: function() {
-			var order = $(this).sortable("serialize") + '&action=updateRecordsListings'; 
+			var order = $(this).sortable("serialize") + '&action=updateRecordsListings?table=groupaktor'; 
 			//alert(order);
-			$.post("updateDB.php", order, function(theResponse){
+			$.post("setFunctions.php", order, function(theResponse){
 				$("#sorted").html(theResponse);
 			});  															 
 		}								  
@@ -86,23 +86,29 @@ $(function() {
 	});
 	
 
+$(function() {
+		$("#sortableFooter ul").sortable({ opacity: 0.6, cursor: 'move', update: function() {
+			var order = $(this).sortable("serialize") + '&action=updateRecordsListings?table=configFooter'; 
+			//alert(order);
+			$.post("setFunctions.php", order, function(theResponse){
+				$("#sortedFooter").html(theResponse);
+			});  															 
+		}								  
+		});
+	
+	$( "#sortableFooter ul" ).bind( "sortstop", function(event, ui) {
+      $('#sortableFooter ul').listview('refresh');
+    });
+	});
+
 });
 
 
 </script>
 
-<div data-role="header" data-position="fixed" data-theme="b">
-	<a href="index.php?page=dashboard" data-icon="home" rel="external">Home</a>
-		<div id="container">
-		<li class="hours"></li>
-		<li class="point">:</li>
-		<li class="min"></li>
-		<li class="point">:</li>
-		<li class="sec"></li>
-		</div>
-	<h1>Settings</h1>
-	<a href="javascript:history.go(0)" data-icon="refresh">refresh</a>
-</div><!-- /header -->
+<?
+include("header.php");
+?>
 
 <div data-role="panel" id="defaultpanel" data-theme="b">
 	<div class="panel-content" data-theme="b">
@@ -140,676 +146,912 @@ $(function() {
 </div>
 
 <div  data-role="sidebar" id="left-sidebar"> 
-
 	<div style="float: left; border-radius:10px; height:200%; width:90%; margin-left:10px; margin-top:10px; margin-right:10px">
     	<div data-role="collapsible" data-theme="d" data-content-theme="d">
     	<h2>Konfiguration</h2>
     	<ul data-role="listview">
 			<li <?php if($_GET['aktion'] == 'editConfig') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editConfig">bearbeiten</a></li>
+			<li <?php if($_GET['aktion'] == 'editFooterOrder') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editFooterOrder">Footer</a></li>
     	</ul>
 		</div>
-	<div data-role="collapsible"  <?php if($_GET['aktion'] == ('readAktor' ) || ($_GET['aktion'] == 'addAktor') || ($_GET['aktion'] == 'editAktor')) { ?> data-collapsed="false" <?php } ?> data-theme="d" data-content-theme="d">
-    	<h2>Aktoren</h2>
-    	<ul data-role="listview">
-        	<li <?php if($_GET['aktion'] == ('readAktor' ) || ($_GET['aktion'] == 'addAktor')) { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=readAktor">hinzufügen</a></li>
-        	<li <?php if($_GET['aktion'] == 'editAktor') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editAktor" selected="selected">bearbeiten</a></li>
-    	</ul>
+		<div data-role="collapsible"  <?php if($_GET['aktion'] == ('readAktor' ) || ($_GET['aktion'] == 'addAktor') || ($_GET['aktion'] == 'editAktor')) { ?> data-collapsed="false" <?php } ?> data-theme="d" data-content-theme="d">
+			<h2>Aktoren</h2>
+			<ul data-role="listview">
+				<li <?php if($_GET['aktion'] == ('readAktor' ) || ($_GET['aktion'] == 'addAktor')) { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=readAktor">hinzufügen</a></li>
+				<li <?php if($_GET['aktion'] == 'editAktor') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editAktor" selected="selected">bearbeiten</a></li>
+			</ul>
 
+		</div>
+		<div data-role="collapsible" data-theme="d" data-content-theme="d">
+			<h2>Sensoren</h2>
+			<ul data-role="listview">
+				<li <?php if($_GET['aktion'] == ('readSensor' ) || ($_GET['aktion'] == 'addSensor')) { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=readSensor">hinzufügen</a></li>
+				<li <?php if($_GET['aktion'] == 'editSensor') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editSensor" selected="selected">bearbeiten</a></li>
+			</ul>
+
+		</div>    
+		
+		<div data-role="collapsible"  <?php if($_GET['aktion'] == ('addRoom')) { ?> data-collapsed="false" <?php } ?> data-theme="d" data-content-theme="d">
+			<h2>Räume</h2>
+			<ul data-role="listview">
+				<li <?php if($_GET['aktion'] == 'addRoom') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addRoom">hinzufügen</a></li>
+				<li <?php if($_GET['aktion'] == 'editRoom') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editRoom" selected="selected">bearbeiten</a></li>
+			</ul>
+
+		</div>  
+		<div data-role="collapsible"  data-theme="d" data-content-theme="d">
+			<h2>Geräte</h2>
+			<ul data-role="listview">
+				<li <?php if($_GET['aktion'] == 'addDevice') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addDevice">hinzufügen</a></li>
+				<li <?php if($_GET['aktion'] == 'editDevice') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editDevice" selected="selected">bearbeiten</a></li>
+			</ul>
+
+		</div> 
+		<div data-role="collapsible"  data-theme="d" data-content-theme="d">
+			<h2>Timer</h2>
+			<ul data-role="listview">
+				<li <?php if($_GET['aktion'] == 'addTimer') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addTimer">hinzufügen</a></li>
+				<li <?php if($_GET['aktion'] == 'editTimer') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editTimer" selected="selected">bearbeiten</a></li>
+			</ul>
+
+		</div>  
+
+		<div data-role="collapsible"  data-theme="d" data-content-theme="d">
+			<h2>Gruppen</h2>
+			<ul data-role="listview">
+				<li <?php if($_GET['aktion'] == 'addGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addGroup">hinzufügen</a></li>
+				<li <?php if($_GET['aktion'] == 'editGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editGroup" selected="selected">bearbeiten</a></li>
+				<li <?php if($_GET['aktion'] == 'sortGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=sortGroup" selected="selected">reihenfolge</a></li>
+			</ul>
+
+		</div> 
+
+		<div data-role="collapsible"  data-theme="d" data-content-theme="d">
+			<h2>Macros</h2>
+			<ul data-role="listview">
+				<li <?php if($_GET['aktion'] == 'addMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addMacro">Macro hinzufügen</a></li>
+				<li <?php if($_GET['aktion'] == 'editMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editMacro" selected="selected">Macro bearbeiten</a></li>
+				<li <?php if($_GET['aktion'] == 'mapMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=mapMacro" selected="selected">Mapping hinzufügen</a></li>
+				<li <?php if($_GET['aktion'] == 'editmapMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editmapMacro" selected="selected">Mapping editieren</a></li>
+			</ul>
+		</div>
+		
 	</div>
-	<div data-role="collapsible" data-theme="d" data-content-theme="d">
-    	<h2>Sensoren</h2>
-    	<ul data-role="listview">
-        	<li <?php if($_GET['aktion'] == ('readSensor' ) || ($_GET['aktion'] == 'addSensor')) { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=readSensor">hinzufügen</a></li>
-        	<li <?php if($_GET['aktion'] == 'editSensor') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editSensor" selected="selected">bearbeiten</a></li>
-    	</ul>
-
-	</div>    
-	
-	<div data-role="collapsible"  <?php if($_GET['aktion'] == ('addRoom')) { ?> data-collapsed="false" <?php } ?> data-theme="d" data-content-theme="d">
-    	<h2>Räume</h2>
-    	<ul data-role="listview">
-        	<li <?php if($_GET['aktion'] == 'addRoom') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addRoom">hinzufügen</a></li>
-        	<li <?php if($_GET['aktion'] == 'editRoom') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editRoom" selected="selected">bearbeiten</a></li>
-    	</ul>
-
-	</div>  
-	<div data-role="collapsible"  data-theme="d" data-content-theme="d">
-    	<h2>Geräte</h2>
-    	<ul data-role="listview">
-        	<li <?php if($_GET['aktion'] == 'addDevice') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addDevice">hinzufügen</a></li>
-        	<li <?php if($_GET['aktion'] == 'editDevice') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editDevice" selected="selected">bearbeiten</a></li>
-    	</ul>
-
-	</div> 
-	<div data-role="collapsible"  data-theme="d" data-content-theme="d">
-    	<h2>Timer</h2>
-    	<ul data-role="listview">
-        	<li <?php if($_GET['aktion'] == 'addTimer') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addTimer">hinzufügen</a></li>
-        	<li <?php if($_GET['aktion'] == 'editTimer') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editTimer" selected="selected">bearbeiten</a></li>
-    	</ul>
-
-	</div>  
-
-	<div data-role="collapsible"  data-theme="d" data-content-theme="d">
-    	<h2>Gruppen</h2>
-    	<ul data-role="listview">
-        	<li <?php if($_GET['aktion'] == 'addGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addGroup">hinzufügen</a></li>
-        	<li <?php if($_GET['aktion'] == 'editGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editGroup" selected="selected">bearbeiten</a></li>
-        	<li <?php if($_GET['aktion'] == 'sortGroup') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=sortGroup" selected="selected">sortierung</a></li>
-    	</ul>
-
-	</div> 
-
-	<div data-role="collapsible"  data-theme="d" data-content-theme="d">
-    	<h2>Macros</h2>
-    	<ul data-role="listview">
-        	<li <?php if($_GET['aktion'] == 'addMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=addMacro">Macro hinzufügen</a></li>
-        	<li <?php if($_GET['aktion'] == 'editMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editMacro" selected="selected">Macro bearbeiten</a></li>
-        	<li <?php if($_GET['aktion'] == 'mapMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=mapMacro" selected="selected">Mapping hinzufügen</a></li>
-        	<li <?php if($_GET['aktion'] == 'editmapMacro') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editmapMacro" selected="selected">Mapping editieren</a></li>
-    	</ul>
-
-	</div> 
-
-</div>
 </div>
 
 <?php
 //$XS1 = "192.168.1.242";
 include('functions.php');
 //ini_set('error_reporting', E_ALL);
-
-switch( $_GET['aktion'] )
-	{
-		
-		case 'readSensor':
+?>
+<?
+switch( $_GET['aktion'] ){
+	case 'readSensor':
 		//include('settings.php');
-		
-?>        
-<div id="cont">
-	<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:12px">
-  		<ul data-role="listview" data-inset="true" data-theme="d">
-    		<li data-role="list-divider">Sensoren</li>
-<?php
-for( $i = 0; $i <= 64; $i++ )
-{
-	extract(ReadXS1(sensor, $i));
-										
-	$sql = query( "SELECT id FROM sensoren WHERE iName = '" . $name . "'" );
-	$row = fetch( $sql );
-	if( !$row['id']  && $name && $type != 'disabled' )
-	{
-	?>	
-		<li><a href="?page=settings&aktion=addSensor&iid=<?php echo $number; ?>"><?php echo $name; ?></a></li>				
-
+		?>        
+		<div id="cont">
+			<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+				<ul data-role="listview" data-inset="true" data-theme="d">
+					<li data-role="list-divider">Sensoren</li>
+					<?php
+					for( $i = 0; $i <= 64; $i++ )
+					{
+						extract(ReadXS1(sensor, $i));
+						$sql = query( "SELECT id FROM sensoren WHERE iName = '" . $name . "'" );
+						$row = fetch( $sql );
+						if( !$row['id']  && $name && $type != 'disabled' )
+						{
+						?>	
+							<li><a href="?page=settings&aktion=addSensor&iid=<?php echo $number; ?>"><?php echo $name; ?></a></li>				
+							<?php
+						}
+					}
+					?>		
+				</ul>
+			</div>
+		 </div>   
 		<?php
-	}
-}
-									
-
-?>		
-			</ul>
-    </div>
-    
- </div>   
-
-
-<?php
-	break;
+		break;
 		
-		case 'readAktor':
+	case 'readAktor':
 		//include('settings.php');
-		
-?>        
-<div id="cont">
-	<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:12px">
-  		<ul data-role="listview" data-inset="true" data-theme="d">
-    		<li data-role="list-divider">Aktoren</li>
-<?php
-for( $i = 0; $i <= 64; $i++ )
-{
-	extract(ReadXS1(actuator, $i));
-										
-	$sql = query( "SELECT id FROM aktor WHERE iName = '" . $name . "'" );
-	$row = fetch( $sql );
-	if( !$row['id']  && $name && $type != 'disabled' )
-	{
-	?>	
-		<li><a href="?page=settings&aktion=addAktor&iid=<?php echo $number; ?>"><?php echo $name; ?></a></li>				
-
+		?>        
+		<div id="cont">
+			<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+				<ul data-role="listview" data-inset="true" data-theme="d">
+					<li data-role="list-divider">Aktoren</li>
 		<?php
-	}
-}
-									
+		for( $i = 0; $i <= 64; $i++ )
+		{
+			extract(ReadXS1(actuator, $i));
+			$sql = query( "SELECT id FROM aktor WHERE iName = '" . $name . "'" );
+			$row = fetch( $sql );
+			if( !$row['id']  && $name && $type != 'disabled' )
+			{
+			?>	
+					<li><a href="?page=settings&aktion=addAktor&iid=<?php echo $number; ?>"><?php echo $name; ?></a></li>
+			<?php
+			}
+		}
+		?>		
+				</ul>
+			</div>
+		 </div>   
+		<?php
+		break;
 
-?>		
-			</ul>
-    </div>
-    
- </div>   
-
-
-<?php
-	break;
-
-		case 'addSensor':
+	case 'addSensor':
 		
 		extract(ReadXS1(sensor, $_GET['iid']));
 		
 		if( !$_POST['submit'] ){
-		$sql = query( "SELECT id FROM rooms");
-		$row = fetch( $sql );
+			$sql = query( "SELECT id FROM rooms");
+			$row = fetch( $sql );
+								
+			if( !$row['id'] ){
+				?>
+				<div class="boxWhite"><p>Zuerst einen Raum anlegen!</p></div>			
+				<?
+			}else{
+				?>
+				<div id="cont">
+					<form action="index.php?page=settings&aktion=addSensor&iid=<?php echo $_GET['iid'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+						<fieldset>
+							<div data-role="fieldcontain">
 							
-		if( !$row['id'] )
-			{
-			?>
-			<div class="boxWhite"><p>Zuerst einen Raum anlegen!</p></div>			
-			<?
-		}else{
-		?>
-		<div id="cont">
-			<form action="index.php?page=settings&aktion=addSensor&iid=<?php echo $_GET['iid'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
-				<fieldset>
-					<div data-role="fieldcontain">
-					
-						    <label for="sensorname">Sensor Name:</label>
-     						<input data-clear-btn="true" name="sensorname" id="sensorname" value="" type="text">
-     						
-     						<label for="xs1name">XS1 Name:</label>
-     						<input disabled="disabled" name="xs1name" id="xs1name" value= "<?php echo $name; ?>" type="text"> 
-     						
-     						<label for="room" class="select">Räume:</label>
-							<select name="room" id="room" data-native-menu="false">
-    							<option>Räume:</option>
-    							<?php
-    							$sql2 = query( "SELECT id,name FROM rooms");					
-								while( $row2 = fetch( $sql2 ) )
-									{
-									?>
-    									<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
-    								<?php
-    								}
-    							?>
+									<label for="sensorname">Sensor Name:</label>
+									<input data-clear-btn="true" name="sensorname" id="sensorname" value="" type="text">
+									
+									<label for="xs1name">XS1 Name:</label>
+									<input disabled="disabled" name="xs1name" id="xs1name" value= "<?php echo $name; ?>" type="text"> 
+									
+									<label for="room" class="select">Räume:</label>
+									<select name="room" id="room" data-native-menu="false">
+										<option>Räume:</option>
+										<?php
+										$sql2 = query( "SELECT id,name FROM rooms");					
+										while( $row2 = fetch( $sql2 ) )
+											{
+											?>
+												<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
+											<?php
+											}
+										?>
 
-							</select>
-							
-							<label for="typ" class="select">Typ:</label>
-							<select name="typ" id="typ" data-native-menu="false">
-    							<option>Typ:</option>
-    							<?php
-    							$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes");					
-								while( $row2 = fetch( $sql2 ) )
-									{
-									if( $row2['device'] == 'sensor'){
-									?>
-											<option value="<?php echo $row2['devtype'] ?>"><?php echo $row2['devtypename'] ?></option>
-    								<?php
-										}
-    								}
-    							?>					
-							</select>						
-					</div>
-					<button type="submit" data-theme="c" name="submitSensor" value="submit-value">Submit</button>
-				</fieldset>
-			</form>
-		</div>
-<?php
-}
-}		
-			if( $_POST['submitSensor'] )
-								{		
-									?>
-									<div class="boxWhite">
-										<p class="center">Sensor wurde hinzugefügt</p>
-									</div>
-																									
-									<?php	
-									$sql = query( "INSERT INTO sensoren VALUES( '', '" . $_GET['iid'] . "',
-																					'" . $name	. "',
-																					'" . $_POST['room'] . "',
-																					'" . $_POST['sensorname'] . "',															
-																					'0',
-																					'" . $_POST['typ'] . "',
-																					'0',
-																					'0"  . "')" );						
-								}
-	break;
+									</select>
+									
+									<label for="typ" class="select">Typ:</label>
+									<select name="typ" id="typ" data-native-menu="false">
+										<option>Typ:</option>
+										<?php
+										$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes");					
+										while( $row2 = fetch( $sql2 ) )
+											{
+											if( $row2['device'] == 'sensor'){
+											?>
+													<option value="<?php echo $row2['devtype'] ?>"><?php echo $row2['devtypename'] ?></option>
+											<?php
+												}
+											}
+										?>					
+									</select>						
+							</div>
+							<button type="submit" data-theme="c" name="submitSensor" value="submit-value">Submit</button>
+						</fieldset>
+					</form>
+				</div>
+				<?php
+			}
+		}		
+		if( $_POST['submitSensor'] ){		
+				?>
+				<div class="boxWhite">
+					<p class="center">Sensor wurde hinzugefügt</p>
+				</div>
+																				
+				<?php	
+				$sql = query( "INSERT INTO sensoren VALUES( '', '" . $_GET['iid'] . "',
+																'" . $name	. "',
+																'" . $_POST['room'] . "',
+																'" . $_POST['sensorname'] . "',															
+																'0',
+																'" . $_POST['typ'] . "',
+																'0',
+																'0"  . "')" );						
+		}
+		break;
 
+		
+		
 		case 'addAktor':
 		
 		extract(ReadXS1(actuator, $_GET['iid']));
 		
 		if( !$_POST['submit'] ){
-		$sql = query( "SELECT id FROM rooms");
-		$row = fetch( $sql );
-							
-		if( !$row['id'] )
-			{
-			?>
-			<div class="boxWhite"><p>Zuerst einen Raum anlegen!</p></div>			
-			<?
-		}else{
-		?>
-		<div id="cont">
-			<form action="index.php?page=settings&aktion=addAktor&iid=<?php echo $_GET['iid'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
-				<fieldset>
-					<div data-role="fieldcontain">
-					
-						    <label for="aktorname">Aktor Name:</label>
-     						<input data-clear-btn="true" name="aktorname" id="aktorname" value="" type="text">
-     						
-     						<label for="xs1name">XS1 Name:</label>
-     						<input disabled="disabled" name="xs1name" id="xs1name" value= "<?php echo $name; ?>" type="text"> 
-     						
-     						<label for="verbrauchWatt">Verbrauch (W):</label>
-     						<input data-clear-btn="true" name="verbrauchWatt" id="verbrauchWatt" value="" type="text">
-     						
-     						<label for="room" class="select">Räume:</label>
-							<select name="room" id="room" data-native-menu="false">
-    							<option>Räume:</option>
-    							<?php
-    							$sql2 = query( "SELECT id,name FROM rooms");					
-								while( $row2 = fetch( $sql2 ) )
-									{
-									?>
-    									<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
-    								<?php
-    								}
-    							?>
-
-							</select>
-							
-							<label for="typ" class="select">Typ:</label>
-							<select name="typ" id="typ" data-native-menu="false">
-    							<option>Typ:</option>
-    							<?php
-    							$sql2 = query( "SELECT id,device,devtype,devtypename FROM deviceTypes");					
-								while( $row2 = fetch( $sql2 ) )
-									{
-									if( $row2['device'] == 'aktor'){
-									?>
-											<option value="<?php echo $row2['id'] ?>"><?php echo $row2['devtypename'] ?></option>
-    								<?php
-										}
-    								}
-    							?>
-    							
-							</select>
-
-						
-					</div>
-					<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
-				</fieldset>
-			</form>
-		</div>
-<?php
-}
-}		
-			if( $_POST['submit'] )
-								{		
-									?>
-									<div class="boxWhite">
-										<p class="center">Aktor wurde hinzugefügt</p>
-									</div>
-																									
-									<?php	
-									$sql = query( "INSERT INTO aktor VALUES( '', '" . $_POST['aktorname'] . "',
-																				 '" . $name	. "',
-																				 '" . $_POST['room'] . "',
-																				 '" . $_POST['typ']  . "',
-																				 '" . $_POST['logging'] . "',
-																				 '" . $_POST['verbrauch'] . "',
-																				 '" . $_GET['iid'] . "',
-																				 '0',
-																				 '0',
-																				 '" . $_POST['verbrauchWatt'] . "')" );						
-								}
+			$sql = query( "SELECT id FROM rooms");
+			$row = fetch( $sql );
 								
-		
-		
+			if( !$row['id'] ){
+				?>
+				<div class="boxWhite"><p>Zuerst einen Raum anlegen!</p></div>			
+				<?
+			}else{
+				?>
+				<div id="cont">
+					<form action="index.php?page=settings&aktion=addAktor&iid=<?php echo $_GET['iid'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+						<fieldset>
+							<div data-role="fieldcontain">
+								<li data-role="fieldcontain">
+									<label for="aktorname">Aktor Name:</label>
+									<input data-clear-btn="true" name="aktorname" id="aktorname" value="" type="text">
+								</li>
+								<li data-role="fieldcontain">
+									<label for="xs1name">XS1 Name:</label>
+									<input disabled="disabled" name="xs1name" id="xs1name" value= "<?php echo $name; ?>" type="text"> 
+								</li>
+								<li data-role="fieldcontain">
+									<label for="verbrauchWatt">Verbrauch (W):</label>
+									<input data-clear-btn="true" name="verbrauchWatt" id="verbrauchWatt" value="" type="text">
+								</li>
+								<li data-role="fieldcontain">	
+									<label for="room" class="select">Räume:</label>
+									<select name="room" id="room" data-native-menu="false">
+										<option>Räume:</option>
+										<?php
+										$sql2 = query( "SELECT id,name FROM rooms");					
+										while( $row2 = fetch( $sql2 ) )
+											{
+											?>
+												<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
+											<?php
+											}
+										?>
+
+									</select>
+								</li>
+								<li data-role="fieldcontain">	
+									<label for="typ" class="select">Typ:</label>
+									<select name="typ" id="typ" data-native-menu="false">
+										<option>Typ:</option>
+										<?php
+										$sql2 = query( "SELECT id,device,devtype,devtypename FROM deviceTypes");					
+										while( $row2 = fetch( $sql2 ) )
+											{
+											if( $row2['device'] == 'aktor'){
+											?>
+													<option value="<?php echo $row2['id'] ?>"><?php echo $row2['devtypename'] ?></option>
+											<?php
+												}
+											}
+										?>
+									</select>
+								</li>
+								<li data-role="fieldcontain">	
+									<label for="Function1" class="select">Function 1:</label>
+									<select name="Function1" id="Function1" data-native-menu="false">
+										<option>Function:</option>
+											<option value=""></option>
+											<option value="100">An</option>
+											<option value="0">Aus</option>
+											<option value="0">Hoch</option>
+											<option value="100">Runter</option>
+											<option value="50">50%</option>
+											<option value="75">75%</option>
+									</select>
+								</li>
+								<li data-role="fieldcontain">	
+									<label for="Function2" class="select">Function 2:</label>
+									<select name="Function2" id="Function2" data-native-menu="false">
+										<option>Function:</option>
+											<option value=""></option>
+											<option value="100">An</option>
+											<option value="0">Aus</option>
+											<option value="0">Hoch</option>
+											<option value="100">Runter</option>
+											<option value="50">50%</option>
+											<option value="75">75%</option>
+									</select>
+								</li>
+								<li data-role="fieldcontain">	
+									<label for="Function3" class="select">Function 3:</label>
+									<select name="Function3" id="Function3" data-native-menu="false">
+										<option>Function:</option>
+											<option value=""></option>
+											<option value="100">An</option>
+											<option value="0">Aus</option>
+											<option value="0">Hoch</option>
+											<option value="100">Runter</option>
+											<option value="50">50%</option>
+											<option value="75">75%</option>
+									</select>
+								</li>
+								<li data-role="fieldcontain">	
+									<label for="Function4" class="select">Function 4:</label>
+									<select name="Function4" id="Function4" data-native-menu="false">
+										<option>Function:</option>
+											<option value=""></option>
+											<option value="100">An</option>
+											<option value="0">Aus</option>
+											<option value="0">Hoch</option>
+											<option value="100">Runter</option>
+											<option value="50">50%</option>
+											<option value="75">75%</option>
+									</select>
+								</li>
+							</div>
+							<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
+						</fieldset>
+					</form>
+				</div>
+			<?php
+			}
+		}		
+		if( $_POST['submit'] ){		
+			switch( $_POST['Function1'] ){
+				case 'An': $func1 = '100';break;
+				case 'Aus': $func1 = '0';break;
+				case 'Hoch': $func1 = '0';break;
+				case 'Runter': $func1 = '100';break;
+				case '50%': $func1 = '50';break;
+				case '75%': $func1 = '75';break;
+				case '': $func1 = '';break;
+			}
+			switch( $_POST['Function2'] ){
+				case 'An': $func2 = '100';break;
+				case 'Aus': $func2 = '0';break;
+				case 'Hoch': $func2 = '0';break;
+				case 'Runter': $func2 = '100';break;
+				case '50%': $func2 = '50';break;
+				case '75%': $func2 = '75';break;
+				case '': $func2 = '';break;
+			}
+			switch( $_POST['Function3'] ){
+				case 'An': $func3 = '100';break;
+				case 'Aus': $func3 = '0';break;
+				case 'Hoch': $func3 = '0';break;
+				case 'Runter': $func3 = '100';break;
+				case '50%': $func3 = '50';break;
+				case '75%': $func3 = '75';break;
+				case '': $func3 = '';break;
+			}
+			switch( $_POST['Function4'] ){
+				case 'An': $func4 = '100';break;
+				case 'Aus': $func4 = '0';break;
+				case 'Hoch': $func4 = '0';break;
+				case 'Runter': $func4 = '100';break;
+				case '50%': $func4 = '50';break;
+				case '75%': $func4 = '75';break;
+				case '': $func4 = '';break;
+			}
+			$sql = query( "INSERT INTO aktor VALUES( '', '" . $_POST['aktorname'] . "',
+														 '" . $name	. "',
+														 '" . $_POST['room'] . "',
+														 '" . $_POST['typ']  . "',
+														 '" . $_POST['logging'] . "',
+														 '" . $_POST['verbrauch'] . "',
+														 '" . $_GET['iid'] . "',
+														 '0',
+														 '0',
+														 '" . $_POST['verbrauchWatt'] . "',
+														 '" . $func1 . "',
+														 '" . $_POST['Function1'] . "',
+														 '" . $func2 . "',
+														 '" . $_POST['Function2'] . "',
+														 '" . $func3 . "',
+														 '" . $_POST['Function3'] . "',
+														 '" . $func4 . "',
+														 '" . $_POST['Function4'] . "')" );						
+		}
+		?>
+		<div class="boxWhite">
+			<p class="center">Aktor wurde hinzugefügt</p>
+		</div>
+																		
+		<?php
 		break;	
+
+		
 		
 		case 'editAktor':
 		if(!$_GET['step']){
-		?>
-		<div id="cont">
-		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
-  		<ul data-role="listview" data-inset="true" data-theme="d">
-    		<li data-role="list-divider">Aktoren</li>
-    	<?php
-		$sql = query( "SELECT id,name,room,type FROM aktor");
-																			
-									while( $row = fetch( $sql ) )
-									{
-										$sql1 = query( "SELECT  name FROM rooms WHERE id = '" . $row['room'] . "'" );
-										$row1 = fetch( $sql1 );
-										$sql2 = query( "SELECT id,device,devtype,devtypename FROM deviceTypes WHERE id = '" . $row['type'] . "'" );
-										$devType = fetch( $sql2 );
-										?>																						
-										<li><a href="?page=settings&aktion=editAktor&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $devType['devtypename'] . ")"; ?></span></a></li>																			
-										<?php
-									}
-									?>
-									</ul>
-		</div>
-   
-		<?php
+			?>
+			<div id="cont">
+			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+				<ul data-role="listview" data-inset="true" data-theme="d">
+					<li data-role="list-divider">Aktoren</li>
+					<?php
+					$sql = query( "SELECT id,name,room,type FROM aktor");
+																						
+					while( $row = fetch( $sql ) )
+					{
+						$sql1 = query( "SELECT  name FROM rooms WHERE id = '" . $row['room'] . "'" );
+						$row1 = fetch( $sql1 );
+						$sql2 = query( "SELECT id,device,devtype,devtypename FROM deviceTypes WHERE id = '" . $row['type'] . "'" );
+						$devType = fetch( $sql2 );
+						?>																						
+						<li><a href="?page=settings&aktion=editAktor&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $devType['devtypename'] . ")"; ?></span></a></li>																			
+						<?php
+					}
+					?>
+				</ul>
+			</div>
+	   
+			<?php
 		}
 		if($_GET['step'] == 2){
-		$sql = query( "SELECT iid, name, iName, room, type, logging, verbrauchWatt, zeitHeute FROM aktor WHERE id = '" . $_GET['id'] . "'" );
-		$row = fetch( $sql );
-		?>
-		<div id="cont">
-			<form action="index.php?page=settings&aktion=editAktor&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
-				<fieldset>
-					<div data-role="fieldcontain">
-						<li data-role="fieldcontain">
-						    <label for="aktorname">Aktor Name:</label>
-     						<input data-clear-btn="true" name="aktorname" id="aktorname" value="<?php echo $row['name']; ?>" type="text">
-     					</li>
-						<li data-role="fieldcontain">	
-     						<label for="xs1name">XS1 Name:</label>
-     						<input disabled="disabled" name="xs1name" id="xs1name" value= "<?php echo $row['iName']; ?>" type="text"> 
-     					</li>
-						<li data-role="fieldcontain">	
-     						<label for="verbrauchWatt">Verbrauch (W):</label>
-     						<input data-clear-btn="true" name="verbrauchWatt" id="verbrauchWatt" value="<?php echo $row['verbrauchWatt']; ?>" type="text">
-     					</li>
-						<li data-role="fieldcontain">	
-     						<label for="room" class="select">Räume:</label>
-							<select name="room" id="room" data-native-menu="false">
-    							<option>Räume:</option>
-    							<?php
-    							$sql2 = query( "SELECT id,name FROM rooms");	
-								$roomID = $row['room'];
-								while( $row2 = fetch( $sql2 ) )
-									{
-										if($roomID == $row2['id']){
-										?>
-											<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['name'] ?></option>
-										<?php
-										}else{
-										?>
-											<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
-										<?php
-										}
-    								}
-    							?>
-
-							</select>
-						</li>
-						<li data-role="fieldcontain">	
-							<label for="typ" class="select">Typ:</label>
-							<select name="typ" id="typ" data-native-menu="false">
-    							<option>Typ:</option>
-								<?php
-    							$sql2 = query( "SELECT id,device,devtype,devtypename FROM deviceTypes");	
-								$devtypeID = $row['type'];
-								while( $row2 = fetch( $sql2 ) )
-									{
-										if($row2['device'] == 'aktor'){
-											if($devtypeID == $row2['id']){
+			$sql = query( "SELECT * FROM aktor WHERE id = '" . $_GET['id'] . "'" );
+			$row = fetch( $sql );
+			?>
+			<div id="cont">
+				<form action="index.php?page=settings&aktion=editAktor&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+					<fieldset>
+						<div data-role="fieldcontain">
+							<li data-role="fieldcontain">
+								<label for="aktorname">Aktor Name:</label>
+								<input data-clear-btn="true" name="aktorname" id="aktorname" value="<?php echo $row['name']; ?>" type="text">
+							</li>
+							<li data-role="fieldcontain">	
+								<label for="xs1name">XS1 Name:</label>
+								<input disabled="disabled" name="xs1name" id="xs1name" value= "<?php echo $row['iName']; ?>" type="text"> 
+							</li>
+							<li data-role="fieldcontain">	
+								<label for="verbrauchWatt">Verbrauch (W):</label>
+								<input data-clear-btn="true" name="verbrauchWatt" id="verbrauchWatt" value="<?php echo $row['verbrauchWatt']; ?>" type="text">
+							</li>
+							<li data-role="fieldcontain">	
+								<label for="room" class="select">Räume:</label>
+								<select name="room" id="room" data-native-menu="false">
+									<option>Räume:</option>
+									<?php
+									$sql2 = query( "SELECT id,name FROM rooms");	
+									$roomID = $row['room'];
+									while( $row2 = fetch( $sql2 ) )
+										{
+											if($roomID == $row2['id']){
 											?>
-												<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['devtypename'] ?></option>
+												<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['name'] ?></option>
 											<?php
 											}else{
 											?>
-												<option value="<?php echo $row2['id'] ?>"><?php echo $row2['devtypename'] ?></option>
+												<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
 											<?php
 											}
 										}
-    								}
-    							?>		
-							</select>
-						</li>
+									?>
+
+								</select>
+							</li>
+							<li data-role="fieldcontain">	
+								<label for="typ" class="select">Typ:</label>
+								<select name="typ" id="typ" data-native-menu="false">
+									<option>Typ:</option>
+									<?php
+									$sql2 = query( "SELECT id,device,devtype,devtypename FROM deviceTypes");	
+									$devtypeID = $row['type'];
+									while( $row2 = fetch( $sql2 ) )
+										{
+											if($row2['device'] == 'aktor'){
+												if($devtypeID == $row2['id']){
+												?>
+													<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['devtypename'] ?></option>
+												<?php
+												}else{
+												?>
+													<option value="<?php echo $row2['id'] ?>"><?php echo $row2['devtypename'] ?></option>
+												<?php
+												}
+											}
+										}
+									?>		
+								</select>
+							</li>
+
+							<li data-role="fieldcontain">	
+							<?
+							$selectAn = '';
+							$selectAus = '';
+							$selectHoch = '';
+							$selectRunter = '';
+							$select50 = '';
+							$select75 = '';
+							$select0 = '';
+							switch( $row['func1desc'] ){
+								case 'An': $selectAn = 'selected=\'selected\''; break;
+								case 'Aus': $selectAus = 'selected=\'selected\'';break;
+								case 'Hoch': $selectHoch = 'selected=\'selected\'';break;
+								case 'Runter': $selectRunter = 'selected=\'selected\'';break;
+								case '50%': $select50 = 'selected=\'selected\'';break;
+								case '75%': $select75 = 'selected=\'selected\'';break;
+								default: $select0 = 'selected=\'selected\'';break;
+							}
+							?>
+								<label for="Function1" class="select">Function 1:</label>
+								<select name="Function1" id="Function1" data-native-menu="false">
+									<option>Function:</option>
+										<option value="" <? echo $select0; ?>></option>
+										<option value="An" <? echo $selectAn; ?>>An</option>
+										<option value="Aus" <? echo $selectAus; ?>>Aus</option>
+										<option value="Hoch" <? echo $selectHoch; ?>>Hoch</option>
+										<option value="Runter" <? echo $selectRunter; ?>>Runter</option>
+										<option value="50%" <? echo $select50; ?>>50%</option>
+										<option value="75%" <? echo $select75; ?>>75%</option>
+								</select>
+							</li>
+							<li data-role="fieldcontain">
+							<?
+							$selectAn = '';
+							$selectAus = '';
+							$selectHoch = '';
+							$selectRunter = '';
+							$select50 = '';
+							$select75 = '';
+							$select0 = '';
+							switch( $row['func2desc'] ){
+								case 'An': $selectAn = 'selected=\'selected\'';break;
+								case 'Aus': $selectAus = 'selected=\'selected\'';break;
+								case 'Hoch': $selectHoch = 'selected=\'selected\'';break;
+								case 'Runter': $selectRunter = 'selected=\'selected\'';break;
+								case '50%': $select50 = 'selected=\'selected\'';break;
+								case '75%': $select75 = 'selected=\'selected\'';break;
+								default: $select0 = 'selected=\'selected\'';break;
+							}
+							?>						
+								<label for="Function2" class="select">Function 2:</label>
+								<select name="Function2" id="Function2" data-native-menu="false">
+									<option>Function:</option>
+										<option value="" <? echo $select0; ?>></option>
+										<option value="An" <? echo $selectAn; ?>>An</option>
+										<option value="Aus" <? echo $selectAus; ?>>Aus</option>
+										<option value="Hoch" <? echo $selectHoch; ?>>Hoch</option>
+										<option value="Runter" <? echo $selectRunter; ?>>Runter</option>
+										<option value="50%" <? echo $select50; ?>>50%</option>
+										<option value="75%" <? echo $select75; ?>>75%</option>
+								</select>
+							</li>
+							<li data-role="fieldcontain">	
+							<?
+							$selectAn = '';
+							$selectAus = '';
+							$selectHoch = '';
+							$selectRunter = '';
+							$select50 = '';
+							$select75 = '';
+							$select0 = '';
+							switch( $row['func3desc'] ){
+								case 'An': $selectAn = 'selected=\'selected\'';break;
+								case 'Aus': $selectAus = 'selected=\'selected\'';break;
+								case 'Hoch': $selectHoch = 'selected=\'selected\'';break;
+								case 'Runter': $selectRunter = 'selected=\'selected\'';break;
+								case '50%': $select50 = 'selected=\'selected\'';break;
+								case '75%': $select75 = 'selected=\'selected\'';break;
+								default: $select0 = 'selected=\'selected\'';break;
+							}
+							?>	
+								<label for="Function3" class="select">Function 3:</label>
+								<select name="Function3" id="Function3" data-native-menu="false">
+									<option>Function:</option>
+										<option value="" <? echo $select0; ?>></option>
+										<option value="An" <? echo $selectAn; ?>>An</option>
+										<option value="Aus" <? echo $selectAus; ?>>Aus</option>
+										<option value="Hoch" <? echo $selectHoch; ?>>Hoch</option>
+										<option value="Runter" <? echo $selectRunter; ?>>Runter</option>
+										<option value="50%" <? echo $select50; ?>>50%</option>
+										<option value="75%" <? echo $select75; ?>>75%</option>
+								</select>
+							</li>
+							<li data-role="fieldcontain">
+							<?
+							$selectAn = '';
+							$selectAus = '';
+							$selectHoch = '';
+							$selectRunter = '';
+							$select50 = '';
+							$select75 = '';
+							$select0 = '';
+							switch( $row['func4desc'] ){
+								case 'An': $selectAn = 'selected=\'selected\'';break;
+								case 'Aus': $selectAus = 'selected=\'selected\'';break;
+								case 'Hoch': $selectHoch = 'selected=\'selected\'';break;
+								case 'Runter': $selectRunter = 'selected=\'selected\'';break;
+								case '50%': $select50 = 'selected=\'selected\'';break;
+								case '75%': $select75 = 'selected=\'selected\'';break;
+								default: $select0 = 'selected=\'selected\'';break;
+							}
+							?>							
+								<label for="Function4" class="select">Function 4:</label>
+								<select name="Function4" id="Function4" data-native-menu="false">
+									<option>Function:</option>
+										<option value="" <? echo $select0; ?>></option>
+										<option value="An" <? echo $selectAn; ?>>An</option>
+										<option value="Aus" <? echo $selectAus; ?>>Aus</option>
+										<option value="Hoch" <? echo $selectHoch; ?>>Hoch</option>
+										<option value="Runter" <? echo $selectRunter; ?>>Runter</option>
+										<option value="50%" <? echo $select50; ?>>50%</option>
+										<option value="75%" <? echo $select75; ?>>75%</option>
+								</select>
+							</li>
+							
+						</div>
+					<div class="ui-body ui-body-c">
+					<fieldset class="ui-grid-a">
+						<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
+						<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
+					</fieldset>
 					</div>
-				<div class="ui-body ui-body-c">
-				<fieldset class="ui-grid-a">
-					<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
-					<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
-	    		</fieldset>
-				</div>
-			</fieldset>
-			</form>
-		</div>		
-		<?php
-		
+				</fieldset>
+				</form>
+			</div>	
+			<?php
 		}
 		if($_GET['step'] == 3){
 			if( $_POST['delete'] ){
-			?>
-			<div id="cont1">
-			<p>Der Aktor wurde gelöscht</p>
-			</div>
-			<?php
-			$sql = query( "DELETE FROM aktor WHERE id = '" . $_GET['id'] . "'" );	
+				?>
+				<div id="cont1">
+				<p>Der Aktor wurde gelöscht</p>
+				</div>
+				<?php
+				$sql = query( "DELETE FROM aktor WHERE id = '" . $_GET['id'] . "'" );	
 			}
 			if( $_POST['submit'] ){
-			?>
-			<div id="cont1">
-			<p>Der Aktor wurde geändert</p>
-			</div>
-			<?php
-			$sql = query( "UPDATE aktor SET name = '" . $_POST['aktorname'] . "', room = '" . $_POST['room'] . "', type = '" . $_POST['typ'] . "', verbrauchWatt = '" . $_POST['verbrauchWatt'] . "' WHERE id = '" . $_GET['id'] . "'" );	
+				switch( $_POST['Function1'] ){
+					case 'An': $func1 = '100';break;
+					case 'Aus': $func1 = '0';break;
+					case 'Hoch': $func1 = '0';break;
+					case 'Runter': $func1 = '100';break;
+					case '50%': $func1 = '50';break;
+					case '75%': $func1 = '75';break;
+					case '': $func1 = '';break;
+				}
+				switch( $_POST['Function2'] ){
+					case 'An': $func2 = '100';break;
+					case 'Aus': $func2 = '0';break;
+					case 'Hoch': $func2 = '0';break;
+					case 'Runter': $func2 = '100';break;
+					case '50%': $func2 = '50';break;
+					case '75%': $func2 = '75';break;
+					case '': $func2 = '';break;
+				}
+				switch( $_POST['Function3'] ){
+					case 'An': $func3 = '100';break;
+					case 'Aus': $func3 = '0';break;
+					case 'Hoch': $func3 = '0';break;
+					case 'Runter': $func3 = '100';break;
+					case '50%': $func3 = '50';break;
+					case '75%': $func3 = '75';break;
+					case '': $func3 = '';break;
+				}
+				switch( $_POST['Function4'] ){
+					case 'An': $func4 = '100';break;
+					case 'Aus': $func4 = '0';break;
+					case 'Hoch': $func4 = '0';break;
+					case 'Runter': $func4 = '100';break;
+					case '50%': $func4 = '50';break;
+					case '75%': $func4 = '75';break;
+					case '': $func4 = '';break;
+				}
+				
+				$sql = query( "UPDATE aktor SET name = '" . $_POST['aktorname'] . "', room = '" . $_POST['room'] . "', type = '" . $_POST['typ'] . "', verbrauchWatt = '" . $_POST['verbrauchWatt'] . "',
+							   func1 = '" . $func1 . "', func1desc = '" . $_POST['Function1'] . "',
+							   func2 = '" . $func2 . "', func2desc = '" . $_POST['Function2'] . "',
+							   func3 = '" . $func3 . "', func3desc = '" . $_POST['Function3'] . "',
+							   func4 = '" . $func4 . "', func4desc = '" . $_POST['Function4'] . "' WHERE id = '" . $_GET['id'] . "'" );
+				?>
+				<div id="cont1">
+				<p>Der Aktor wurde geändert</p>
+				</div>
+				<?php							   
 			}
 		}
 									
-		//include('dreambox.php');
 		break;			
 	
 	
 	
 		case 'editSensor':
-		if(!$_GET['step']){
-		?>
-		<div id="cont">
-		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
-  		<ul data-role="listview" data-inset="true" data-theme="d">
-    		<li data-role="list-divider">Sensoren</li>
-    	<?php
-		$sql = query( "SELECT id,name,room,hcType FROM sensoren");
-																			
-									while( $row = fetch( $sql ) )
-									{
-										$sql1 = query( "SELECT  name FROM rooms WHERE id = '" . $row['room'] . "'" );
-										$row1 = fetch( $sql1 )
-										?>																						
-										<li><a href="?page=settings&aktion=editSensor&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $row['hcType'] . ")"; ?></span></a></li>																			
+			if(!$_GET['step']){
+				?>
+				<div id="cont">
+				<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+					<ul data-role="listview" data-inset="true" data-theme="d">
+						<li data-role="list-divider">Sensoren</li>
+						<?php
+						$sql = query( "SELECT id,name,room,hcType FROM sensoren");
+						while( $row = fetch( $sql ) )
+						{
+							$sql1 = query( "SELECT  name FROM rooms WHERE id = '" . $row['room'] . "'" );
+							$row1 = fetch( $sql1 )
+							?>																						
+							<li><a href="?page=settings&aktion=editSensor&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $row['hcType'] . ")"; ?></span></a></li>																			
+							<?php
+						}
+						?>
+					</ul>
+				</div>
+		   
+				<?php
+			}
+			if($_GET['step'] == 2){
+				$sql = query( "SELECT iid, name, iName, room, hcType FROM sensoren WHERE id = '" . $_GET['id'] . "'" );
+				$row = fetch( $sql );
+				?>
+				<div id="cont">
+					<form action="index.php?page=settings&aktion=editSensor&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+						<fieldset>
+							<div data-role="fieldcontain">
+								<li data-role="fieldcontain">
+									<label for="sensorname">Sensor Name:</label>
+									<input data-clear-btn="true" name="sensorname" id="sensorname" value="<?php echo $row['name']; ?>" type="text">
+								</li>
+								<li data-role="fieldcontain">	
+									<label for="xs1name">XS1 Name:</label>
+									<input disabled="disabled" name="xs1name" id="xs1name" value= "<?php echo $row['iName']; ?>" type="text"> 
+								</li>
+								<li data-role="fieldcontain">	
+									<label for="room" class="select">Räume:</label>
+									<select name="room" id="room" data-native-menu="false">
+									<option>Räume:</option>
 										<?php
-									}
-									?>
-									</ul>
-    </div>
-   
-		<?php
-		}
-		if($_GET['step'] == 2){
-		$sql = query( "SELECT iid, name, iName, room, hcType FROM sensoren WHERE id = '" . $_GET['id'] . "'" );
-		$row = fetch( $sql );
-		?>
-		<div id="cont">
-			<form action="index.php?page=settings&aktion=editSensor&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
-				<fieldset>
-					<div data-role="fieldcontain">
-						<li data-role="fieldcontain">
-						    <label for="sensorname">Sensor Name:</label>
-     						<input data-clear-btn="true" name="sensorname" id="sensorname" value="<?php echo $row['name']; ?>" type="text">
-     					</li>
-						<li data-role="fieldcontain">	
-     						<label for="xs1name">XS1 Name:</label>
-     						<input disabled="disabled" name="xs1name" id="xs1name" value= "<?php echo $row['iName']; ?>" type="text"> 
-     					</li>
-						<li data-role="fieldcontain">	
-     						<label for="room" class="select">Räume:</label>
-							<select name="room" id="room" data-native-menu="false">
-							<option>Räume:</option>
-    							<?php
-    							$sql2 = query( "SELECT id,name FROM rooms");
-								$roomID = $row['room'];					
-								while( $row2 = fetch( $sql2 ) )
-									{
-										if($roomID == $row2['id']){
-										?>
-											<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['name'] ?></option>
-										<?php
-										}else{
-										?>
-											<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
-										<?php
-										}
-    								}
-    							?>							
-							</select>
-						</li>
-						<li data-role="fieldcontain">	
-							<label for="hcType" class="select">Typ:</label>
-							<select name="hcType" id="hcType" data-native-menu="false">
-    							<option>Typ:</option>
-									<?php
-									$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes");	
-									$devtypeID = $row['hcType'];
-									while( $row2 = fetch( $sql2 ) )
-										{
-											if($row2['device'] == 'sensor'){
-												if($devtypeID == $row2['devtype']){
+										$sql2 = query( "SELECT id,name FROM rooms");
+										$roomID = $row['room'];					
+										while( $row2 = fetch( $sql2 ) )
+											{
+												if($roomID == $row2['id']){
 												?>
-													<option value="<?php echo $row2['devtype'] ?>" selected="selected"><?php echo $row2['devtypename'] ?></option>
+													<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['name'] ?></option>
 												<?php
 												}else{
 												?>
-													<option value="<?php echo $row2['devtype'] ?>"><?php echo $row2['devtypename'] ?></option>
+													<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
 												<?php
 												}
 											}
-										}
-    							?>								
-							</select>
-						</li>
-					</div>
-				<div class="ui-body ui-body-c">
-				<fieldset class="ui-grid-a">
-					<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
-					<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
-	    		</fieldset>
+										?>							
+									</select>
+								</li>
+								<li data-role="fieldcontain">	
+									<label for="hcType" class="select">Typ:</label>
+									<select name="hcType" id="hcType" data-native-menu="false">
+										<option>Typ:</option>
+											<?php
+											$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes");	
+											$devtypeID = $row['hcType'];
+											while( $row2 = fetch( $sql2 ) )
+												{
+													if($row2['device'] == 'sensor'){
+														if($devtypeID == $row2['devtype']){
+														?>
+															<option value="<?php echo $row2['devtype'] ?>" selected="selected"><?php echo $row2['devtypename'] ?></option>
+														<?php
+														}else{
+														?>
+															<option value="<?php echo $row2['devtype'] ?>"><?php echo $row2['devtypename'] ?></option>
+														<?php
+														}
+													}
+												}
+										?>								
+									</select>
+								</li>
+							</div>
+							<div class="ui-body ui-body-c">
+								<fieldset class="ui-grid-a">
+									<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
+									<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
+								</fieldset>
+							</div>
+						</fieldset>
+					</form>
+				</div>		
+				<?php
+			}
+			if($_GET['step'] == 3){
+				if( $_POST['delete'] ){
+				?>
+				<div id="cont1">
+				<p>Der Sensor wurde gelöscht</p>
 				</div>
-			</fieldset>
-			</form>
-		</div>		
-		<?php
-		
-		}
-		if($_GET['step'] == 3){
-			if( $_POST['delete'] ){
-			?>
-			<div id="cont1">
-			<p>Der Sensor wurde gelöscht</p>
-			</div>
-			<?php
-			$sql = query( "DELETE FROM sensoren WHERE id = '" . $_GET['id'] . "'" );	
+				<?php
+				$sql = query( "DELETE FROM sensoren WHERE id = '" . $_GET['id'] . "'" );	
+				}
+				if( $_POST['submit'] ){
+				?>
+				<div id="cont1">
+				<p>Der Sensor wurde geändert</p>
+				</div>
+				<?php
+				$sql = query( "UPDATE sensoren SET name = '" . $_POST['sensorname'] . "', room = '" . $_POST['room'] . "', hcType = '" . $_POST['hcType'] . "' WHERE id = '" . $_GET['id'] . "'" );	
+				}
 			}
-			if( $_POST['submit'] ){
-			?>
-			<div id="cont1">
-			<p>Der Sensor wurde geändert</p>
-			</div>
-			<?php
-			$sql = query( "UPDATE sensoren SET name = '" . $_POST['sensorname'] . "', room = '" . $_POST['room'] . "', hcType = '" . $_POST['hcType'] . "' WHERE id = '" . $_GET['id'] . "'" );	
-			}
-		}
-									
-		//include('dreambox.php');
-		break;			
+			break;			
 		
 		
 		case 'editRoom':
 		if(!$_GET['step']){
-		?>
-		<div id="cont">
-		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
-  		<ul data-role="listview" data-inset="true" data-theme="d">
-    		<li data-role="list-divider">Räume</li>
-    	<?php
-		$sql = query( "SELECT id,name,icon FROM rooms");
-																			
-									while( $room = fetch( $sql ) )
-									{
-										?>																						
-										<li><a href="?page=settings&aktion=editRoom&step=2&id=<?php echo $room['id']; ?>"><img src="<?php echo $room['icon'] ?>" class="ui-li-icon"><?php echo $room['name'] ?> <span style="float:right;position:absolute;right:40px;"></span></a></li>																			
-										<?php
-									}
-									?>
-									</ul>
-		</div>
-   
-		<?php
+			?>
+			<div id="cont">
+			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+				<ul data-role="listview" data-inset="true" data-theme="d">
+					<li data-role="list-divider">Räume</li>
+					<?php
+					$sql = query( "SELECT id,name,icon FROM rooms");
+					while( $room = fetch( $sql ) )
+						{
+							?>																						
+							<li><a href="?page=settings&aktion=editRoom&step=2&id=<?php echo $room['id']; ?>"><img src="<?php echo $room['icon'] ?>" class="ui-li-icon"><?php echo $room['name'] ?> <span style="float:right;position:absolute;right:40px;"></span></a></li>																			
+							<?php
+						}
+						?>
+				</ul>
+			</div>
+			<?php
 		}
 		if($_GET['step'] == 2){
-		$sql = query( "SELECT id, name, icon FROM rooms WHERE id = '" . $_GET['id'] . "'" );
-		$room = fetch( $sql );
-		?>
-		<div id="cont">
-			<form action="index.php?page=settings&aktion=editRoom&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
-				<fieldset>
-					<div data-role="fieldcontain">
-					
-						    <label for="roomname">Raum Name:</label>
-     						<input data-clear-btn="true" name="roomname" id="roomname" value="<?php echo $room['name']; ?>" type="text">
-     				</div>		
-					
-					<div data-role="fieldcontain">
-						<?
+			$sql = query( "SELECT id, name, icon FROM rooms WHERE id = '" . $_GET['id'] . "'" );
+			$room = fetch( $sql );
+			?>
+			<div id="cont">
+				<form action="index.php?page=settings&aktion=editRoom&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+					<fieldset>
+						<div data-role="fieldcontain">
 						
-						// open this directory 
-						$myDirectory = opendir("glyphish-icons/");
-
-						// get each entry
-						while($entryName = readdir($myDirectory)) {
-							$dirArray[] = $entryName;
-						}
-
-						// close directory
-						closedir($myDirectory);
-
-						//	count elements in array
-						$indexCount	= count($dirArray);
-						// sort 'em
-						//sort($dirArray);
+								<label for="roomname">Raum Name:</label>
+								<input data-clear-btn="true" name="roomname" id="roomname" value="<?php echo $room['name']; ?>" type="text">
+						</div>		
 						
-						list($foldername, $filename) = explode('/', $room['icon']);
-						
-						?>
-						<label for="roomicon" class="select">Icon:</label>
-							<select name="roomicon" id="roomicon" data-native-menu="false">
-							<option>Icon:</option>
-    							<?php
-    										
-								for($index=0; $index < $indexCount; $index++) {
-									if (substr("$dirArray[$index]", 0, 1) != "."){ // don't list hidden files
-										if($dirArray[$index] == $filename){
-										?>
-											<option value="<?php echo $dirArray[$index] ?>" selected="selected"><?php echo $dirArray[$index] ?></option>
-										<?php
-										}else{
-										?>
-											<option value="<?php echo $dirArray[$index] ?>"><?php echo $dirArray[$index] ?></option>
-										<?php
-										}
-    								}
-									}
-    							?>							
-							</select>
+						<div data-role="fieldcontain">
+							<?
 							
+							// open this directory 
+							$myDirectory = opendir("glyphish-icons/");
+
+							// get each entry
+							while($entryName = readdir($myDirectory)) {
+								$dirArray[] = $entryName;
+							}
+
+							// close directory
+							closedir($myDirectory);
+
+							//	count elements in array
+							$indexCount	= count($dirArray);
+							// sort 'em
+							//sort($dirArray);
+							
+							list($foldername, $filename) = explode('/', $room['icon']);
+							
+							?>
+							<label for="roomicon" class="select">Icon:</label>
+								<select name="roomicon" id="roomicon" data-native-menu="false">
+								<option>Icon:</option>
+									<?php
+												
+									for($index=0; $index < $indexCount; $index++) {
+										if (substr("$dirArray[$index]", 0, 1) != "."){ // don't list hidden files
+											if($dirArray[$index] == $filename){
+											?>
+												<option value="<?php echo $dirArray[$index] ?>" selected="selected"><?php echo $dirArray[$index] ?></option>
+											<?php
+											}else{
+											?>
+												<option value="<?php echo $dirArray[$index] ?>"><?php echo $dirArray[$index] ?></option>
+											<?php
+											}
+										}
+										}
+									?>							
+								</select>
+								
+						</div>
+					<div class="ui-body ui-body-c">
+					<fieldset class="ui-grid-a">
+						<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
+						<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
+					</fieldset>
 					</div>
-				<div class="ui-body ui-body-c">
-				<fieldset class="ui-grid-a">
-					<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
-					<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
-	    		</fieldset>
-				</div>
-			</fieldset>
-			</form>
-		</div>		
-		<?php
+				</fieldset>
+				</form>
+			</div>		
+			<?php
 		
 		}
 		if($_GET['step'] == 3){
@@ -831,130 +1073,113 @@ for( $i = 0; $i <= 64; $i++ )
 			}
 		}
 									
-		//include('dreambox.php');
 		break;		
 			
 		
 		
 		case 'editmapMacro':
-		if(!$_GET['step']){
-		?>
-		<div id="cont">
-		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
-  		<ul data-role="listview" data-inset="true" data-theme="d">
-    		<li data-role="list-divider">Devices mit Macro Mapping</li>
-    	<?php
-		
-		$sql = query( "SELECT id,DeviceID FROM devicemacro");
-		while( $device = fetch($sql))
-		{
-			$DevicesWithMacro[] = $device['DeviceID'];
-		}
-		$DevicesWithMacro = array_unique($DevicesWithMacro);
-		$DevicesWithMacro = array_values($DevicesWithMacro);
-		for($i=0;$i<=count($DevicesWithMacro)-1;$i++)
-		{
-			$sql_device = query( "SELECT id,name FROM devices WHERE id ='" . $DevicesWithMacro[$i] . "'");
-			$device = fetch($sql_device)
-			?>																						
-			<li><a href="?page=settings&aktion=editmapMacro&step=2&id=<?php echo $DevicesWithMacro[$i]; ?>"><?php echo $device['name'] ?> <span style="float:right;position:absolute;right:40px;"></span></a></li>
-			<?php
-		}
-		?>
-		</ul>
-		</div>
-   
-		<?php
-		}
-		if($_GET['step'] == 2){
-		$sql = query( "SELECT id, DeviceID, MacroID FROM devicemacro WHERE DeviceID = '" . $_GET['id'] . "'" );
-		$Device = fetch( $sql );
-		$DeviceID = $Device['DeviceID'];
-		?>
-		<div id="cont">
-			<form action="index.php?page=settings&aktion=editmapMacro&step=3&id=<?php echo $DeviceID ?>" method="post" class="ui-body ui-body-c ui-corner-all">
-			<fieldset>
-						<li data-role="fieldcontain">		
-     						<label for="device" class="select">Device:</label>
-							<select name="device" id="device" data-native-menu="false">
-								<?php
-								?>
-								<option>Bitte wählen...</option>
-								<optgroup label="device">
-								<?php
-    							$sql2 = query( "SELECT id,name,room FROM devices");					
-								while( $row2 = fetch( $sql2 ) )
-								{
-									$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
-									$RoomName = fetch($sql);
-									$DevID = $row2['id'];
-									if ($DeviceID == $DevID){
-									?>
-											<option value="<?php echo $row2['id']; ?>" selected="selected"><?php echo $row2['name'] . " (" . $RoomName['name'] . ")"; ?></option>
-    								<?php
-									}else {
-									?>
-											<option value="<?php echo $row2['id']; ?>"><?php echo $row2['name'] . " (" . $RoomName['name'] . ")"; ?></option>
-    								<?php
-									}
-									
-    							}
-								?>
-							</select>	
-						</li>
-					
-						<div data-role="fieldcontain">
-						<fieldset data-role="controlgroup">
-						<legend>Macros:</legend>
-							<?php
-								
-    						$sql_macros = query( "SELECT id,name,value FROM tvmacros");
-							while($macros = fetch($sql_macros))
-							{
-								$sql_DevMac = query( "SELECT MacroID FROM devicemacro WHERE DeviceID='" . $DeviceID . "'");	
-								while ($DevMacros = fetch($sql_DevMac))
-								{
-									if($macros['id'] == $DevMacros['MacroID']){ $checked = "checked";}
-								}
-								?>
-								<input type="checkbox" name="Macros[]" id="<?php echo $macros['id'] ?>"  <? echo $checked ?> value="<?php echo $macros['id'] ?>" class="custom" />
-	   							<label for="<?php echo $macros['id'] ?>"><?php echo $macros['name']; ?></label>
-    							<?php
-    							$checked = "";
-    						}
-    						?>
-						</fieldset>
-						</div>			
-
-				<div class="ui-body ui-body-c">
-				<fieldset class="ui-grid-a">
-					<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
-					<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
-	    		</fieldset>
-				</div>
-			</fieldset>
-			</form>
-		</div>		
-		<?php
-		
-		}
-		if($_GET['step'] == 3){
-			if( $_POST['delete'] ){
-			$sql_mappings = query("SELECT id,DeviceId FROM devicemacro ORDER BY id DESC");
-			while($mappings = fetch($sql_mappings))
-			{
-				if ($mappings['DeviceId'] == $_POST['device']){
-					$sql = query( "DELETE FROM devicemacro WHERE id = '" . $mappings['id'] . "'" );
-				}
-			}
+			if(!$_GET['step']){
+				?>
+				<div id="cont">
+				<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+				<ul data-role="listview" data-inset="true" data-theme="d">
+					<li data-role="list-divider">Devices mit Macro Mapping</li>
+				<?php
 				
-			?>
-			<div id="cont1">
-			<p>Das Mapping wurde gelöscht</p>
-			</div>
-			<?php
+				$sql = query( "SELECT id,DeviceID FROM devicemacro");
+				while( $device = fetch($sql))
+				{
+					$DevicesWithMacro[] = $device['DeviceID'];
+				}
+				$DevicesWithMacro = array_unique($DevicesWithMacro);
+				$DevicesWithMacro = array_values($DevicesWithMacro);
+				for($i=0;$i<=count($DevicesWithMacro)-1;$i++)
+				{
+					$sql_device = query( "SELECT id,name FROM devices WHERE id ='" . $DevicesWithMacro[$i] . "'");
+					$device = fetch($sql_device)
+					?>																						
+					<li><a href="?page=settings&aktion=editmapMacro&step=2&id=<?php echo $DevicesWithMacro[$i]; ?>"><?php echo $device['name'] ?> <span style="float:right;position:absolute;right:40px;"></span></a></li>
+					<?php
+				}
+				?>
+				</ul>
+				</div>
+		   
+				<?php
 			}
-			if( $_POST['submit'] ){
+			if($_GET['step'] == 2){
+				$sql = query( "SELECT id, DeviceID, MacroID FROM devicemacro WHERE DeviceID = '" . $_GET['id'] . "'" );
+				$Device = fetch( $sql );
+				$DeviceID = $Device['DeviceID'];
+				?>
+				<div id="cont">
+					<form action="index.php?page=settings&aktion=editmapMacro&step=3&id=<?php echo $DeviceID ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+						<fieldset>
+							<li data-role="fieldcontain">		
+								<label for="device" class="select">Device:</label>
+								<select name="device" id="device" data-native-menu="false">
+									<?php
+									?>
+									<option>Bitte wählen...</option>
+									<optgroup label="device">
+									<?php
+									$sql2 = query( "SELECT id,name,room FROM devices");					
+									while( $row2 = fetch( $sql2 ) )
+									{
+										$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+										$RoomName = fetch($sql);
+										$DevID = $row2['id'];
+										if ($DeviceID == $DevID){
+										?>
+												<option value="<?php echo $row2['id']; ?>" selected="selected"><?php echo $row2['name'] . " (" . $RoomName['name'] . ")"; ?></option>
+										<?php
+										}else {
+										?>
+												<option value="<?php echo $row2['id']; ?>"><?php echo $row2['name'] . " (" . $RoomName['name'] . ")"; ?></option>
+										<?php
+										}
+										
+									}
+									?>
+								</select>	
+							</li>
+						
+							<div data-role="fieldcontain">
+								<fieldset data-role="controlgroup">
+								<legend>Macros:</legend>
+									<?php
+										
+									$sql_macros = query( "SELECT id,name,value FROM tvmacros");
+									while($macros = fetch($sql_macros))
+									{
+										$sql_DevMac = query( "SELECT MacroID FROM devicemacro WHERE DeviceID='" . $DeviceID . "'");	
+										while ($DevMacros = fetch($sql_DevMac))
+										{
+											if($macros['id'] == $DevMacros['MacroID']){ $checked = "checked";}
+										}
+										?>
+										<input type="checkbox" name="Macros[]" id="<?php echo $macros['id'] ?>"  <? echo $checked ?> value="<?php echo $macros['id'] ?>" class="custom" />
+										<label for="<?php echo $macros['id'] ?>"><?php echo $macros['name']; ?></label>
+										<?php
+										$checked = "";
+									}
+									?>
+								</fieldset>
+							</div>			
+
+						<div class="ui-body ui-body-c">
+							<fieldset class="ui-grid-a">
+								<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
+								<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
+							</fieldset>
+						</div>
+					</fieldset>
+					</form>
+				</div>		
+				<?php
+			}
+			if($_GET['step'] == 3){
+				if( $_POST['delete'] ){
 				$sql_mappings = query("SELECT id,DeviceId FROM devicemacro ORDER BY id DESC");
 				while($mappings = fetch($sql_mappings))
 				{
@@ -962,92 +1187,105 @@ for( $i = 0; $i <= 64; $i++ )
 						$sql = query( "DELETE FROM devicemacro WHERE id = '" . $mappings['id'] . "'" );
 					}
 				}
-				$DeviceID = $_POST['device'];
-				$Macros = $_POST['Macros'];
-				for($i=0;$i<=count($Macros)-1;$i++) 
-				{
-					$sql = query( "INSERT INTO devicemacro VALUES( '', '" . $DeviceID . "', '" . $Macros[$i] . "')" );
-				}		
-				
+					
 				?>
 				<div id="cont1">
-				<p>Das Mapping wurde geändert</p>
+				<p>Das Mapping wurde gelöscht</p>
 				</div>
-				<?
+				<?php
+				}
+				if( $_POST['submit'] ){
+					$sql_mappings = query("SELECT id,DeviceId FROM devicemacro ORDER BY id DESC");
+					while($mappings = fetch($sql_mappings))
+					{
+						if ($mappings['DeviceId'] == $_POST['device']){
+							$sql = query( "DELETE FROM devicemacro WHERE id = '" . $mappings['id'] . "'" );
+						}
+					}
+					$DeviceID = $_POST['device'];
+					$Macros = $_POST['Macros'];
+					for($i=0;$i<=count($Macros)-1;$i++) 
+					{
+						$sql = query( "INSERT INTO devicemacro VALUES( '', '" . $DeviceID . "', '" . $Macros[$i] . "')" );
+					}		
+					
+					?>
+					<div id="cont1">
+					<p>Das Mapping wurde geändert</p>
+					</div>
+					<?
+				}
 			}
-		}
-									
-		//include('dreambox.php');
-		break;		
+			break;		
 
 		
 		
 		
 		case 'editMacro':
-		if(!$_GET['step']){
-		?>
-		<div id="cont">
-		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
-  		<ul data-role="listview" data-inset="true" data-theme="d">
-    		<li data-role="list-divider">Macros</li>
-    	<?php
-		$sql = query( "SELECT id,name,value FROM tvmacros");
-																			
-									while( $macro = fetch( $sql ) )
-									{
-										?>																						
-										<li><a href="?page=settings&aktion=editMacro&step=2&id=<?php echo $macro['id']; ?>"><?php echo $macro['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $macro['value'] . ")"; ?></span></a></li>																			
-										<?php
-									}
-									?>
-									</ul>
-		</div>
-   
-		<?php
+			if(!$_GET['step']){
+			?>
+			<div id="cont">
+			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+				<ul data-role="listview" data-inset="true" data-theme="d">
+				<li data-role="list-divider">Macros</li>
+				<?php
+				$sql = query( "SELECT id,name,value FROM tvmacros");
+																					
+				while( $macro = fetch( $sql ) )
+				{
+					?>																						
+					<li><a href="?page=settings&aktion=editMacro&step=2&id=<?php echo $macro['id']; ?>"><?php echo $macro['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $macro['value'] . ")"; ?></span></a></li>																			
+					<?php
+				}
+				?>
+				</ul>
+			</div>
+	   
+			<?php
 		}
 		if($_GET['step'] == 2){
-		$sql = query( "SELECT id, name, value FROM tvmacros WHERE id = '" . $_GET['id'] . "'" );
-		$macro = fetch( $sql );
-		?>
-		<div id="cont">
-			<form action="index.php?page=settings&aktion=editMacro&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
-				<fieldset>
-					<div data-role="fieldcontain">
-					    <label for="macroname">Macro Name:</label>
-     					<input data-clear-btn="true" name="macroname" id="macroname" value="<?php echo $macro['name']; ?>" type="text">					
-					</div>
-					<div data-role="fieldcontain">
-					    <label for="macrovalue">Commands: (<a href="#popup-TVMacroHelp"  data-inline="true" data-rel="popup" data-position-to="window">Erklärung</a>)</label>
-     					<input data-clear-btn="true" name="macrovalue" id="macrovalue" value="<?php echo $macro['value']; ?>" type="text">					
-					</div>
-				<div class="ui-body ui-body-c">
-				<fieldset class="ui-grid-a">
-					<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
-					<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
-	    		</fieldset>
-				</div>
-			</fieldset>
-			</form>
-		</div>		
-		<?php
+			$sql = query( "SELECT id, name, value FROM tvmacros WHERE id = '" . $_GET['id'] . "'" );
+			$macro = fetch( $sql );
+			?>
+			<div id="cont">
+				<form action="index.php?page=settings&aktion=editMacro&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+					<fieldset>
+						<div data-role="fieldcontain">
+							<label for="macroname">Macro Name:</label>
+							<input data-clear-btn="true" name="macroname" id="macroname" value="<?php echo $macro['name']; ?>" type="text">					
+						</div>
+						<div data-role="fieldcontain">
+							<label for="macrovalue">Commands: (<a href="#popup-TVMacroHelp"  data-inline="true" data-rel="popup" data-position-to="window">Erklärung</a>)</label>
+							<input data-clear-btn="true" name="macrovalue" id="macrovalue" value="<?php echo $macro['value']; ?>" type="text">					
+						</div>
+						<div class="ui-body ui-body-c">
+							<fieldset class="ui-grid-a">
+								<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
+								<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
+							</fieldset>
+						</div>
+					</fieldset>
+				</form>
+			</div>		
+			<?php
 		
 		}
 		if($_GET['step'] == 3){
 			if( $_POST['delete'] ){
-			?>
-			<div id="cont1">
-			<p>Das Macro wurde gelöscht</p>
-			</div>
-			<?php
-			$sql = query( "DELETE FROM tvmacros WHERE id = '" . $_GET['id'] . "'" );	
+				?>
+				<div id="cont1">
+				<p>Das Macro wurde gelöscht</p>
+				</div>
+				<?php
+				$sql = query( "DELETE FROM tvmacros WHERE id = '" . $_GET['id'] . "'" );	
 			}
 			if( $_POST['submit'] ){
-			?>
-			<div id="cont1">
-			<p>Das Macro wurde geändert</p>
-			</div>
-			<?php
-			$sql = query( "UPDATE tvmacros SET name = '" . $_POST['macroname'] . "', value = '" . $_POST['macrovalue'] . "'" );	
+				?>
+				<div id="cont1">
+				<p>Das Macro wurde geändert</p>
+				</div>
+				<?php
+				$sql = query( "UPDATE tvmacros SET name = '" . $_POST['macroname'] . "', value = '" . $_POST['macrovalue'] . "'" );	
 			}
 		}
 		break;					
@@ -1056,129 +1294,128 @@ for( $i = 0; $i <= 64; $i++ )
 		//EDIT DEVICE
 		case 'editDevice':
 		if(!$_GET['step']){
-		?>
-		<div id="cont">
-		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
-  		<ul data-role="listview" data-inset="true" data-theme="d">
-    		<li data-role="list-divider">Geräte</li>
-    	<?php
-		$sql = query( "SELECT id,name,ip,room,type FROM devices");
-																			
-									while( $row = fetch( $sql ) )
-									{
-										$sql1 = query( "SELECT  name,icon FROM rooms WHERE id = '" . $row['room'] . "'" );
-										$row1 = fetch( $sql1 )
-										?>																						
-										<li><a href="?page=settings&aktion=editDevice&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $row['ip'] . ")"; ?></span></a></li>																			
-										<?php
-									}
-									?>
-									</ul>
-		</div>
-   
-		<?php
+			?>
+			<div id="cont">
+			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+				<ul data-role="listview" data-inset="true" data-theme="d">
+					<li data-role="list-divider">Geräte</li>
+					<?php
+					$sql = query( "SELECT id,name,ip,room,type FROM devices");
+					
+					while( $row = fetch( $sql ) )
+					{
+						$sql1 = query( "SELECT  name,icon FROM rooms WHERE id = '" . $row['room'] . "'" );
+						$row1 = fetch( $sql1 )
+						?>																						
+						<li><a href="?page=settings&aktion=editDevice&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $row['ip'] . ")"; ?></span></a></li>																			
+						<?php
+					}
+					?>
+				</ul>
+			</div>
+	   
+			<?php
 		}
 		if($_GET['step'] == 2){
-		$sql = query( "SELECT iid, name, room, type, script, ip, logging, verbrauchWatt, zeitHeute FROM devices WHERE id = '" . $_GET['id'] . "'" );
-		$row = fetch( $sql );
-		?>
-		<div id="cont">
-			<form action="index.php?page=settings&aktion=editDevice&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
-				<fieldset>
-					<div data-role="fieldcontain">
-						<li data-role="fieldcontain">
-						    <label for="devicename">Geräte Name:</label>
-     						<input data-clear-btn="true" name="devicename" id="devicename" value="<?php echo $row['name']; ?>" type="text">
-     					</li>
-						<li data-role="fieldcontain">	
-     						<label for="verbrauchWatt">Verbrauch (W):</label>
-     						<input data-clear-btn="true" name="verbrauchWatt" id="verbrauchWatt" value="<?php echo $row['verbrauchWatt']; ?>" type="text">
-     					</li>
-						<li data-role="fieldcontain">	     						
-     						<label for="ip">IP Adresse:</label>
-     						<input data-clear-btn="true" name="ip" id="ip" value="<?php echo $row['ip']; ?>" type="text">
-     					</li>
-						<li data-role="fieldcontain">	
-     						<label for="room" class="select">Räume:</label>
-							<select name="room" id="room" data-native-menu="false">
-    							<option>Räume:</option>
-    							<?php
-    							$sql2 = query( "SELECT id,name FROM rooms");	
-								$roomID = $row['room'];
-								while( $row2 = fetch( $sql2 ) )
-									{
-										if($roomID == $row2['id']){
-										?>
-											<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['name'] ?></option>
-										<?php
-										}else{
-										?>
-											<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
-										<?php
-										}
-    								}
-    							?>
-
-							</select>
-						</li>
-						<li data-role="fieldcontain">	
-							<label for="typ" class="select">Typ:</label>
-							<select name="typ" id="typ" data-native-menu="false">
-								<option>Typ:</option>
-								<?php
-								$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes");	
-								$devtypeID = $row['type'];
-								while( $row2 = fetch( $sql2 ) )
-									{
-										if($row2['device'] == 'device'){
-											if($devtypeID == $row2['devtype']){
+			$sql = query( "SELECT iid, name, room, type, script, ip, logging, verbrauchWatt, zeitHeute FROM devices WHERE id = '" . $_GET['id'] . "'" );
+			$row = fetch( $sql );
+			?>
+			<div id="cont">
+				<form action="index.php?page=settings&aktion=editDevice&step=3&id=<?php echo $_GET['id'] ?>" method="post" class="ui-body ui-body-c ui-corner-all">
+					<fieldset>
+						<div data-role="fieldcontain">
+							<li data-role="fieldcontain">
+								<label for="devicename">Geräte Name:</label>
+								<input data-clear-btn="true" name="devicename" id="devicename" value="<?php echo $row['name']; ?>" type="text">
+							</li>
+							<li data-role="fieldcontain">	
+								<label for="verbrauchWatt">Verbrauch (W):</label>
+								<input data-clear-btn="true" name="verbrauchWatt" id="verbrauchWatt" value="<?php echo $row['verbrauchWatt']; ?>" type="text">
+							</li>
+							<li data-role="fieldcontain">	     						
+								<label for="ip">IP Adresse:</label>
+								<input data-clear-btn="true" name="ip" id="ip" value="<?php echo $row['ip']; ?>" type="text">
+							</li>
+							<li data-role="fieldcontain">	
+								<label for="room" class="select">Räume:</label>
+								<select name="room" id="room" data-native-menu="false">
+									<option>Räume:</option>
+									<?php
+									$sql2 = query( "SELECT id,name FROM rooms");	
+									$roomID = $row['room'];
+									while( $row2 = fetch( $sql2 ) )
+										{
+											if($roomID == $row2['id']){
 											?>
-												<option value="<?php echo $row2['devtype'] ?>" selected="selected"><?php echo $row2['devtypename'] ?></option>
+												<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['name'] ?></option>
 											<?php
 											}else{
 											?>
-												<option value="<?php echo $row2['devtype'] ?>"><?php echo $row2['devtypename'] ?></option>
+												<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
 											<?php
 											}
 										}
-    								}
-    							?>		
-							   							
-							</select>
-						</li>						
-					</div>
-				<div class="ui-body ui-body-c">
-				<fieldset class="ui-grid-a">
-					<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
-					<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
-	    		</fieldset>
-				</div>
-			</fieldset>
-			</form>
-		</div>		
-		<?php
+									?>
+
+								</select>
+							</li>
+							<li data-role="fieldcontain">	
+								<label for="typ" class="select">Typ:</label>
+								<select name="typ" id="typ" data-native-menu="false">
+									<option>Typ:</option>
+									<?php
+									$sql2 = query( "SELECT device,devtype,devtypename FROM deviceTypes");	
+									$devtypeID = $row['type'];
+									while( $row2 = fetch( $sql2 ) )
+										{
+											if($row2['device'] == 'device'){
+												if($devtypeID == $row2['devtype']){
+												?>
+													<option value="<?php echo $row2['devtype'] ?>" selected="selected"><?php echo $row2['devtypename'] ?></option>
+												<?php
+												}else{
+												?>
+													<option value="<?php echo $row2['devtype'] ?>"><?php echo $row2['devtypename'] ?></option>
+												<?php
+												}
+											}
+										}
+									?>		
+															
+								</select>
+							</li>						
+						</div>
+						<div class="ui-body ui-body-c">
+							<fieldset class="ui-grid-a">
+								<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
+								<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
+							</fieldset>
+						</div>
+					</fieldset>
+				</form>
+			</div>		
+			<?php
 		
 		}
 		if($_GET['step'] == 3){
 			if( $_POST['delete'] ){
-			?>
-			<div id="cont1">
-			<p>Das Gerät wurde gelöscht</p>
-			</div>
-			<?php
-			$sql = query( "DELETE FROM devices WHERE id = '" . $_GET['id'] . "'" );	
+				?>
+				<div id="cont1">
+				<p>Das Gerät wurde gelöscht</p>
+				</div>
+				<?php
+				$sql = query( "DELETE FROM devices WHERE id = '" . $_GET['id'] . "'" );	
 			}
 			if( $_POST['submit'] ){
-			$id = $_GET['id'];
-			$sql = query( "UPDATE devices SET name = '" . $_POST['devicename'] . "', room = '" . $_POST['room'] . "', type = '" . $_POST['typ'] . "', ip = '" . $_POST['ip'] . "', verbrauchWatt = '" . $_POST['verbrauchWatt'] . "' WHERE id = '" . $id . "'" );
-			?>
-			<div id="cont1">
-			<p>Das Gerät wurde geändert</p>
-			</div>
-			<?php	
+				$id = $_GET['id'];
+				$sql = query( "UPDATE devices SET name = '" . $_POST['devicename'] . "', room = '" . $_POST['room'] . "', type = '" . $_POST['typ'] . "', ip = '" . $_POST['ip'] . "', verbrauchWatt = '" . $_POST['verbrauchWatt'] . "' WHERE id = '" . $id . "'" );
+				?>
+				<div id="cont1">
+				<p>Das Gerät wurde geändert</p>
+				</div>
+				<?php	
 			}
-		}
-									
+		}									
 		break;	
 		
 			
@@ -1186,43 +1423,43 @@ for( $i = 0; $i <= 64; $i++ )
 		//EDIT Timer
 		case 'editTimer':
 		if(!$_GET['step']){
-		?>
-		<div id="cont">
-		<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
-  		<ul data-role="listview" data-inset="true" data-theme="d">
-    		<li data-role="list-divider">Timer</li>
-    	<?php
-		$sql = query( "SELECT id,name,enabled,aktor,time,isGroup FROM timer");
-															
-			while( $row = fetch( $sql ) )
-			{
-				if ($row['isGroup'] == 'Yes'){
-					$sql1 = query( "SELECT  name FROM groups WHERE id = '" . $row['aktor'] . "'" );
-					$row1 = fetch( $sql1 );
-					$name = $row1['name'];
-				} else {
-					$sql1 = query( "SELECT  name,type FROM aktor WHERE id = '" . $row['aktor'] . "'" );
-					$row1 = fetch( $sql1 );
-					$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row1['type']. "'" );
-					$devtype = fetch( $sqldt );
-					$name = $row1['name'] . " / " . $devtype['devtypename'];
-				}
-				if ($row['enabled'] == 'Yes'){
-				?>																						
-					<li><a href="?page=settings&aktion=editTimer&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"><FONT COLOR="#01DF01"> <? echo "(" . $row['time'] . " / " . $name . ")"; ?></FONT></span></a></li>																			
-				<?php
-				}else {
-				?>																						
-					<li><a href="?page=settings&aktion=editTimer&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"><FONT COLOR="#FF0000"> <? echo "(" . $row['time'] . " / " . $name . ")"; ?></FONT></span></a></li>																			
-				<?php
-				}
-				
-			}
 			?>
-			</ul>
-		</div>
-   
-		<?php
+			<div id="cont">
+			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+			<ul data-role="listview" data-inset="true" data-theme="d">
+				<li data-role="list-divider">Timer</li>
+			<?php
+			$sql = query( "SELECT id,name,enabled,aktor,time,isGroup FROM timer");
+																
+				while( $row = fetch( $sql ) )
+				{
+					if ($row['isGroup'] == 'Yes'){
+						$sql1 = query( "SELECT  name FROM groups WHERE id = '" . $row['aktor'] . "'" );
+						$row1 = fetch( $sql1 );
+						$name = $row1['name'];
+					} else {
+						$sql1 = query( "SELECT  name,type FROM aktor WHERE id = '" . $row['aktor'] . "'" );
+						$row1 = fetch( $sql1 );
+						$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row1['type']. "'" );
+						$devtype = fetch( $sqldt );
+						$name = $row1['name'] . " / " . $devtype['devtypename'];
+					}
+					if ($row['enabled'] == 'Yes'){
+					?>																						
+						<li><a href="?page=settings&aktion=editTimer&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"><FONT COLOR="#01DF01"> <? echo "(" . $row['time'] . " / " . $name . ")"; ?></FONT></span></a></li>																			
+					<?php
+					}else {
+					?>																						
+						<li><a href="?page=settings&aktion=editTimer&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"><FONT COLOR="#FF0000"> <? echo "(" . $row['time'] . " / " . $name . ")"; ?></FONT></span></a></li>																			
+					<?php
+					}
+					
+				}
+				?>
+				</ul>
+			</div>
+	   
+			<?php
 		}
 		if($_GET['step'] == 2){
 		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup, suninfo, SensorID, SensorValue FROM timer WHERE id = '" . $_GET['id'] . "'" );
@@ -1625,32 +1862,27 @@ for( $i = 0; $i <= 64; $i++ )
 		
 		case 'editConfig':
 		if( $_POST['submit'] ){
-		?>
-		<div class="boxWhite">
-			<p class="center">Konfiguration wurde geändert</p>
-		</div>
-																									
-		<?php
-		//clear config table
-		$sql1 = query( "TRUNCATE TABLE config");
-		//insert config values
-		$sql1 = query( "INSERT INTO config VALUES( '', 'XS1IP', '" . $_POST['XS1IP'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'XS1User', '" . $_POST['XS1User'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'XS1Pass', '" . $_POST['XS1Pass'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'DreamBoxavail', '" . $_POST['flipDreamBox'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'Multimedia', '" . $_POST['flipMultimedia'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'WetterWidget', '" . str_replace("'","\"",$_POST['WetterWidget']) . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'WetterWidgetAktiv', '" . $_POST['flipWetter'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'TimerFooter', '" . $_POST['flipTimerFooter'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'RaspberryFooter', '" . $_POST['flipRaspberryFooter'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'GroupFooter', '" . $_POST['flipGroupFooter'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'SensorFooter', '" . $_POST['flipSensorFooter'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'ShowDayGraph', '" . $_POST['flipDayGraph'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'ShowWeekGraph', '" . $_POST['flipWeekGraph'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'ShowMonthGraph', '" . $_POST['flipMonthGraph'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'GlobalEnergy', '" . $_POST['flipGlobalEnergy'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'EnergySensor', '" . $_POST['EnergySensor'] . "')");
-		$sql1 = query( "INSERT INTO config VALUES( '', 'EnergyPrice', '" . $_POST['EnergyPrice'] . "')");
+			?>
+			<div class="boxWhite">
+				<p class="center">Konfiguration wurde geändert</p>
+			</div>
+																										
+			<?php
+			//clear config table
+			$sql1 = query( "TRUNCATE TABLE config");
+			//insert config values
+			$sql1 = query( "INSERT INTO config VALUES( '', 'XS1IP', '" . $_POST['XS1IP'] . "')");
+			$sql1 = query( "INSERT INTO config VALUES( '', 'XS1User', '" . $_POST['XS1User'] . "')");
+			$sql1 = query( "INSERT INTO config VALUES( '', 'XS1Pass', '" . $_POST['XS1Pass'] . "')");
+			$sql1 = query( "INSERT INTO config VALUES( '', 'WetterWidget', '" . str_replace("'","\"",$_POST['WetterWidget']) . "')");
+			$sql1 = query( "INSERT INTO config VALUES( '', 'WetterWidgetAktiv', '" . $_POST['flipWetter'] . "')");
+			$sql1 = query( "INSERT INTO config VALUES( '', 'ShowDayGraph', '" . $_POST['flipDayGraph'] . "')");
+			$sql1 = query( "INSERT INTO config VALUES( '', 'ShowWeekGraph', '" . $_POST['flipWeekGraph'] . "')");
+			$sql1 = query( "INSERT INTO config VALUES( '', 'ShowMonthGraph', '" . $_POST['flipMonthGraph'] . "')");
+			$sql1 = query( "INSERT INTO config VALUES( '', 'GlobalEnergy', '" . $_POST['flipGlobalEnergy'] . "')");
+			$sql1 = query( "INSERT INTO config VALUES( '', 'EnergySensor', '" . $_POST['EnergySensor'] . "')");
+			$sql1 = query( "INSERT INTO config VALUES( '', 'EnergyPrice', '" . $_POST['EnergyPrice'] . "')");
+			$sql1 = query( "INSERT INTO config VALUES( '', 'StandardRoom', '" . $_POST['StandardRoom'] . "')");
 		
 		}else{		
 		?>
@@ -1802,125 +2034,32 @@ for( $i = 0; $i <= 64; $i++ )
 
 							</select>	
 					</li>
-					<li data-role="list-divider">Footer</li>
-					<li data-role="fieldcontain">
-							<?
-							$sql = query( "SELECT value FROM config WHERE options='DreamBoxavail'");
-							$config = fetch( $sql);
-							$YesNo = $config['value'];
-							if ($YesNo == 'Yes'){
-								$ValueYes = "selected=\"selected\"";
-								$ValueNo = "";
-							}else {
-								$ValueYes = "";
-								$ValueNo = "selected=\"selected\"";
-							}
-							?>
-							<label for="flipDreamBox">DreamBox Footer:</label>
-							<select name="flipDreamBox" id="flipDreamBox" data-role="slider">
-								<option value="No" <? echo $ValueNo; ?>>No</option>
-								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
-							</select>	
-							
-					</li>
-					<li data-role="fieldcontain">
-							<?
-							$sql = query( "SELECT value FROM config WHERE options='Multimedia'");
-							$config = fetch( $sql);
-							$YesNo = $config['value'];
-							if ($YesNo == 'Yes'){
-								$ValueYes = "selected=\"selected\"";
-								$ValueNo = "";
-							}else {
-								$ValueYes = "";
-								$ValueNo = "selected=\"selected\"";
-							}
-							?>
-							<label for="flipMultimedia">Multimedia Footer:</label>
-							<select name="flipMultimedia" id="flipMultimedia" data-role="slider">
-								<option value="No" <? echo $ValueNo; ?>>No</option>
-								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
-							</select>							
-					</li>
-					<li data-role="fieldcontain">
-							<?
-							$sql = query( "SELECT value FROM config WHERE options='TimerFooter'");
-							$config = fetch( $sql);
-							$YesNo = $config['value'];
-							if ($YesNo == 'Yes'){
-								$ValueYes = "selected=\"selected\"";
-								$ValueNo = "";
-							}else {
-								$ValueYes = "";
-								$ValueNo = "selected=\"selected\"";
-							}
-							?>
-							<label for="flipTimerFooter">Timer footer:</label>
-							<select name="flipTimerFooter" id="flipTimerFooter" data-role="slider">
-								<option value="No" <? echo $ValueNo; ?>>No</option>
-								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
-							</select>							
-					</li>
-					<li data-role="fieldcontain">
-							<?
-							$sql = query( "SELECT value FROM config WHERE options='RaspberryFooter'");
-							$config = fetch( $sql);
-							$YesNo = $config['value'];
-							if ($YesNo == 'Yes'){
-								$ValueYes = "selected=\"selected\"";
-								$ValueNo = "";
-							}else {
-								$ValueYes = "";
-								$ValueNo = "selected=\"selected\"";
-							}
-							?>
-							<label for="flipRaspberryFooter">RaspberryPi footer:</label>
-							<select name="flipRaspberryFooter" id="flipRaspberryFooter" data-role="slider">
-								<option value="No" <? echo $ValueNo; ?>>No</option>
-								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
-							</select>							
-					</li>
-					<li data-role="fieldcontain">
-							<?
-							$sql = query( "SELECT value FROM config WHERE options='GroupFooter'");
-							$config = fetch( $sql);
-							$YesNo = $config['value'];
-							if ($YesNo == 'Yes'){
-								$ValueYes = "selected=\"selected\"";
-								$ValueNo = "";
-							}else {
-								$ValueYes = "";
-								$ValueNo = "selected=\"selected\"";
-							}
-							?>
-							<label for="flipGroupFooter">Gruppen Footer:</label>
-							<select name="flipGroupFooter" id="flipGroupFooter" data-role="slider">
-								<option value="No" <? echo $ValueNo; ?>>No</option>
-								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
-							</select>	
-							
-					</li>
-					<li data-role="fieldcontain">
-							<?
-							$sql = query( "SELECT value FROM config WHERE options='SensorFooter'");
-							$config = fetch( $sql);
-							$YesNo = $config['value'];
-							if ($YesNo == 'Yes'){
-								$ValueYes = "selected=\"selected\"";
-								$ValueNo = "";
-							}else {
-								$ValueYes = "";
-								$ValueNo = "selected=\"selected\"";
-							}
-							?>
-							<label for="flipSensorFooter">Sensor Footer:</label>
-							<select name="flipSensorFooter" id="flipSensorFooter" data-role="slider">
-								<option value="No" <? echo $ValueNo; ?>>No</option>
-								<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
-							</select>	
-							
-					</li>
-						<li data-role="list-divider">Wetter Widget</li>
+					<li data-role="list-divider">Räume</li>
+						<li data-role="fieldcontain">
+						<label for="StandardRoom" class="select">Hauptraum:</label>
+								<select name="StandardRoom" id="StandardRoom" data-native-menu="false">
+									<option>Räume</option>
+									<?php
+									$sql = query( "SELECT value FROM config WHERE options='StandardRoom'");
+									$config = fetch( $sql);
+									$sql2 = query( "SELECT id,name FROM rooms ORDER by name ASC");					
+									while( $row2 = fetch( $sql2 ) )
+										{
+										if ($config['value'] == $row2['id']){
+												?>
+													<option value="<?php echo $row2['id'] ?>" selected="selected"><?php echo $row2['name'] ?></option>
+												<?php										
+											}else{
+												?>
+													<option value="<?php echo $row2['id'] ?>"><?php echo $row2['name'] ?></option>
+												<?php
+											}
+										}
+									?>
+
+								</select>	
+						</li>
+					<li data-role="list-divider">Wetter Widget</li>
 						<li data-role="fieldcontain">		
 							<?
 							$sql = query( "SELECT value FROM config WHERE options='WetterWidgetAktiv'");
@@ -1962,6 +2101,86 @@ for( $i = 0; $i <= 64; $i++ )
 		}
 		break;
 		
+		case 'editFooterOrder':
+		if( $_POST['submit'] ){
+			
+			$sql = query( "SELECT * FROM configFooter");
+			$configt = fetch( $sql );
+			for($x = 1; $x < count($configt) - 2; $x++) {
+				$sql = query( "SELECT * FROM configFooter WHERE id=" . $x);
+				$config = fetch( $sql );
+				$flip = "flip" . $config['codename'];
+				//echo $config['name'];
+				$befehl = query("UPDATE configFooter SET visible = '" . $_POST[$flip] . "' WHERE name = '" . $config['name'] . "'");
+			}
+			
+			?>
+			<div class="boxWhite">
+				<p class="center">Footer Konfiguration wurde geändert</p>
+			</div>
+																										
+			<?php
+		
+		}else{		
+			?>
+			<div id="cont">
+				<form action="index.php?page=settings&aktion=editFooterOrder" method="post" class="ui-body ui-body-c ui-corner-all">
+					<div data-role="content" data-theme="c">
+					<ul data-role="listview" data-inset="true" data-theme="c">
+						<li data-role="list-divider">Footer</li>
+							<?
+							$sql = query( "SELECT * FROM configFooter ORDER BY name ASC");
+							while( $config = fetch( $sql ) ){
+								$YesNo = $config['visible'];
+								if ($YesNo == 'Yes'){
+									$ValueYes = "selected=\"selected\"";
+									$ValueNo = "";
+								}else {
+									$ValueYes = "";
+									$ValueNo = "selected=\"selected\"";
+								}
+								?>
+								<li data-role="fieldcontain">
+									<label for="flip<?echo $config['codename'];?>"><?echo $config['name'];?></label>
+										<select name="flip<?echo $config['codename'];?>" id="flip<?echo $config['codename'];?>" data-role="slider">
+											<option value="No" <? echo $ValueNo; ?>>No</option>
+											<option value="Yes" <? echo $ValueYes; ?>>Yes</option>
+										</select>
+								</li>
+								<?
+							}
+							?>
+						</ul>
+						<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
+					</div> 
+					<div data-role="content" data-theme="c" id="sortableFooter">
+						<ul data-role="listview" data-inset="true">
+							<li data-role="list-divider">Footer Reihenfolge</li>
+								<?
+									$sql_footerconf = query( "SELECT id,name,visible FROM configFooter ORDER by sortOrder ASC");
+									while( $footerconf = fetch( $sql_footerconf ) ){
+										if ($footerconf['visible'] == 'Yes') {
+											//$sichtbar = ' (sichtbar)'; 
+											$font = "#01DF01";
+										} else { 
+											//$sichtbar = ' (versteckt)'; 
+											$font = "#FF0000";
+										}
+										?>
+										<li id="recordsArray_<?php echo $footerconf['id']; ?>"><FONT COLOR="<? echo $font ?>"><?php echo $footerconf['name'] . $sichtbar; ?></FONT></li>
+										<?php
+									}		
+									?>
+						</ul>
+					</div> 
+					<div data-role="content" data-theme="c" id="sortedFooter">
+						<p>&nbsp;</p>	
+					</div>				
+				</form>
+			</div>
+			<?php
+		}
+		break;
 		
 		case 'addDevice':
 		
@@ -2355,7 +2574,6 @@ for( $i = 0; $i <= 64; $i++ )
 				}
 				?>
 				<input type="hidden" name="groupname" value="<? echo $groupname ?>">
-				<input type="hidden" name="groupstatus" value="<? echo $groupstatus ?>">
 				<?
 				for($i = 0; $i < count($devices); $i++) {
 					$deviceVal = $deviceVal . $devices[$i] . "," ;
@@ -2387,7 +2605,7 @@ for( $i = 0; $i <= 64; $i++ )
 				//var_dump($aktorenValues);	
 				//print_r($aktorenValues);
 
-				$sql = query( "INSERT INTO groups VALUES( '', '" . $_POST['groupname'] . "', '" . $_POST['groupstatus'] . "')" );
+				$sql = query( "INSERT INTO groups VALUES( '', '" . $_POST['groupname'] . "', '')" );
 				$groupID = query("SELECT id FROM groups ORDER BY id DESC LIMIT 0,1 "); 
 				$row = mysql_fetch_assoc($groupID);
 				$GrID = $row['id'];
@@ -2417,7 +2635,7 @@ for( $i = 0; $i <= 64; $i++ )
 																	 '" . $dev[0] . "', 
 																	 '" . $GrID . "',
 																	 '',
-																	 '" . $dev[1]  . "'),
+																	 '" . $dev[1]  . "',
 																	 '')";
 					$sql = query( $befehl);	
 				}
@@ -2454,64 +2672,53 @@ for( $i = 0; $i <= 64; $i++ )
 									<input data-clear-btn="true" name="groupname" id="groupname" value="" type="text">
 								</li>
 							
-							<div data-role="fieldcontain">
-							<fieldset data-role="controlgroup">
-							<legend>Aktoren:</legend>
-										<?php
-										$sql2 = query( "SELECT id,name,type,room FROM aktor");
-										$i = 0;					
-										while( $row2 = fetch( $sql2 ) )
-											{
-											$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
-											$RoomName = fetch($sql);
-											$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row2['type']. "'" );
-											$devtype = fetch( $sqldt );
-											$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $devtype['devtypename'] .")";
-											?>
-													
-													<input type="checkbox" name="Aktoren[]" id="Aktor-<?php echo $row2['id'] ?>"  value="<?php echo $row2['id'] ?>" class="custom" />
-													<label for="Aktor-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
+								<div data-role="fieldcontain">
+								<fieldset data-role="controlgroup">
+								<legend>Aktoren:</legend>
 											<?php
-											}
-										?>	
-										
-							</fieldset>
-							</div>	
+											$sql2 = query( "SELECT id,name,type,room FROM aktor");
+											$i = 0;					
+											while( $row2 = fetch( $sql2 ) )
+												{
+												$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+												$RoomName = fetch($sql);
+												$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row2['type']. "'" );
+												$devtype = fetch( $sqldt );
+												$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $devtype['devtypename'] .")";
+												?>
+														
+														<input type="checkbox" name="Aktoren[]" id="Aktor-<?php echo $row2['id'] ?>"  value="<?php echo $row2['id'] ?>" class="custom" />
+														<label for="Aktor-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
+												<?php
+												}
+											?>	
+											
+								</fieldset>
+								</div>	
 
-
-							
-							<div data-role="fieldcontain">
-							<fieldset data-role="controlgroup">
-							<legend>Geräte:</legend>
-										<?php
-										$sql2 = query( "SELECT id,name,type,room FROM devices");
-										$i = 0;					
-										while( $row2 = fetch( $sql2 ) )
-											{
-											$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
-											$RoomName = fetch($sql);
-											//$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row2['type']. "'" );
-											//$devtype = fetch( $sqldt );
-											$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
-											?>
-													
-													<input type="checkbox" name="Geraete[]" id="Geraet-<?php echo $row2['id'] ?>"  value="<?php echo $row2['id'] ?>" class="custom" />
-													<label for="Geraet-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
+								<div data-role="fieldcontain">
+								<fieldset data-role="controlgroup">
+								<legend>Geräte:</legend>
 											<?php
-											}
-										?>	
-										
-							</fieldset>
-							</div>
-						
-
-							<li data-role="fieldcontain">	
-								<label for="flipAktiv">Gruppe enabled:</label>
-								<select name="flipAktiv" id="flipAktiv" data-role="slider">
-									<option value="No">No</option>
-									<option value="Yes" selected="selected">Yes</option>
-								</select>	
-							</li>	
+											$sql2 = query( "SELECT id,name,type,room FROM devices");
+											$i = 0;					
+											while( $row2 = fetch( $sql2 ) )
+												{
+												$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+												$RoomName = fetch($sql);
+												//$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $row2['type']. "'" );
+												//$devtype = fetch( $sqldt );
+												$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
+												?>
+														
+														<input type="checkbox" name="Geraete[]" id="Geraet-<?php echo $row2['id'] ?>"  value="<?php echo $row2['id'] ?>" class="custom" />
+														<label for="Geraet-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
+												<?php
+												}
+											?>	
+											
+								</fieldset>
+								</div>
 							</div>
 							<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
 						</fieldset>
@@ -2650,7 +2857,6 @@ case 'editGroup':
 
 				?>
 				<input type="hidden" name="groupname" value="<? echo $groupname ?>">
-				<input type="hidden" name="groupstatus" value="<? echo $groupstatus ?>">
 				<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
 				</fieldset>
 				</form>
@@ -2734,90 +2940,82 @@ case 'editGroup':
 					<fieldset>
 						<div data-role="fieldcontain">
 						
-						<li data-role="fieldcontain">
-							<?
-							$sql_group = query( "SELECT name FROM groups WHERE id='" . $_GET['group'] ."'" );
-							$group = fetch( $sql_group );
-							$GroupID = $_GET['group'];
-							?>
-							<label for="groupname">Gruppen Name:</label>
-							<input data-clear-btn="true" name="groupname" id="groupname" value="<? echo $group['name']; ?>" type="text">
-						</li>
+							<li data-role="fieldcontain">
+								<?
+								$sql_group = query( "SELECT name FROM groups WHERE id='" . $_GET['group'] ."'" );
+								$group = fetch( $sql_group );
+								$GroupID = $_GET['group'];
+								?>
+								<label for="groupname">Gruppen Name:</label>
+								<input data-clear-btn="true" name="groupname" id="groupname" value="<? echo $group['name']; ?>" type="text">
+							</li>
 
-						<div data-role="fieldcontain">
-						<fieldset data-role="controlgroup">
-							<legend>Aktoren:</legend>
-									<?php
-									$sql_aktoren = query( "SELECT id,name,type,room FROM aktor");
-									$i = 0;		
-									$GroupID = $_GET['group'];									
-									while( $aktoren = fetch( $sql_aktoren ) )
-										{
-										$sql_room = query( "SELECT id,name FROM rooms WHERE id='" . $aktoren['room'] ."'" );
-										$room = fetch($sql_room);
-										
-										$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $aktoren['type']. "'" );
-										$devtype = fetch( $sqldt );
-										$RowName = $aktoren['name'] . " (" . $room['name'] . " / " . $devtype['devtypename'] .")";
-										
-										$sql_groupaktor = query( "SELECT * FROM groupaktor WHERE groupID='" . $_GET['group'] ."' ORDER BY aktorID ASC" );
-										
-										while( $groupaktor = fetch( $sql_groupaktor ) ){
-											if($groupaktor['aktorID'] == $aktoren['id']){
-												$checked = "checked";
-											}
-										}
-										
-										?>
-												
-												<input type="checkbox" name="Aktoren[]" id="Aktor-<?php echo $aktoren['id'] ?>"  <? echo $checked ?> value="<?php echo $aktoren['id'] ?>" class="custom" />
-												<label for="Aktor-<?php echo $aktoren['id'] ?>"><?php echo $RowName; ?></label>
+							<div data-role="fieldcontain">
+							<fieldset data-role="controlgroup">
+								<legend>Aktoren:</legend>
 										<?php
-										$checked = "";
-										}
+										$sql_aktoren = query( "SELECT id,name,type,room FROM aktor");
+										$i = 0;		
+										$GroupID = $_GET['group'];									
+										while( $aktoren = fetch( $sql_aktoren ) )
+											{
+											$sql_room = query( "SELECT id,name FROM rooms WHERE id='" . $aktoren['room'] ."'" );
+											$room = fetch($sql_room);
+											
+											$sqldt = query( "SELECT id,devtypename FROM deviceTypes WHERE id = '" . $aktoren['type']. "'" );
+											$devtype = fetch( $sqldt );
+											$RowName = $aktoren['name'] . " (" . $room['name'] . " / " . $devtype['devtypename'] .")";
+											
+											$sql_groupaktor = query( "SELECT * FROM groupaktor WHERE groupID='" . $_GET['group'] ."' ORDER BY aktorID ASC" );
+											
+											while( $groupaktor = fetch( $sql_groupaktor ) ){
+												if($groupaktor['aktorID'] == $aktoren['id']){
+													$checked = "checked";
+												}
+											}
+											
+											?>
+													
+													<input type="checkbox" name="Aktoren[]" id="Aktor-<?php echo $aktoren['id'] ?>"  <? echo $checked ?> value="<?php echo $aktoren['id'] ?>" class="custom" />
+													<label for="Aktor-<?php echo $aktoren['id'] ?>"><?php echo $RowName; ?></label>
+											<?php
+											$checked = "";
+											}
+											
+										?>	
 										
-									?>	
-									
-						</fieldset>
-						</div>	
+							</fieldset>
+							</div>	
 						
-						<div data-role="fieldcontain">
-						<fieldset data-role="controlgroup">
-						<legend>Geräte:</legend>
-									<?php
-									$GroupID = $_GET['group'];	
-									$sql2 = query( "SELECT id,name,type,room FROM devices");
-									while( $row2 = fetch( $sql2 ) )
-									{
-										$sql_groupdevice = query( "SELECT deviceID FROM groupaktor WHERE groupID='" . $GroupID ."'" );
-										while( $groupdevice = fetch( $sql_groupdevice ) ){
-											if($groupdevice['deviceID'] == $row2['id']){
-												$checked = "checked";
-											}
-										}
-										
-										$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
-										$RoomName = fetch($sql);
-										$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
-										?>
-												
-												<input type="checkbox" name="Geraete[]" id="Geraet-<?php echo $row2['id'] ?>" <? echo $checked ?> value="<?php echo $row2['id'] ?>" class="custom" />
-												<label for="Geraet-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
+							<div data-role="fieldcontain">
+							<fieldset data-role="controlgroup">
+							<legend>Geräte:</legend>
 										<?php
-										$checked = "";
-									}
-									?>	
-									
-						</fieldset>
-						</div>
-
-						<li data-role="fieldcontain">	
-							<label for="flipAktiv">Gruppe enabled:</label>
-							<select name="flipAktiv" id="flipAktiv" data-role="slider">
-								<option value="No">No</option>
-								<option value="Yes" selected="selected">Yes</option>
-							</select>	
-						</li>	
+										$GroupID = $_GET['group'];	
+										$sql2 = query( "SELECT id,name,type,room FROM devices");
+										while( $row2 = fetch( $sql2 ) )
+										{
+											$sql_groupdevice = query( "SELECT deviceID FROM groupaktor WHERE groupID='" . $GroupID ."'" );
+											while( $groupdevice = fetch( $sql_groupdevice ) ){
+												if($groupdevice['deviceID'] == $row2['id']){
+													$checked = "checked";
+												}
+											}
+											
+											$sql = query( "SELECT id,name FROM rooms WHERE id='" . $row2['room'] ."'" );
+											$RoomName = fetch($sql);
+											$RowName = $row2['name'] . " (" . $RoomName['name'] . " / " . $row2['type'] .")";
+											?>
+													
+													<input type="checkbox" name="Geraete[]" id="Geraet-<?php echo $row2['id'] ?>" <? echo $checked ?> value="<?php echo $row2['id'] ?>" class="custom" />
+													<label for="Geraet-<?php echo $row2['id'] ?>"><?php echo $RowName; ?></label>
+											<?php
+											$checked = "";
+										}
+										?>	
+										
+							</fieldset>
+							</div>
 						</div>
 						<div class="ui-block-a"><button type="submit" name="delete" value="Submit">Delete</button></div>
 						<div class="ui-block-c"><button type="submit" name="submit" value="submit-value">Submit</button></div>
@@ -2879,10 +3077,15 @@ case 'sortGroup':
 					<fieldset>
 						<div data-role="fieldcontain">
 							<div data-role="content" data-theme="c" id="sortable">
+							<?
+							$GroupID = $_GET['group'];
+							$sql_group = query( "SELECT name FROM groups WHERE id='" . $GroupID . "'");
+							$group = fetch($sql_group);
+							?>
+							<h3>Reihenfolge für Gruppe <? echo $group['name'];?> bearbeiten</h3>
 							<ul data-role="listview" data-inset="true" data-theme="d">
-							  <li data-role="list-divider">Reihenfolge</li>
+								 <!--<li data-role="list-divider">Reihenfolge</li>-->
 										<?php
-										$GroupID = $_GET['group'];			
 										$sql_eintraege = query( "SELECT id,aktorID,aktorValue,deviceID,macroID FROM groupaktor WHERE groupID='" . $GroupID . "' ORDER BY sortOrder ASC");
 										$x=0;
 										while( $eintraege = fetch( $sql_eintraege ) )
@@ -2890,19 +3093,56 @@ case 'sortGroup':
 											$text = '';
 											//aktor
 											if ($eintraege['aktorID'] != 0){
-												$sql_aktor = query( "SELECT name,room FROM aktor WHERE id='" . $eintraege['aktorID'] . "'");
+												$sql_aktor = query( "SELECT name,room,type FROM aktor WHERE id='" . $eintraege['aktorID'] . "'");
 												$aktor = fetch($sql_aktor);
+												$sql_aktortyp = query( "SELECT devtype FROM deviceTypes WHERE id='" . $aktor['type'] . "'");
+												$aktortyp = fetch($sql_aktortyp);
+												switch ($aktortyp['devtype']) {
+													case 'rolladen':
+														$Typ = 'Rolladen';
+														if ($eintraege['aktorValue'] == 0){
+															$Aktion = 'runter';
+														}elseif ($eintraege['aktorValue'] == 100){
+															$Aktion = 'hoch';
+														}
+														break;
+													case 'schalter':
+														$Typ = 'Schalter';
+														if ($eintraege['aktorValue'] == 0){
+															$Aktion = 'aus';
+														}elseif ($eintraege['aktorValue'] == 100){
+															$Aktion = 'an';
+														}
+														break;
+													case 'dimmer':
+														$Typ = 'Dimmer';
+														if ($eintraege['aktorValue'] == 0){
+															$Aktion = 'aus';
+														}elseif ($eintraege['aktorValue'] == 100){
+															$Aktion = 'an';
+														}else{
+															$Aktion = ' zu ' . $eintraege['aktorValue'] . '% an';
+														}
+														break;
+													case 'virtuell':
+														$Typ = 'Virtuell';
+														$Aktion = $eintraege['aktorValue'];
+														break;
+												}
+												
 												$sql_room = query( "SELECT name FROM rooms WHERE id='" . $aktor['room'] . "'");
 												$room = fetch($sql_room);
-												$text = $eintraege['id'] .". " . $aktor['name'] . " (" . $room['name'] .")";
+												$text = $aktor['name'] . " (" . $room['name'] .") --> " . $Typ . " " . $Aktion; 
 											}
 											//device
 											if ($eintraege['deviceID'] != 0){
 												$sql_device = query( "SELECT name,room FROM devices WHERE id='" . $eintraege['deviceID'] . "'");
 												$device = fetch($sql_device);
+												$sql_macro = query( "SELECT name,value FROM tvmacros WHERE id='" . $eintraege['macroID'] . "'");
+												$macro = fetch($sql_macro);
 												$sql_room = query( "SELECT name FROM rooms WHERE id='" . $device['room'] . "'");
 												$room = fetch($sql_room);
-												$text = $eintraege['id'] .". " . $device['name'] . " (" . $room['name'] .")";
+												$text = $device['name'] . " (" . $room['name'] .") --> " . $macro['name'] . " (" . $macro['value'] . ")";
 											}
 											?>
 											 <li id="recordsArray_<?php echo $eintraege['id']; ?>"><?php echo $text ?></li>
@@ -2914,7 +3154,7 @@ case 'sortGroup':
 							</div>
 							<!-- sorted table -->
 							<div data-role="content" data-theme="c" id="sorted">
-								<p>&nbsp; </p>	
+								<p>&nbsp;</p>	
 							</div>
 						</div>
 					</fieldset>

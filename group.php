@@ -2,18 +2,11 @@
 <?
 include('functions.php');
 ?>
-<div data-role="header" data-position="fixed" data-theme="b">
-	<a href="index.php?page=dashboard" data-icon="home" rel="external">Home</a>
-	<div id="container">
-		<li class="hours"></li>
-		<li class="point">:</li>
-		<li class="min"></li>
-		<li class="point">:</li>
-		<li class="sec"></li>
-	</div>
-	<h1>Gruppen</h1>
-	<a href="javascript:history.go(0)" data-icon="refresh">refresh</a>
-</div><!-- /header -->
+
+<?
+include("header.php");
+?>
+
 
 <div data-role="popup" id="positionWindow" class="ui-content" data-theme="d">
 	<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
@@ -107,19 +100,6 @@ $(document).ready(function() {
 
 <?php
 
-$sql_group = query( "SELECT id FROM groups ORDER BY name ASC" );
-
-while ($groups = fetch($sql_group))
-{
-	echo "$(\"#flip-group-" . $groups['id'] . "\").on(\"slidestop\", function( event, ui ) { \n";
-	echo "var jqxhr = $.get(\"setFunctions.php?function=ChangeGroupState&ID=" . $groups['id'] . "\", function() {})\n";
-	echo "changeElement(\"flip-group-" . $groups['id'] . "-schalten-css\")\n";
-	echo "});\n";	
-	echo "\n";	
-}
-
-	echo "\n";	
-	echo "\n";	
 $sql = query( "SELECT id FROM groups");
 
 for ($i=1; $holen =  fetch($sql); $i++) {
@@ -128,7 +108,7 @@ for ($i=1; $holen =  fetch($sql); $i++) {
 	echo "var singleValues = $(\"#button-" . $holen['id'] . "\").val();\n";
 	echo "var url = \"$link\";\n";
 	echo "var url_komplett = \"aktor.php\" +  url + singleValues;\n";
-	echo "alert(url_komplett);\n";
+	//echo "alert(url_komplett);\n";
 	echo "var jqxhr = $.get(url_komplett, function() {\n";
 	echo "})\n";
 	echo "});\n";	
@@ -230,22 +210,12 @@ while( $groups = fetch( $sql_groups ) )
 
 
 	
-	<div style="float: left; border-radius:10px; height:250px; width:32%; margin-left:10px; margin-bottom:12px">
+	<div style="float: left; border-radius:10px; height:175px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider"><? echo $groups['name']?></li>			
 			
 			<li><a href="#popup-aktor-<? echo $groups['id'] ?>"  data-inline="true" data-rel="popup" data-position-to="window">Aktoren: </a></li> 
 			<li><a href="#popup-device-<? echo $groups['id'] ?>"  data-inline="true" data-rel="popup" data-position-to="window">Geräte: </a></li> 
-			<li>
-			
-			<label for="flip-group-<?php echo $groups['id'] ?>"><STRONG>Aktiv</STRONG></label>
-			<div style="position: absolute ;right:10px;top:0">
-			<select name="flip-group-<?php echo $groups['id'] ?>" id="flip-group-<?php echo $groups['id'] ?>" data-role="slider" data-mini="true">
-				<option value="off" <? if($groups['status'] != 'Yes'){ echo "selected=\"selected\"";}; ?>>Aus</option>
-				<option value="on" <? if($groups['status'] == 'Yes'){ echo "selected=\"selected\"";}; ?>>An</option>
-			</select>		
-			</div>
-			</li>
 			<li>
 			<label for="flip-<? echo $groups['id']?>"><b>Schalten:</b></label>
 			<div style="position: absolute ;right:10px;top:0px">

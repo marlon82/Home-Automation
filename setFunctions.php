@@ -2,9 +2,6 @@
 ini_set('error_reporting', E_ALL);
 include('functions.php');
 
-$updateRecordsArray = $POST['recordsArray'];
-echo $POST;
-
 switch( $_GET['function'] ){
 
 	case 'SamsungSendKey':
@@ -25,26 +22,33 @@ switch( $_GET['function'] ){
 		//echo "GroupdID:" . $_GET['ID'];
 		change_group_state($_GET['ID']);
 		break;
-		
-	case 'updateRecordsListings':
-		echo 'fired updateRecordsListings';
-		$listingCounter = 1;
-		foreach ($updateRecordsArray as $recordIDValue) {
-			
-			//$query = "UPDATE records SET recordListingID = " . $listingCounter . " WHERE recordID = " . $recordIDValue;
-			$sql = query("UPDATE groupaktor SET sortOrder = '" . $listingCounter . "' WHERE id = '" . $recordIDValue . "'");
-			//mysql_query($query) or die('Error, insert query failed');
-			$listingCounter = $listingCounter + 1;	
-		}
-		
-		echo '<pre>';
-		print_r($updateRecordsArray);
-		echo '</pre>';
-		echo 'If you refresh the page, you will see that records will stay just as you modified.';
-		break;
-		
+				
 	case 'test':
 		echo "Dies war ein Test!";
 		break;
 }
+
+if ($_POST) {
+	
+	//$action 				= mysql_real_escape_string($_POST['action']); 
+	$test 					= explode("?table=", $_POST['action']);
+	$table 					= $test[1]; 
+	$action 				= $test[0]; 
+	$updateRecordsArray 	= $_POST['recordsArray'];
+	if ($action == "updateRecordsListings"){
+		
+			$listingCounter = 1;
+			foreach ($updateRecordsArray as $recordIDValue) {
+				$sql = query("UPDATE " . $table . " SET sortOrder = '" . $listingCounter . "' WHERE id = '" . $recordIDValue . "'");
+				$listingCounter = $listingCounter + 1;	
+			}
+			
+			echo '<h4>die neue Sortierung wurde gespeichert</h4>';
+			//echo '<pre>';
+			//print_r($updateRecordsArray);
+			//echo '</pre>';
+	}
+}
+
+
 ?>
