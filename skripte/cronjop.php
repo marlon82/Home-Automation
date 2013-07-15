@@ -110,13 +110,27 @@ function timer(){
 						}
 					}else{
 						$SensorStart = True;
-					}					
+					}
+					$sqlAktFunc = query( "SELECT * FROM aktor WHERE id = '" . $timer['aktor'] . "'");
+					$AktorFunction = fetch( $sqlAktFunc );
+					
+					$Function == '';
+					if ($AktorFunction['func1'] == $group['aktorValue']) {
+						$Function = 1;
+					}elseif ($AktorFunction['func2'] == $group['aktorValue']) {
+						$Function = 2;
+					}elseif ($AktorFunction['func3'] == $group['aktorValue']) {
+						$Function = 3;
+					}elseif ($AktorFunction['func4'] == $group['aktorValue']) {
+						$Function = 4;
+					}
+					
 					//echo $start . $today['weekday'];
 					if ((($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) && ($SensorStart)) {
 						$sqla = query( "SELECT iid,name FROM aktor WHERE id = '" . $group['aktorID'] . "'" );
 						$aktor = fetch( $sqla );
 						//echo "start   iid:" . $aktor['iid'];
-						setAktor($aktor['iid'], $group['aktorValue'], false);
+						setAktor($aktor['iid'], $group['aktorValue'], $Function);
 					}else {
 						//echo 'stop';
 					}
@@ -159,11 +173,21 @@ function timer(){
 				}else{
 					$SensorStart = True;
 				}
+				$Function == '';
+				if ($AktorFunction['func1'] == $timer['value']) {
+					$Function = 1;
+				}elseif ($AktorFunction['func2'] == $timer['value']) {
+					$Function = 2;
+				}elseif ($AktorFunction['func3'] == $timer['value']) {
+					$Function = 3;
+				}elseif ($AktorFunction['func4'] == $timer['value']) {
+					$Function = 4;
+				}
 				if ((($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) && ($SensorStart)) {
 					$sqla = query( "SELECT iid,name FROM aktor WHERE id = '" . $timer['aktor'] . "'" );
 					$aktor = fetch( $sqla );
 					//echo "start   iid:" . $aktor['iid'];
-					setAktor($aktor['iid'], $timer['value'], false);
+					setAktor($aktor['iid'], $timer['value'], $Function);
 				}else {
 					//echo 'stop';
 				}

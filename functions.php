@@ -619,7 +619,7 @@ function Onkyo_send_key($device,$key){
 	else
 	{
 		$SendKeys = explode(",",$key);
-		foreach($key as $Send_Key){
+		foreach($SendKeys as $Send_Key){
 			$length=strlen($Send_Key); 
 			$length=$length+1;
 			$total=$length+16;

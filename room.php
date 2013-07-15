@@ -130,39 +130,59 @@ $sql = query( "SELECT name,iName,iid FROM aktor WHERE room = '" . $roomid . "' A
 for ($i=1; $holen =  fetch($sql); $i++) {
 	$link = '?id=' . $holen['iid'] . '&value=';
 	echo "$(\"#flip-" . $holen['iid'] . "\").on(\"slidestop\", function( event, ui ) { \n";
-	echo "var singleValues = $(\"#flip-" . $holen['iid'] . "\").val();\n";
-	echo "var url = \"$link\";\n";
-	echo "var url_komplett = \"aktor.php\" +  url + singleValues;\n";
-	echo "var jqxhr = $.get(url_komplett, function() {\n";
-	echo "})\n";
-	echo "changeElement(\"flip-" . $holen['iid'] . "-schalten-css\")\n";
+	echo "	var singleValues = $(\"#flip-" . $holen['iid'] . "\").val();\n";
+	echo "	var url = \"$link\";\n";
+	echo "	var url_komplett = \"aktor.php\" +  url + singleValues;\n";
+	echo "	var jqxhr = $.get(url_komplett, function() {\n";
+	echo "	})\n";
+	echo "	changeElement(\"flip-" . $holen['iid'] . "-schalten-css\")\n";
 	echo "});\n";	
 }	
 
 $sqld = query( "SELECT id,devtypename FROM deviceTypes WHERE devtype = 'rolladen'" );
 $devtype = fetch( $sqld );
 $typ = $devtype['id']; 
-$sql = query( "SELECT name,iName,iid FROM aktor WHERE room = '" . $roomid . "' AND type = '" . $typ . "'" );
+$sql = query( "SELECT * FROM aktor WHERE room = '" . $roomid . "' AND type = '" . $typ . "'" );
 
 for ($i=1; $holen =  fetch($sql); $i++) {
-	$link = '?id=' . $holen['iid'] . '&function=';
+	$Function == '';
+	if ($holen['func1desc'] == 'Hoch') {
+		$Function = 1;
+	}elseif ($holen['func2desc'] == 'Hoch') {
+		$Function = 2;
+	}elseif ($holen['func3desc'] == 'Hoch') {
+		$Function = 3;
+	}elseif ($holen['func4desc'] == 'Hoch') {
+		$Function = 4;
+	}
+	$link = '?id=' . $holen['iid'] . '&function=' . $Function;
 	echo "$(\"#Hoch-" . $holen['iid'] . "\").bind(\"click\", function( event, ui ) { \n";
-	echo "var singleValues = 1;\n";
-	echo "var url = \"$link\";\n";
-	echo "var url_komplett = \"aktor.php\" +  url + singleValues;\n";
-	echo "var jqxhr = $.get(url_komplett, function() {\n";
-	echo "})\n";
-	echo "changeElement(\"Hoch-" . $holen['iid'] . "-schalten-css\")\n";
+	echo "	var singleValues = 1;\n";
+	echo "	var url = \"$link\";\n";
+	echo "	var url_komplett = \"aktor.php\" +  url + singleValues;\n";
+	echo "	var jqxhr = $.get(url_komplett, function() {\n";
+	echo "	})\n";
+	echo "	changeElement(\"Hoch-" . $holen['iid'] . "-schalten-css\")\n";
 	echo "});\n";	
 	
-	$link = '?id=' . $holen['iid'] . '&function=';
+	$Function == '';
+	if ($holen['func1desc'] == 'Runter') {
+		$Function = 1;
+	}elseif ($holen['func2desc'] == 'Runter') {
+		$Function = 2;
+	}elseif ($holen['func3desc'] == 'Runter') {
+		$Function = 3;
+	}elseif ($holen['func4desc'] == 'Runter') {
+		$Function = 4;
+	}
+	$link = '?id=' . $holen['iid'] . '&function=' . $Function;
 	echo "$(\"#Runter-" . $holen['iid'] . "\").bind(\"click\", function( event, ui ) { \n";
-	echo "var singleValues = 2;\n";
-	echo "var url = \"$link\";\n";
-	echo "var url_komplett = \"aktor.php\" +  url + singleValues;\n";
-	echo "var jqxhr = $.get(url_komplett, function() {\n";
-	echo "})\n";
-	echo "changeElement(\"Runter-" . $holen['iid'] . "-schalten-css\")\n";
+	echo "	var singleValues = 2;\n";
+	echo "	var url = \"$link\";\n";
+	echo "	var url_komplett = \"aktor.php\" +  url + singleValues;\n";
+	echo "	var jqxhr = $.get(url_komplett, function() {\n";
+	echo "	})\n";
+	echo "	changeElement(\"Runter-" . $holen['iid'] . "-schalten-css\")\n";
 	echo "});\n";	
 }
 

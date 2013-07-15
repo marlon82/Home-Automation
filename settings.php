@@ -37,7 +37,7 @@ height:20px;
  div#cont{
 	float: left;
 	margin-top:15px;
-	margin-bottom:500px;
+	margin-bottom:120px;
 	width:70%; 
   }
 
@@ -561,7 +561,7 @@ switch( $_GET['aktion'] ){
 				<ul data-role="listview" data-inset="true" data-theme="d">
 					<li data-role="list-divider">Aktoren</li>
 					<?php
-					$sql = query( "SELECT id,name,room,type FROM aktor");
+					$sql = query( "SELECT * FROM aktor");
 																						
 					while( $row = fetch( $sql ) )
 					{
@@ -569,8 +569,22 @@ switch( $_GET['aktion'] ){
 						$row1 = fetch( $sql1 );
 						$sql2 = query( "SELECT id,device,devtype,devtypename FROM deviceTypes WHERE id = '" . $row['type'] . "'" );
 						$devType = fetch( $sql2 );
+						$Function = '';
+						if ($row['func1desc'] != '') {
+							$Function = $Function . $row['func1desc'] . "-";
+						}
+						if ($row['func2desc'] != '') {
+							$Function = $Function . $row['func2desc'] . "-";
+						}
+						if ($row['func3desc'] != '') {
+							$Function = $Function . $row['func3desc'] . "-";
+						}
+						if ($row['func4desc'] != '') {
+							$Function = $Function . $row['func4desc'] . "-";
+						}
+						$Function = substr($Function, 0, -1);
 						?>																						
-						<li><a href="?page=settings&aktion=editAktor&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $devType['devtypename'] . ")"; ?></span></a></li>																			
+						<li><a href="?page=settings&aktion=editAktor&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $row1['name'] . " / " . $devType['devtypename'] . " / " . $Function .")"; ?></span></a></li>																			
 						<?php
 					}
 					?>
@@ -1227,7 +1241,7 @@ switch( $_GET['aktion'] ){
 			if(!$_GET['step']){
 			?>
 			<div id="cont">
-			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:130px">
+			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:170px">
 				<ul data-role="listview" data-inset="true" data-theme="d">
 				<li data-role="list-divider">Macros</li>
 				<?php
@@ -1241,6 +1255,7 @@ switch( $_GET['aktion'] ){
 				}
 				?>
 				</ul>
+			</div>
 			</div>
 	   
 			<?php
@@ -2485,7 +2500,7 @@ switch( $_GET['aktion'] ){
 						<?php 
 						}
 						
-						$sql = query( "SELECT name FROM aktor WHERE id = '" . $aktoren[$i] . "' AND type = '" . $typid[$x] . "'" );	
+						$sql = query( "SELECT name,room FROM aktor WHERE id = '" . $aktoren[$i] . "' AND type = '" . $typid[$x] . "'" );	
 						if ( mysql_num_rows($sql) == 0 ) {
 							// nichts gefunden
 						} else {
@@ -2495,31 +2510,33 @@ switch( $_GET['aktion'] ){
 							<?php
 							$sqltype = query( "SELECT id,devtype,devtypename FROM deviceTypes WHERE id = '" . $typid[$x] . "'" );
 							$devtype = fetch( $sqltype );
+							$sqlroom = query( "SELECT name FROM rooms WHERE id = '" . $row['room'] . "'" );
+							$room = fetch( $sqlroom );
 							if($devtype['devtypename'] == "Dimmer"){
-							?>
-								<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
-								<input name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-highlight="true" min="0" max="100" step="5" value="0" type="range">
-							<?php
+								?>
+									<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] . ' (' . $room['name'] . ')';?></label>
+									<input name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-highlight="true" min="0" max="100" step="5" value="0" type="range">
+								<?php
 							}
 							if($devtype['devtypename'] == "Schalter"){
-							?>
-								<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
-								<select name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-role="slider">
-									<option value="0">Aus</option>
-									<option value="100">An</option>
-								</select>
-							<?php
+								?>
+									<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] . ' (' . $room['name'] . ')';?></label>
+									<select name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-role="slider">
+										<option value="0">Aus</option>
+										<option value="100">An</option>
+									</select>
+								<?php
 							}
 							if($devtype['devtypename'] == "Rolladen"){
-							?>
-								<fieldset data-role="controlgroup" data-type="horizontal">
-								<legend><?php echo $row['name'] ?></legend>
-									<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-h-<?php echo $aktoren[$i] ?>" value="100">
-									<label for="Aktor-h-<?php echo $aktoren[$i] ?>">Hoch</label>
-									<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-r-<?php echo $aktoren[$i] ?>" value="0">
-									<label for="Aktor-r-<?php echo $aktoren[$i] ?>">Runter</label>
-								</fieldset>
-							<?php
+								?>
+									<fieldset data-role="controlgroup" data-type="horizontal">
+									<legend><?php echo $row['name'] . ' (' . $room['name'] . ')';?></legend>
+										<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-h-<?php echo $aktoren[$i] ?>" value="100">
+										<label for="Aktor-h-<?php echo $aktoren[$i] ?>">Hoch</label>
+										<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-r-<?php echo $aktoren[$i] ?>" value="0">
+										<label for="Aktor-r-<?php echo $aktoren[$i] ?>">Runter</label>
+									</fieldset>
+								<?php
 							}
 							?>    					
 							</li>
@@ -2767,11 +2784,13 @@ case 'editGroup':
 								
 						<?php 
 						} 	 
-						$sql = query( "SELECT name FROM aktor WHERE id = '" . $aktoren[$i] . "' AND type = '" . $typid[$x] . "'" );	
+						$sql = query( "SELECT * FROM aktor WHERE id = '" . $aktoren[$i] . "' AND type = '" . $typid[$x] . "'" );	
 						if ( mysql_num_rows($sql) == 0 ) {
 							// nichts gefunden
 						} else {
 							$row = mysql_fetch_assoc($sql);
+							$sqlroom = query( "SELECT name FROM rooms WHERE id = '" . $row['room'] . "'" );
+							$room = fetch( $sqlroom );
 							?>
 							<li>
 							<?php
@@ -2779,13 +2798,13 @@ case 'editGroup':
 							$devtype = fetch( $sqltype );
 							if($devtype['devtypename'] == "Dimmer"){
 							?>
-								<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
+								<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] . ' (' . $room['name'] . ')';?></label>
 								<input name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-highlight="true" min="0" max="100" value="0" type="range">
 							<?php
 							}
 							if($devtype['devtypename'] == "Schalter"){
 							?>
-								<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] ?></label>
+								<label for="Aktor-<?php echo $aktoren[$i] ?>"><?php echo $row['name'] . ' (' . $room['name'] . ')';?></label>
 								<select name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-<?php echo $aktoren[$i] ?>" data-role="slider">
 									<option value="0">Aus</option>
 									<option value="100">An</option>
@@ -2795,7 +2814,7 @@ case 'editGroup':
 							if($devtype['devtypename'] == "Rolladen"){
 							?>
 								<fieldset data-role="controlgroup" data-type="horizontal">
-								<legend><?php echo $row['name'] ?></legend>
+								<legend><?php echo $row['name'] . ' (' . $room['name'] . ')';?></legend>
 									<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-h-<?php echo $aktoren[$i] ?>" value="100">
 									<label for="Aktor-h-<?php echo $aktoren[$i] ?>">Hoch</label>
 									<input type="radio" name="Aktor-<?php echo $aktoren[$i] ?>" id="Aktor-r-<?php echo $aktoren[$i] ?>" value="0">
@@ -3019,8 +3038,12 @@ case 'editGroup':
 							</fieldset>
 							</div>
 						</div>
-						<div class="ui-block-a"><button type="submit" name="delete" value="Submit">Delete</button></div>
-						<div class="ui-block-c"><button type="submit" name="submit" value="submit-value">Submit</button></div>
+						<div class="ui-body ui-body-c">
+						<fieldset class="ui-grid-a">
+							<div class="ui-block-a"><button type="submit" name="delete" value="Submit" data-theme="d">Delete</button></div>
+							<div class="ui-block-c"><button type="submit" name="submit" value="Submit" data-theme="b">Submit</button></div>
+						</fieldset>
+						</div>
 					</fieldset>
 				</form>
 			</div>

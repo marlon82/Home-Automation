@@ -83,7 +83,18 @@ if ($XS1Online){
 			{
 				if( $value > 1 ){
 					if(($devtype['devtype'] == 'dimmer') || ($devtype['devtype'] == 'rolladen') || ($devtype['devtype'] == 'schalter')){
-						$link = '?id=' . $row['iid'] . '&value=0';
+						$Function == '';
+						if (($row['func1desc'] == 'Hoch') || ($row['func1desc'] == 'Aus')) {
+							$Function = 1;
+						}elseif (($row['func2desc'] == 'Hoch') || ($row['func2desc'] == 'Aus')) {
+							$Function = 2;
+						}elseif (($row['func3desc'] == 'Hoch') || ($row['func3desc'] == 'Aus')) {
+							$Function = 3;
+						}elseif (($row['func4desc'] == 'Hoch') || ($row['func4desc'] == 'Aus')) {
+							$Function = 4;
+						}
+					
+						$link = '?id=' . $row['iid'] . '&value=0'. '&function=' . $Function;
 						echo "	$(\"#invertAktor-" . $row['iid'] . "\").on(\"click\", function( event, ui ) { \n";
 						echo "		var singleValues = $(\"#invertAktor-" . $row['iid'] . "\").val();\n";
 						echo "		var url = \"$link\";\n";

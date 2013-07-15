@@ -76,6 +76,82 @@ $sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monda
 
 while( $timer = fetch( $sql ) )
 {	
+	if ( $timer['isGroup'] == 'Yes') {
+		$sqlg = query( "SELECT id, name FROM groups WHERE id='" . $timer['aktor'] ."'" );
+		$group = fetch( $sqlg );
+		?>
+		<div data-role="popup" id="popup-group-<? echo $group['id'] ?>" class="ui-content" data-theme="d">
+			<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+				<table>
+				  <tr>
+					<td><b>Aktor</b></td>
+					<td><b>Raum</b></td>
+					<td><b>Value</b></td>
+				  </tr>
+					<?
+					$sql_groupaktor = query( "SELECT aktorID,aktorValue,deviceID FROM groupaktor WHERE groupID='" . $group['id'] ."'" );
+					while( $groupaktor = fetch( $sql_groupaktor ) ){
+						if ($groupaktor['aktorID'] != 0) {
+							$sql_aktor = query( "SELECT name,room FROM aktor where id='" . $groupaktor['aktorID'] ."'" );
+							$aktor = fetch( $sql_aktor );
+							
+							$sql_raum = query( "SELECT id,name FROM rooms where id='" . $aktor['room'] ."'" );
+							$raum = fetch( $sql_raum );
+							//var_dump($raum1);
+							if($groupaktor['aktorValue'] > 0){
+								$font = "#01DF01";
+							}else{
+								$font = "#FF0000";
+							}
+						
+							
+						?>
+						<!-- <p><? echo $aktor1['name']; ?></p> -->
+						  <tr>
+							<td style="padding: 5px"><FONT COLOR="<? echo $font ?>"><? echo $aktor['name']; ?></FONT></td>
+							<td style="padding: 5px"><FONT COLOR="<? echo $font ?>"><? echo $raum['name']; ?></FONT></td>
+							<td style="padding: 5px"><FONT COLOR="<? echo $font ?>"><? echo $groupaktor['aktorValue']; ?></FONT></td>
+						  </tr>
+						<? 
+						}
+					}	?>
+
+
+
+				</table>
+				
+				<table>
+				  <tr>
+					<td><b>Device</b></td>
+					<td><b>Raum</b></td>
+					<td><b>Macro</b></td>
+				  </tr>
+					<?
+					$sql_groupaktor2 = query( "SELECT deviceID,macroID FROM groupaktor WHERE groupID='" . $group['id'] ."'" );
+					
+					while( $groupaktor2 = fetch( $sql_groupaktor2 ) ){
+						if ($groupaktor2['deviceID'] != 0) {
+						$sql_device = query( "SELECT name,room FROM devices where id='" . $groupaktor2['deviceID'] ."'" );
+						$device = fetch( $sql_device );
+						
+						$sql_raum = query( "SELECT id,name FROM rooms where id='" . $device['room'] ."'" );
+						$raum = fetch( $sql_raum );
+						
+						$sql_macro = query( "SELECT id,name,value FROM tvmacros where id='" . $groupaktor2['macroID'] ."'" );
+						$macro = fetch( $sql_macro );
+						?>
+						<tr>
+						<td style="padding: 5px"><? echo $device['name']; ?></td>
+						<td style="padding: 5px"><? echo $raum['name']; ?></td>
+						<td style="padding: 5px"><? echo $macro['name']; ?></td>
+						</tr>
+				<?  	}
+					} ?>
+
+				</table>
+		</div>
+	<?
+	}
 	if ($timer['Monday'] == 'Yes') { $Wochentage =  $Wochentage . ' Mo /';}
 	if ($timer['Tuesday'] == 'Yes') { $Wochentage = $Wochentage . ' Di /';}
 	if ($timer['Wednesday'] == 'Yes') { $Wochentage = $Wochentage . ' Mi /';}
@@ -96,7 +172,7 @@ while( $timer = fetch( $sql ) )
 				$sqlg = query( "SELECT id, name FROM groups WHERE id='" . $timer['aktor'] ."'" );
 				$group = fetch( $sqlg );
 			?>
-				<li>Gruppe<span style="float:right"><? echo $group['name']; ?></span></li> 
+				<li><a href="#popup-group-<? echo $group['id'] ?>"  data-inline="true" data-rel="popup" data-position-to="window">Gruppe<span style="float:right"><? echo $group['name']; ?></span></a></li>
 			<?
 			}else {
 				$sqla = query( "SELECT id, name, room, type FROM aktor WHERE id='" . $timer['aktor'] ."'" );
