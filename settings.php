@@ -35,10 +35,11 @@ height:20px;
  }
  
  div#cont{
- float: left;
-margin-top:15px;
-   width:70%; 
-   
+	float: left;
+	margin-top:15px;
+	margin-bottom:500px;
+	width:70%; 
+  }
 
 </style>
 
@@ -230,7 +231,7 @@ switch( $_GET['aktion'] ){
 		//include('settings.php');
 		?>        
 		<div id="cont">
-			<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+			<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:130px">
 				<ul data-role="listview" data-inset="true" data-theme="d">
 					<li data-role="list-divider">Sensoren</li>
 					<?php
@@ -257,7 +258,7 @@ switch( $_GET['aktion'] ){
 		//include('settings.php');
 		?>        
 		<div id="cont">
-			<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+			<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:130px">
 				<ul data-role="listview" data-inset="true" data-theme="d">
 					<li data-role="list-divider">Aktoren</li>
 		<?php
@@ -556,7 +557,7 @@ switch( $_GET['aktion'] ){
 		if(!$_GET['step']){
 			?>
 			<div id="cont">
-			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:130px">
 				<ul data-role="listview" data-inset="true" data-theme="d">
 					<li data-role="list-divider">Aktoren</li>
 					<?php
@@ -574,6 +575,7 @@ switch( $_GET['aktion'] ){
 					}
 					?>
 				</ul>
+			</div>
 			</div>
 	   
 			<?php
@@ -851,7 +853,7 @@ switch( $_GET['aktion'] ){
 			if(!$_GET['step']){
 				?>
 				<div id="cont">
-				<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+				<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:130px">
 					<ul data-role="listview" data-inset="true" data-theme="d">
 						<li data-role="list-divider">Sensoren</li>
 						<?php
@@ -969,7 +971,7 @@ switch( $_GET['aktion'] ){
 		if(!$_GET['step']){
 			?>
 			<div id="cont">
-			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:130px">
 				<ul data-role="listview" data-inset="true" data-theme="d">
 					<li data-role="list-divider">Räume</li>
 					<?php
@@ -1081,7 +1083,7 @@ switch( $_GET['aktion'] ){
 			if(!$_GET['step']){
 				?>
 				<div id="cont">
-				<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+				<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:130px">
 				<ul data-role="listview" data-inset="true" data-theme="d">
 					<li data-role="list-divider">Devices mit Macro Mapping</li>
 				<?php
@@ -1225,7 +1227,7 @@ switch( $_GET['aktion'] ){
 			if(!$_GET['step']){
 			?>
 			<div id="cont">
-			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:130px">
 				<ul data-role="listview" data-inset="true" data-theme="d">
 				<li data-role="list-divider">Macros</li>
 				<?php
@@ -1296,7 +1298,7 @@ switch( $_GET['aktion'] ){
 		if(!$_GET['step']){
 			?>
 			<div id="cont">
-			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:130px">
 				<ul data-role="listview" data-inset="true" data-theme="d">
 					<li data-role="list-divider">Geräte</li>
 					<?php
@@ -1425,7 +1427,7 @@ switch( $_GET['aktion'] ){
 		if(!$_GET['step']){
 			?>
 			<div id="cont">
-			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:12px">
+			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:130px">
 			<ul data-role="listview" data-inset="true" data-theme="d">
 				<li data-role="list-divider">Timer</li>
 			<?php

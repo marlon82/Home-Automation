@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 13, 2013 at 03:46 PM
--- Server version: 5.5.27
--- PHP Version: 5.4.7
+-- Erstellungszeit: 15. Jul 2013 um 09:03
+-- Server Version: 5.5.27
+-- PHP-Version: 5.4.7
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,11 +17,25 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `cd_home_automation`
+-- Datenbank: `cd_home_automation`
 --
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `devicetypes`
+-- Tabellenstruktur für Tabelle `devicetypes`
+--
+
+CREATE TABLE IF NOT EXISTS `devicetypes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `device` varchar(255) DEFAULT NULL,
+  `devtype` varchar(255) DEFAULT NULL,
+  `devtypename` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
+
+--
+-- Daten für Tabelle `devicetypes`
 --
 
 INSERT INTO `devicetypes` (`id`, `device`, `devtype`, `devtypename`) VALUES
@@ -45,7 +59,9 @@ INSERT INTO `devicetypes` (`id`, `device`, `devtype`, `devtypename`) VALUES
 (19, 'device', 'samsungtv', 'Samsung TV'),
 (20, 'device', 'samsungbluray', 'Samsung 3D Blu-Ray Player'),
 (21, 'device', 'onkyoavrec', 'Onkyo AV Receiver'),
-(22, 'device', 'enigma2', 'Dreambox (enigma2)');
+(22, 'device', 'enigma2', 'Dreambox (enigma2)'),
+(23, 'sensor', 'energiezaehler', 'Energiezaehler'),
+(24, 'aktor', 'infrarot', 'Infrarot');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

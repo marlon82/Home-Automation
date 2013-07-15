@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 13, 2013 at 03:46 PM
--- Server version: 5.5.27
--- PHP Version: 5.4.7
+-- Erstellungszeit: 15. Jul 2013 um 09:02
+-- Server Version: 5.5.27
+-- PHP-Version: 5.4.7
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `cd_home_automation`
+-- Datenbank: `cd_home_automation`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `aktor`
+-- Tabellenstruktur für Tabelle `aktor`
 --
 
 CREATE TABLE IF NOT EXISTS `aktor` (
@@ -38,13 +38,21 @@ CREATE TABLE IF NOT EXISTS `aktor` (
   `zeitEin` int(11) NOT NULL,
   `zeitHeute` int(11) NOT NULL,
   `verbrauchWatt` decimal(5,2) DEFAULT NULL,
+  `func1` int(3) DEFAULT NULL,
+  `func1desc` varchar(255) DEFAULT NULL,
+  `func2` int(3) DEFAULT NULL,
+  `func2desc` varchar(255) DEFAULT NULL,
+  `func3` int(3) DEFAULT NULL,
+  `func3desc` varchar(255) DEFAULT NULL,
+  `func4` int(3) DEFAULT NULL,
+  `func4desc` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `config`
+-- Tabellenstruktur für Tabelle `config`
 --
 
 CREATE TABLE IF NOT EXISTS `config` (
@@ -57,7 +65,23 @@ CREATE TABLE IF NOT EXISTS `config` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `devicemacro`
+-- Tabellenstruktur für Tabelle `configfooter`
+--
+
+CREATE TABLE IF NOT EXISTS `configfooter` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `visible` varchar(3) DEFAULT NULL,
+  `sortOrder` int(11) DEFAULT NULL,
+  `icon` varchar(255) DEFAULT NULL,
+  `codename` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `devicemacro`
 --
 
 CREATE TABLE IF NOT EXISTS `devicemacro` (
@@ -70,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `devicemacro` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `devices`
+-- Tabellenstruktur für Tabelle `devices`
 --
 
 CREATE TABLE IF NOT EXISTS `devices` (
@@ -92,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `devices` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `devicetypes`
+-- Tabellenstruktur für Tabelle `devicetypes`
 --
 
 CREATE TABLE IF NOT EXISTS `devicetypes` (
@@ -106,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `devicetypes` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `groupaktor`
+-- Tabellenstruktur für Tabelle `groupaktor`
 --
 
 CREATE TABLE IF NOT EXISTS `groupaktor` (
@@ -115,13 +139,15 @@ CREATE TABLE IF NOT EXISTS `groupaktor` (
   `deviceID` int(11) DEFAULT NULL,
   `groupID` int(11) DEFAULT NULL,
   `aktorValue` int(11) DEFAULT NULL,
+  `macroID` int(11) DEFAULT NULL,
+  `sortOrder` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `groups`
+-- Tabellenstruktur für Tabelle `groups`
 --
 
 CREATE TABLE IF NOT EXISTS `groups` (
@@ -134,13 +160,13 @@ CREATE TABLE IF NOT EXISTS `groups` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `logsensoren`
+-- Tabellenstruktur für Tabelle `logsensoren`
 --
 
 CREATE TABLE IF NOT EXISTS `logsensoren` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `iid` int(4) NOT NULL,
-  `value` varchar(20) NOT NULL,
+  `value` varchar(20) CHARACTER SET latin1 COLLATE latin1_german1_ci NOT NULL,
   `zeit` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -148,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `logsensoren` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `logverbrauch`
+-- Tabellenstruktur für Tabelle `logverbrauch`
 --
 
 CREATE TABLE IF NOT EXISTS `logverbrauch` (
@@ -164,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `logverbrauch` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rooms`
+-- Tabellenstruktur für Tabelle `rooms`
 --
 
 CREATE TABLE IF NOT EXISTS `rooms` (
@@ -177,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `rooms` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sensoren`
+-- Tabellenstruktur für Tabelle `sensoren`
 --
 
 CREATE TABLE IF NOT EXISTS `sensoren` (
@@ -196,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `sensoren` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `timer`
+-- Tabellenstruktur für Tabelle `timer`
 --
 
 CREATE TABLE IF NOT EXISTS `timer` (
@@ -216,7 +242,7 @@ CREATE TABLE IF NOT EXISTS `timer` (
   `Saturday` varchar(255) DEFAULT NULL,
   `Sunday` varchar(255) DEFAULT NULL,
   `isGroup` varchar(255) DEFAULT NULL,
-  `suninfo` varchar(11) DEFAULT NULL,
+  `suninfo` varchar(11) NOT NULL,
   `SensorID` int(11) DEFAULT NULL,
   `SensorValue` varchar(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -225,15 +251,15 @@ CREATE TABLE IF NOT EXISTS `timer` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tvmacros`
+-- Tabellenstruktur für Tabelle `tvmacros`
 --
 
 CREATE TABLE IF NOT EXISTS `tvmacros` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
-  `value` varchar(4000) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
