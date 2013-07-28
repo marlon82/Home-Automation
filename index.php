@@ -1,4 +1,3 @@
-
 <!DOCTYPE html> 
 <html>
 
@@ -8,9 +7,12 @@
 	<title>Home Automation</title> 
 	<link rel="stylesheet" href="./jquery/jquery.mobile-1.3.1.css" />
 	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
 	<script src="./jquery/jquery.mobile-1.3.1.js"></script>
+	<!-- andere skripte -->
 	<script src="./skripte/time.js"></script>
-	<!-- <script src="slider.js"></script> -->
+	<script src="./skripte/jquery.ui.touch-punch.min.js"></script>
+
 	<?php
 
 /// calculating width of each navbar ///
@@ -19,23 +21,23 @@ $width = 100/7; /// dividing 100% space among 7 items. If data is coming form DB
 ?>
         <style>
            /**** Trying to style h1 and paragraph *******/
-               .nav-glyphish-example .ui-btn .ui-btn-inner { padding-top: 40px !important; }
-    .nav-glyphish-example .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: none !important; border-radius: none !important; }
-    #dashboard1 .ui-icon { background:  url(glyphish-icons/81-dashboard.png) no-repeat }
-    #haus .ui-icon { background:  url(glyphish-icons/53-house.png) 50% 50% no-repeat }
-    #tv .ui-icon { background:  url(glyphish-icons/70-tv.png) 50% 50% no-repeat; }
-    #zap .ui-icon { background:  url(glyphish-icons/64-zap.png) 50% 50% no-repeat}
-    #coffee .ui-icon { background:  url(glyphish-icons/100-coffee.png) 50% 50% no-repeat;  background-size: 20px 24px; }
-    #skull .ui-icon { background:  url(glyphish-icons/21-skull.png) 50% 50% no-repeat;  background-size: 22px 24px; }
-    #watch .ui-icon { background:  url(glyphish-icons/78-stopwatch.png) 50% 50% no-repeat;  background-size: 22px 24px; }
-    #music .ui-icon { background:  url(glyphish-icons/65-note.png) 50% 50% no-repeat;  background-size: 22px 24px; }
-    #weather .ui-icon { background:  url(glyphish-icons/25-weather.png) 50% 50% no-repeat;  background-size: 22px 24px; }
-    #raspberry .ui-icon { background:  url(glyphish-icons/raspberrypi.png) 50% 50% no-repeat;  background-size: 22px 24px; }
-    #settings .ui-icon { background:  url(glyphish-icons/19-gear.png) 50% 50% no-repeat; }
-    #group .ui-icon { background:  url(glyphish-icons/123-id-card.png) 50% 50% no-repeat; }
-    #sensor .ui-icon { background:  url(glyphish-icons/16-line-chart.png) 50% 50% no-repeat; }
-    
-
+				.nav-glyphish-example .ui-btn .ui-btn-inner { padding-top: 40px !important; }
+				.nav-glyphish-example .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: none !important; border-radius: none !important; }
+				#dashboard1 .ui-icon { background:  url(glyphish-icons/81-dashboard.png) no-repeat }
+				#haus .ui-icon { background:  url(glyphish-icons/53-house.png) 50% 50% no-repeat }
+				#tv .ui-icon { background:  url(glyphish-icons/70-tv.png) 50% 50% no-repeat; }
+				#zap .ui-icon { background:  url(glyphish-icons/64-zap.png) 50% 50% no-repeat}
+				#coffee .ui-icon { background:  url(glyphish-icons/100-coffee.png) 50% 50% no-repeat;  background-size: 20px 24px; }
+				#skull .ui-icon { background:  url(glyphish-icons/21-skull.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+				#watch .ui-icon { background:  url(glyphish-icons/78-stopwatch.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+				#music .ui-icon { background:  url(glyphish-icons/65-note.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+				#weather .ui-icon { background:  url(glyphish-icons/25-weather.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+				#raspberry .ui-icon { background:  url(glyphish-icons/raspberrypi.png) 50% 50% no-repeat;  background-size: 22px 24px; }
+				#settings .ui-icon { background:  url(glyphish-icons/19-gear.png) 50% 50% no-repeat; }
+				#group .ui-icon { background:  url(glyphish-icons/123-id-card.png) 50% 50% no-repeat; }
+				#sensor .ui-icon { background:  url(glyphish-icons/16-line-chart.png) 50% 50% no-repeat; }
+				#logviewer .ui-icon { background:  url(glyphish-icons/179-notepad.png) 50% 50% no-repeat; }
+				#television .ui-icon { background:  url(glyphish-icons/45-movie-1.png) 50% 50% no-repeat; }
 
 .mycss
 {
@@ -62,35 +64,43 @@ switch( $_GET['page'] )
 
 		case 'multimedia':
 		include('multimedia.php');
-		break;	
+		break;
 		
 		case 'room':
 		include('room.php');
-		break;	
+		break;
 		
 		case 'dreambox':
 		include('dreambox.php');
-		break;	
+		break;
 		
 		case 'timer':
 		include('timer.php');
-		break;	
+		break;
 		
 		case 'raspberry':
 		include('raspberry.php');
-		break;	
+		break;
 		
 		case 'group':
 		include('group.php');
-		break;			
+		break;
 		
 		case 'sensoren':
 		include('sensoren.php');
-		break;			
+		break;
+		
+		case 'logviewer':
+		include('logviewer.php');
+		break;
+		
+		case 'television':
+		include('television.php');
+		break;
 	
 		default:
 		include('dashboard.php');
-		break;	
+		break;
 	}
 	
 include("footer.php");

@@ -19,7 +19,7 @@ while($row = fetch( $sql )){
 	//var_dump($row);
 	$result = ping($row['ip']);
 	//var_dump($result);
-	if($result){ 
+	if($result){
 		if($row['zeitEin'] == "0"){
 			$sql1 = query("UPDATE devices SET zeitEin = '" . time() . "' WHERE id = '" . $row['id'] . "'");
 			// update Zeit Ein heute
@@ -110,21 +110,36 @@ function timer(){
 						}
 					}else{
 						$SensorStart = True;
-					}					
+					}
+					$sqlAktFunc = query( "SELECT * FROM aktor WHERE id = '" . $timer['aktor'] . "'");
+					$AktorFunction = fetch( $sqlAktFunc );
+					
+					$Function == '';
+					if ($AktorFunction['func1'] == $group['aktorValue']) {
+						$Function = 1;
+					}elseif ($AktorFunction['func2'] == $group['aktorValue']) {
+						$Function = 2;
+					}elseif ($AktorFunction['func3'] == $group['aktorValue']) {
+						$Function = 3;
+					}elseif ($AktorFunction['func4'] == $group['aktorValue']) {
+						$Function = 4;
+					}
+					
 					//echo $start . $today['weekday'];
 					if ((($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) && ($SensorStart)) {
-						$sqla = query( "SELECT iid,name FROM aktor WHERE id = '" . $group['aktorID'] . "'" );
+						$sqla = query( "SELECT iid,id,name,room FROM aktor WHERE id = '" . $group['aktorID'] . "'" );
 						$aktor = fetch( $sqla );
+						$sqlroom = query( "SELECT * FROM rooms WHERE id = '" . $aktor['room'] . "'" );
+						$room = fetch( $sqlroom );
 						//echo "start   iid:" . $aktor['iid'];
-						setAktor($aktor['iid'], $group['aktorValue'], false);
+						$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','cronjob.php','timer','call','aufruf setAktor mit " . $aktor['name'] . " " . $room['name'] . " (ID:" .  $aktor['id'] . ", IID:" .  $aktor['iid'] . ") value: " . $group['aktorValue'] . " function:" .  $Function . "')");
+						setAktor($aktor['iid'], $group['aktorValue'], $Function);
 					}else {
 						//echo 'stop';
 					}
 				}
 			}else{
 			//Aktoren
-				//echo $start . $today['weekday'];
-				
 				if ($timer['SensorID'] != '')
 				{
 					echo "Timer:" . $timer['name'];
@@ -159,11 +174,24 @@ function timer(){
 				}else{
 					$SensorStart = True;
 				}
+				$Function == '';
+				if ($AktorFunction['func1'] == $timer['value']) {
+					$Function = 1;
+				}elseif ($AktorFunction['func2'] == $timer['value']) {
+					$Function = 2;
+				}elseif ($AktorFunction['func3'] == $timer['value']) {
+					$Function = 3;
+				}elseif ($AktorFunction['func4'] == $timer['value']) {
+					$Function = 4;
+				}
 				if ((($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) && ($SensorStart)) {
-					$sqla = query( "SELECT iid,name FROM aktor WHERE id = '" . $timer['aktor'] . "'" );
+					$sqla = query( "SELECT iid,id,name,room FROM aktor WHERE id = '" . $timer['aktor'] . "'" );
 					$aktor = fetch( $sqla );
+					$sqlroom = query( "SELECT * FROM rooms WHERE id = '" . $aktor['room'] . "'" );
+					$room = fetch( $sqlroom );
 					//echo "start   iid:" . $aktor['iid'];
-					setAktor($aktor['iid'], $timer['value'], false);
+					$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','cronjob.php','timer','call','aufruf setAktor mit " . $aktor['name'] . " " . $room['name'] . " (ID:" .  $aktor['id'] . ") value: " . $time['value'] . " function:" .  $Function . "')");
+					setAktor($aktor['iid'], $timer['value'], $Function);
 				}else {
 					//echo 'stop';
 				}
@@ -208,14 +236,28 @@ function update_sensoren(){
 
 function update_sensoren_min(){
 
-	$sql = query( "SELECT id, iid FROM sensoren");
+	$sql = query( "SELECT id, iid, hcType FROM sensoren");
 																			
 	while( $row = fetch( $sql ) )
 	{
 		extract(ReadXS1(sensor, $row['iid']));	
-		if($utime && $number && $value){																															
-			//$sql1 = query( "INSERT INTO logsensoren VALUES( '', '" . $number . "', '" . $value . "' , '" . $utime . "')" );
+		if($utime && $number && $value){																						
 			$sql1 = query( "UPDATE sensoren SET value = '" . $value . "' WHERE id = '" . $row['iid'] . "'" );		
+		}									
+	}
+}
+
+function update_energie_sensoren_5min(){
+
+	$sql = query( "SELECT id, iid, hcType FROM sensoren");
+																			
+	while( $row = fetch( $sql ) )
+	{
+		if (($row['hcType'] == 'energiezaehler') || ($row['hcType'] == 'zaehler')) {
+			extract(ReadXS1(sensor, $row['iid']));	
+			if($utime && $number && $value){																						
+				$sql1 = query( "INSERT INTO logsensoren VALUES( '', '" . $number . "', '" . $value . "' , '" . $utime . "')" );	
+			}
 		}									
 	}
 }
@@ -335,7 +377,6 @@ while( $row = fetch( $sqlRooms )){
 	GenGraph($yAchse,$xAchse,$filename,$min_wert,$max_wert);
 	}
 }
-
 
 function update_sensoren_graph_month(){
 
@@ -475,6 +516,7 @@ switch( $_GET['func'] ){
 	
 	case '5min':
 	update_geraete();
+	update_energie_sensoren_5min;
 	break;
 
 	case 'timer':

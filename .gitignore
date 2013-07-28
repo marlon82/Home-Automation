@@ -1,3 +1,6 @@
 config.php
 test.php
+*.xls
+*.pdf
+view-source*
 sensor_graph\*.png

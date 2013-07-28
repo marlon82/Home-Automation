@@ -29,6 +29,9 @@ while( $config = fetch( $sql_config ) )
 			case 'XS1Pass':
 				$XS1['pw'] = $config['value'];
 				break;
+			case 'EnergyPrice':
+				$StromPreis = $config['value'];
+				break;
 		}
 	}
 
@@ -56,6 +59,10 @@ function set_channel($sref){
 	global $dreamIP;
 	$xml = simplexml_load_file("http://".$dreamIP."/web/zap?sRef=".$sref);
 	var_dump($xml);
+}
+
+function enigma2_send_key($deviceIP, $key){
+
 }
 
 
@@ -238,21 +245,26 @@ function fetch( $query )
 }
 function ReadXS1($aktion, $id) 
 {
-
-    global $XS1;
+	global $XS1;
 	  	  
 	if (strcmp($aktion,'sensor')==0){
-	    $actionCmd = 'get_state_sensor'; }
+	    $actionCmd = 'get_state_sensor'; 
+		$Url = $XS1['ip']."control?callback=cname&cmd=".$actionCmd."&number=".$id;
+	}
+	elseif (strcmp($aktion,'allActuators')==0){
+	    $actionCmd = 'get_list_actuators'; 
+		$Url = $XS1['ip']."control?callback=cname&cmd=".$actionCmd;
+	}	
 	else{
-	    $actionCmd = 'get_state_actuator'; }
-	
-	  $Url = $XS1['ip']."control?callback=cname&cmd=".$actionCmd."&number=".$id;
+	    $actionCmd = 'get_state_actuator'; 
+		$Url = $XS1['ip']."control?callback=cname&cmd=".$actionCmd."&number=".$id;
+	}
 	  $jsonData = file_get_contents($Url);
 
 	  // Remove "cname(" and ")"
 	  $json = substr($jsonData, strpos($jsonData,'{'));
 	  $json = substr($json, 0, strrpos($json,'}')+1); 
-	 
+		
 	  //echo $json; echo "<br><br>";  //json string
 	  
 	  $json = json_decode($json);
@@ -260,17 +272,20 @@ function ReadXS1($aktion, $id)
 	  $number = $json->{$aktion}->{'number'};		
 	  $value = $json->{$aktion}->{'value'};
 	  $name = $json->{$aktion}->{'name'};
+	  //echo $name;
 	  $type = $json->{$aktion}->{'type'};
 	  $unit = $json->{$aktion}->{'unit'};
 	  $utime = $json->{$aktion}->{'utime'};
+	  $id = $json->{$aktion}->{'id'};
+	  $function = $json->{$aktion}->{'function'};
 	  
-	  if( $actionCmd == 'get_state_sensor')
-	  {
+	  if( $actionCmd == 'get_state_sensor'){
 	  	$state = $json->{$aktion}->{'state'};
 	  	return compact('number', 'value', 'name', 'type', 'unit', 'utime', 'state');
-	  }
-	  else
-	  {
+	  }elseif( $actionCmd == 'get_list_actuators'){
+		//echo $function;
+	  	return compact('id,name,function'); 
+	  }else{
 	  	$newvalue = $json->{$aktion}->{'newvalue'};
 	  	return compact('number', 'value', 'name', 'type', 'unit', 'utime', 'newvalue'); 
 	  }
@@ -283,35 +298,29 @@ function setUrl($url)
 	fread($handle,$filesize);
 }
 
-
-
-
-
 function ping($host, $timeout = 1) {
-
-
-  if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-    //echo 'This is a server using Windows!';
-    $online=exec("ping -n 1 $host", $output, $error); 
-  } else {
-    //echo 'This is a server not using Windows!';
-    $online=exec("ping -c 1 $host", $output, $error); 
-  }
-  //echo $online;
- if(stristr($online, 'Mittelwert') === FALSE) {   
-     if(stristr($online, 'min/avg/max') === FALSE) {
-        if(stristr($online, 'Average') === FALSE) { 
-          //echo $online;
-		  return 0;
-		  }else{
-      return 1;
-   } 
-        }else{
-      return 1;
-   } 
-   }else{
-      return 1;
-   } 
+	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+	//echo 'This is a server using Windows!';
+	$online=exec("ping -n 1 $host", $output, $error); 
+	} else {
+	//echo 'This is a server not using Windows!';
+	$online=exec("ping -c 1 $host", $output, $error); 
+	}
+	//echo $online;
+	if(stristr($online, 'Mittelwert') === FALSE) {   
+		if(stristr($online, 'min/avg/max') === FALSE) {
+			if(stristr($online, 'Average') === FALSE) { 
+			  //echo $online;
+				return 0;
+			}else{
+				return 1;
+			} 
+		}else{
+			return 1;
+		} 
+	}else{
+		return 1;
+	}
         
 }
 
@@ -323,20 +332,27 @@ function setAktor($id, $value, $funktion )
 	//echo "xs1:" . $XS1['ip'] . "  id:" . $id . "  val:" . $value;
 	//echo $funktion;
 	// URL zum Aktor setzen zusammenbauen 
+	
+	$sql = query( "SELECT * FROM aktor WHERE iid = '" . $id . "'" );
+	$row = fetch( $sql );
+	$sqlroom = query( "SELECT * FROM rooms WHERE id = '" . $row['room'] . "'" );
+	$room = fetch( $sqlroom );
+	
 	if( $funktion == false ){
 		$url = $XS1['ip'] . 'preset?switch='.$id.'&value='.$value;
 		//echo $XS1['ip'] . "preset?switch=" . $id . "&value=" . $value;
+		$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','function.php','setAktor','set','schalte " . $row['name'] . " " . $room['name'] . " mit value " . $value . " ')");
 	}else {
 		$url = $XS1['ip'] . 'control?callback=cname&cmd=set_state_actuator&number=' . $id . '&function=' . $funktion;
 		//echo $XS1['ip'] . "control?callback=cname&cmd=set_state_actuator&number=" . $id . "&function=" . $funktion;
+		$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','function.php','setAktor','set','schalte " . $row['name'] . " " . $room['name'] . " mit function " . $funktion . " ')");
 	}
 	$filesize= 10000;
 	setUrl($url);
 	//$handle = fopen($url, "r");
 
 	
-	$sql = query( "SELECT zeitEin, zeitHeute FROM aktor WHERE iid = '" . $id . "'" );
-	$row = fetch( $sql );
+	
 		
 	$zeitEin = $row['zeitEin'];
 
@@ -345,10 +361,6 @@ function setAktor($id, $value, $funktion )
 		// Doppeltes Einschalten verhindern
 		if( $zeitEin == 0 )
 			$sql = query( "UPDATE aktor SET zeitEin = '" . time() . "' WHERE iid = '" . $id . "'" );
-		
-		// Logging
-		//$sql = query( "INSERT INTO logAktor VALUES( '', '" . $id . "', '" . time() . "', '', '', '', '')" );
-		
 	}
 	
 	elseif( $value == 'off' || $value == 0 )
@@ -464,24 +476,7 @@ function change_group_state($ID)
 function getLocalIp()
 { return gethostbyname(trim(`hostname`)); }
 
-function samsung_send_key($tvip, $SendKey)
-{    
-	//echo $SendKey;
-	
-    //$tvip = "192.168.1.100"; //IP Address of TV
-    $myip = getLocalIp();
-    $mymac = "00-0c-29-3e-b1-4f"; //Used for the access control/validation, but not after that AFAIK
-    $appstring = "iphone..iapp.samsung"; //What the iPhone app reports
-    $tvappstring = "iphone.UD40D6310.iapp.samsung"; //Might need changing to match your TV type
-    $remotename = "Home Automation"; //What gets reported when it asks for permission/also shows in General->Wireless Remote Control menu
-    //echo "Content-type: text/html\n\n";
-    flush();
-    $sock = socket_create(AF_INET, SOCK_STREAM, getprotobyname('tcp'));
-	$result = socket_connect($sock, $tvip, '55000');
-    if( $result === false)
-	   die ("Could not create socket: \n");
-
-    //Normal remote keys
+//Normal remote keys
     //KEY_0
     //KEY_1
     //KEY_2
@@ -544,50 +539,71 @@ function samsung_send_key($tvip, $SendKey)
     //KEY_PROGUP
     //KEY_PROG_UP
 
-	if(!isset($SendKey)){
-		$SendKey = 'CHAN_UP';
+function samsung_send_key($tvip, $SendKey)
+{    
+	//echo $SendKey;
+	
+    $myip = getLocalIp();
+    $mymac = "00-0c-29-3e-b1-4f"; //Used for the access control/validation, but not after that AFAIK
+    $appstring = "iphone..iapp.samsung"; //What the iPhone app reports
+    $tvappstring = "iphone.UD40D6310.iapp.samsung"; //Might need changing to match your TV type
+    $remotename = "Home Automation"; //What gets reported when it asks for permission/also shows in General->Wireless Remote Control menu
+    //echo "Content-type: text/html\n\n";
+    flush();
+    $sock = socket_create(AF_INET, SOCK_STREAM, getprotobyname('tcp'));
+	$result = socket_connect($sock, $tvip, '55000');
+    if( $result === false){
+	   echo "Could not create socket\n";
+	}else{
+		$ipencoded = base64_encode($myip);
+		$macencoded = base64_encode($mymac);
+		$messagepart1 = chr(0x64) . chr(0x00) . chr(strlen($ipencoded)) . chr(0x00) . $ipencoded . chr(strlen($macencoded)) . chr(0x00) . $macencoded .
+							chr(strlen(base64_encode($remotename))) . chr(0x00) . base64_encode($remotename);
+							
+		$part1 = chr(0x00) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart1)) . chr(0x00) . $messagepart1;
+
+		socket_write($sock, $part1, strlen($part1));
+		//echo $part1;
+		//echo "\n";
+
+		$messagepart2 = chr(0xc8) . chr(0x00);
+		$part2 = chr(0x00) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart2)) . chr(0x00) . $messagepart2;
+		socket_write($sock, $part2, strlen($part2));
+		//echo $part2;
+		//echo "\n";
+
+		//Preceding sections all first time only
+
+		$SendKeys = explode(",",$SendKey);
+		foreach($SendKeys as $Send_Key){
+			if (isset($Send_Key)) {
+				//Send remote key
+				$key = "KEY_" . $Send_Key;
+				$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','function.php','samsung_send_key','set','sende befehl " . $key . " an " . $tvip . " ')");
+				$messagepart3 = chr(0x00) . chr(0x00) . chr(0x00) . chr(strlen(base64_encode($key))) . chr(0x00) . base64_encode($key);
+				$part3 = chr(0x00) . chr(strlen($tvappstring)) . chr(0x00) . $tvappstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
+				socket_write($sock,$part3,strlen($part3));
+				//echo $part3;
+				//echo "\n";
+				usleep(500000);
+			} else if (isset($_REQUEST["text"])) {
+				//Send text, e.g. in YouTube app's search, N.B. NOT BBC iPlayer app.
+				$text = $_REQUEST["text"];
+				$messagepart3 = chr(0x01) . chr(0x00) . chr(strlen(base64_encode($text))) . chr(0x00) . base64_encode($text);
+				$part3 = chr(0x01) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
+				socket_write($sock,$part3,strlen($part3));
+				//echo $part3;
+				//echo "\n";   
+			}
+		}
+
+		
+		
+		
+
+		socket_close($sock);
+		
 	}
-	
-	
-	$ipencoded = base64_encode($myip);
-	$macencoded = base64_encode($mymac);
-    $messagepart1 = chr(0x64) . chr(0x00) . chr(strlen($ipencoded)) . chr(0x00) . $ipencoded . chr(strlen($macencoded)) . chr(0x00) . $macencoded .
-                     	chr(strlen(base64_encode($remotename))) . chr(0x00) . base64_encode($remotename);
-						
-    $part1 = chr(0x00) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart1)) . chr(0x00) . $messagepart1;
-
-    socket_write($sock, $part1, strlen($part1));
-    //echo $part1;
-    //echo "\n";
-
-    $messagepart2 = chr(0xc8) . chr(0x00);
-    $part2 = chr(0x00) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart2)) . chr(0x00) . $messagepart2;
-    socket_write($sock, $part2, strlen($part2));
-    //echo $part2;
-    //echo "\n";
-
-    //Preceding sections all first time only
-
-    if (isset($SendKey)) {
-       //Send remote key
-       $key = "KEY_" . $SendKey;
-       $messagepart3 = chr(0x00) . chr(0x00) . chr(0x00) . chr(strlen(base64_encode($key))) . chr(0x00) . base64_encode($key);
-       $part3 = chr(0x00) . chr(strlen($tvappstring)) . chr(0x00) . $tvappstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
-       socket_write($sock,$part3,strlen($part3));
-       //echo $part3;
-       //echo "\n";
-    } else if (isset($_REQUEST["text"])) {
-       //Send text, e.g. in YouTube app's search, N.B. NOT BBC iPlayer app.
-       $text = $_REQUEST["text"];
-       $messagepart3 = chr(0x01) . chr(0x00) . chr(strlen(base64_encode($text))) . chr(0x00) . base64_encode($text);
-       $part3 = chr(0x01) . chr(strlen($appstring)) . chr(0x00) . $appstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
-       socket_write($sock,$part3,strlen($part3));
-	   //echo $part3;
-       //echo "\n";   
-    }
-
-    socket_close($sock);
-
     //echo "\n\n";
 }
 
@@ -596,29 +612,68 @@ function Onkyo_send_key($device,$key){
 	$fp = stream_socket_client("tcp://".$device.":".$port, $errno, $errstr, 5);
 	if (!$fp) {
 		if($errno == "110" OR $errno == "113") {
-			echo "<html><center><div style='color:red; font-size:15px; font-family:Verdana,sans-serif;'>
-			No receiver found at $ip:$port<br>
-           Please check if IP and Port settings are correct and the device is switched on!<p style='color:#888;font-size:12px;'>
-           To switch on the device via Ethernet, you have to set 'Setup/Network Setup/NetworkControl' to ON<br>
-           (Remember that this setting uses &sim;20 W Power at Standby instead of &sim;2 W with NetworkControl OFF)</p></div></center></html>\n";} 
+		
+		}
 		else{ 
-			echo "<html><center><div style='color:red; font-size:15px; font-family:Verdana,sans-serif;'>
-				Error connecting to $device:$port<br>$errstr ($errno)</div></center></html>\n";}
+			
+		}
 	}
 	else
 	{
-
-		$length=strlen($key); 
-		$length=$length+1;
-		$total=$length+16;
-		$code=chr($length);
-		// total eiscp packet to send 
-		$line="ISCP\x00\x00\x00\x10\x00\x00\x00$code\x01\x00\x00\x00".$key."\x0D";
-		fwrite($fp, $line); 
-		return $line;
+		$SendKeys = explode(",",$key);
+		foreach($SendKeys as $Send_Key){
+			$length=strlen($Send_Key); 
+			$length=$length+1;
+			$total=$length+16;
+			$code=chr($length);
+			// total eiscp packet to send 
+			$line="ISCP\x00\x00\x00\x10\x00\x00\x00$code\x01\x00\x00\x00".$Send_Key."\x0D";
+			fwrite($fp, $line); 
+			$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','function.php','Onkyo_send_key','set','sende befehl " . $Send_Key . " an " . $device . " ')");
+			usleep(500000);
+			return $line;
+		}
 	}
 }
 
+function Onkyo_get_status($device,$key){
+
+	$port = "60128";
+	$fp = stream_socket_client("tcp://".$device.":".$port, $errno, $errstr, 5);
+
+    if (strpos($key,'#') != FALSE){ // strips "#" from the end of a command (indicating that a response is wanted) 
+        $key = substr($key,0,strpos($key,'#'));}
+      
+	// this is a "fake"-implementation of the command "!1NPRQSTN" (question Network-Preset)
+	// that was somehow "forgotten" in the ISCP-protocol - so we record the switches in $_SESSION["NPR"] (see send_key)
+	// and "fake" this command.
+	if($key=="!1NPRQSTN"){if(isset($_SESSION["NPR"])) return $_SESSION["NPR"]; else {$_SESSION["NPR"]="na"; return "na";}}  //fake-question (was not implemented in protocol)
+	//adjust if "na" ist shown often
+	$timeout=1.2;  //default 1.2 seconds - according to protocol even 0.05 should be enough, but wasn't ;-)
+	// stream_set_timeout($fp, 5);  
+	$start = microtime(1); 
+	$oft=0;
+	Onkyo_send_key($device,$key);
+	do {
+		//   if ($oft==0 OR ($oft==1 AND $nu>timeout/2)) {send_key($key, $fp, $debug);$oft++;} //experimental: try twice as sometimes message won't be received
+		$status = "";
+		$status = fread($fp, 80);
+		$info = stream_get_meta_data($fp);
+		$status = substr($status, strpos($status, "!"));
+		$status = substr($status, 0, strlen($status)-3);
+		$nu=microtime(1)-$start;
+	} while (($nu<$timeout) AND (substr($status,2,3)!=substr($key,2,3))); //loop until timeout OR matching message (receiver sends a lot of unsolicited messages - so we watch for messages of the same type as our sent message)
+	if ($nu>=$timeout OR $info['timed_out']) { //if stopped by timeout put "na" into the session-string (of same type as sent message) and return 
+		$_SESSION[substr($status,2,3)] = "na";
+		return "na"; 
+	}
+	else{ //if matching messages found, put received message into the session-string (of same type as sent message) and return 
+		$_SESSION[substr($status,2,3)] = $status;
+		
+		$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','function.php','Onkyo_get_status','get','frage wert von " . $key . " an " . $device . " ab ')");
+		return $status;
+	} 
+}
 
 function rechneVerbrauch($id,$type,$zeitEin, $zeitAus)
 {
@@ -651,8 +706,6 @@ function rechneVerbrauch($id,$type,$zeitEin, $zeitAus)
 	return $verbrauch;
 }
 
-
-
 function rechneVerbrauchHeute( $id,$type,$zeitHeute )
 {
 	global $verbrauch;
@@ -678,7 +731,6 @@ function rechneVerbrauchHeute( $id,$type,$zeitHeute )
 	return $verbrauch;
 	
 }
-
 
 function verbrauchAktuell()
 {
@@ -717,7 +769,6 @@ function verbrauchAktuell()
 	return $verbrauch;
 		
 }
-
 
 function verbrauchHeute()
 {
@@ -815,7 +866,6 @@ function verbrauchTimestamp( $timestamp )
 	return $verbrauch;
 	
 }
-
 
 function verbrauchGestern()
 {
