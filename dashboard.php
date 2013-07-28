@@ -37,10 +37,6 @@ height:20px;
 }
 
 </style>
-
-
-
-	
 <script>	
 function SamsungKey(Device,Key)
 {
@@ -84,13 +80,13 @@ if ($XS1Online){
 				if( $value > 1 ){
 					if(($devtype['devtype'] == 'dimmer') || ($devtype['devtype'] == 'rolladen') || ($devtype['devtype'] == 'schalter')){
 						$Function == '';
-						if (($row['func1desc'] == 'Hoch') || ($row['func1desc'] == 'Aus')) {
+						if (($row['func1desc'] == 'Runter') || ($row['func1desc'] == 'Aus')) {
 							$Function = 1;
-						}elseif (($row['func2desc'] == 'Hoch') || ($row['func2desc'] == 'Aus')) {
+						}elseif (($row['func2desc'] == 'Runter') || ($row['func2desc'] == 'Aus')) {
 							$Function = 2;
-						}elseif (($row['func3desc'] == 'Hoch') || ($row['func3desc'] == 'Aus')) {
+						}elseif (($row['func3desc'] == 'Runter') || ($row['func3desc'] == 'Aus')) {
 							$Function = 3;
-						}elseif (($row['func4desc'] == 'Hoch') || ($row['func4desc'] == 'Aus')) {
+						}elseif (($row['func4desc'] == 'Runter') || ($row['func4desc'] == 'Aus')) {
 							$Function = 4;
 						}
 					
@@ -102,7 +98,8 @@ if ($XS1Online){
 						echo "		//alert(url_komplett);\n";
 						echo "		var jqxhr = $.get(url_komplett, function() {\n";
 						echo "		})\n";
-						echo "		changeElement(\"invertAktor-" . $row['iid'] . "-schalten-css\")\n";
+						//echo "		changeElement(\"invertAktor-" . $row['iid'] . "-schalten-css\")\n";
+						echo "		setTimeout(\"location.reload(true);\",1500);\n";
 						echo "	});\n";	
 					}					
 					$count = $count + 1;

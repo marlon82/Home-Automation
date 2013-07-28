@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.2.2
+-- version 3.4.11.1deb1
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Erstellungszeit: 15. Jul 2013 um 09:02
--- Server Version: 5.5.27
--- PHP-Version: 5.4.7
+-- Host: localhost
+-- Erstellungszeit: 28. Jul 2013 um 15:40
+-- Server Version: 5.5.28
+-- PHP-Version: 5.4.4-14
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `aktor` (
   `func4` int(3) DEFAULT NULL,
   `func4desc` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
 
 -- --------------------------------------------------------
 
@@ -60,23 +60,7 @@ CREATE TABLE IF NOT EXISTS `config` (
   `options` varchar(255) DEFAULT NULL,
   `value` varchar(4000) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `configfooter`
---
-
-CREATE TABLE IF NOT EXISTS `configfooter` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `visible` varchar(3) DEFAULT NULL,
-  `sortOrder` int(11) DEFAULT NULL,
-  `icon` varchar(255) DEFAULT NULL,
-  `codename` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
@@ -89,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `devicemacro` (
   `DeviceID` int(11) DEFAULT NULL,
   `MacroID` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=79 ;
 
 -- --------------------------------------------------------
 
@@ -111,21 +95,7 @@ CREATE TABLE IF NOT EXISTS `devices` (
   `zeitHeute` int(11) NOT NULL,
   `verbrauchWatt` decimal(5,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `devicetypes`
---
-
-CREATE TABLE IF NOT EXISTS `devicetypes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `device` varchar(255) DEFAULT NULL,
-  `devtype` varchar(255) DEFAULT NULL,
-  `devtypename` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -142,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `groupaktor` (
   `macroID` int(11) DEFAULT NULL,
   `sortOrder` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=148 ;
 
 -- --------------------------------------------------------
 
@@ -155,7 +125,24 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `name` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `log`
+--
+
+CREATE TABLE IF NOT EXISTS `log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dt` varchar(255) DEFAULT NULL,
+  `tm` varchar(255) DEFAULT NULL,
+  `file` varchar(30) DEFAULT NULL,
+  `function` varchar(30) DEFAULT NULL,
+  `action` varchar(30) DEFAULT NULL,
+  `desc` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2977 ;
 
 -- --------------------------------------------------------
 
@@ -169,15 +156,15 @@ CREATE TABLE IF NOT EXISTS `logsensoren` (
   `value` varchar(20) CHARACTER SET latin1 COLLATE latin1_german1_ci NOT NULL,
   `zeit` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16622 ;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `logverbrauch`
+-- Tabellenstruktur für Tabelle `logVerbrauch`
 --
 
-CREATE TABLE IF NOT EXISTS `logverbrauch` (
+CREATE TABLE IF NOT EXISTS `logVerbrauch` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `iid` int(5) DEFAULT NULL,
   `kwh` varchar(11) CHARACTER SET utf8 NOT NULL,
@@ -185,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `logverbrauch` (
   `zeitEin` int(11) DEFAULT NULL,
   `date` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1283 ;
 
 -- --------------------------------------------------------
 
@@ -198,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   `name` varchar(255) DEFAULT NULL,
   `icon` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
@@ -217,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `sensoren` (
   `value` varchar(20) NOT NULL,
   `zeit` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 -- --------------------------------------------------------
 
@@ -246,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `timer` (
   `SensorID` int(11) DEFAULT NULL,
   `SensorValue` varchar(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
@@ -258,8 +245,10 @@ CREATE TABLE IF NOT EXISTS `tvmacros` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
+  `isChannel` varchar(3) DEFAULT NULL,
+  `ChannelIcon` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

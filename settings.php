@@ -1097,7 +1097,7 @@ switch( $_GET['aktion'] ){
 			if(!$_GET['step']){
 				?>
 				<div id="cont">
-				<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:130px">
+				<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:300px">
 				<ul data-role="listview" data-inset="true" data-theme="d">
 					<li data-role="list-divider">Devices mit Macro Mapping</li>
 				<?php
@@ -1165,7 +1165,7 @@ switch( $_GET['aktion'] ){
 								<legend>Macros:</legend>
 									<?php
 										
-									$sql_macros = query( "SELECT id,name,value FROM tvmacros");
+									$sql_macros = query( "SELECT id,name,value FROM tvmacros ORDER BY name ASC");
 									while($macros = fetch($sql_macros))
 									{
 										$sql_DevMac = query( "SELECT MacroID FROM devicemacro WHERE DeviceID='" . $DeviceID . "'");	
@@ -1236,32 +1236,32 @@ switch( $_GET['aktion'] ){
 
 		
 		
-		
 		case 'editMacro':
 			if(!$_GET['step']){
 			?>
 			<div id="cont">
-			<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:170px">
-				<ul data-role="listview" data-inset="true" data-theme="d">
-				<li data-role="list-divider">Macros</li>
-				<?php
-				$sql = query( "SELECT id,name,value FROM tvmacros");
-																					
-				while( $macro = fetch( $sql ) )
-				{
-					?>																						
-					<li><a href="?page=settings&aktion=editMacro&step=2&id=<?php echo $macro['id']; ?>"><?php echo $macro['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $macro['value'] . ")"; ?></span></a></li>																			
-					<?php
-				}
-				?>
-				</ul>
-			</div>
+				<div style="float: left; border-radius:10px; height:300px; width:100%; margin-left:10px; margin-top:15px; margin-bottom:500px">
+					<ul data-role="listview" data-inset="true" data-theme="d">
+						<li data-role="list-divider">Macros</li>
+						<?php
+						$sql = query( "SELECT * FROM tvmacros");
+						
+						while( $macro = fetch( $sql ) )
+						{
+							?>																						
+							<li><a href="?page=settings&aktion=editMacro&step=2&id=<?php echo $macro['id']; ?>"><img src="<?php echo $macro['ChannelIcon'] ?>" class="ui-li-icon"><?php echo $macro['name'] ?> <span style="float:right;position:absolute;right:40px;"> <? echo "(" . $macro['value'] . ")"; ?></span></a></li>																			
+							<?php
+						}
+						?>
+					</ul>
+					<br><br><br><br><br><br>
+				</div>
 			</div>
 	   
 			<?php
 		}
 		if($_GET['step'] == 2){
-			$sql = query( "SELECT id, name, value FROM tvmacros WHERE id = '" . $_GET['id'] . "'" );
+			$sql = query( "SELECT * FROM tvmacros WHERE id = '" . $_GET['id'] . "'" );
 			$macro = fetch( $sql );
 			?>
 			<div id="cont">
@@ -1274,6 +1274,63 @@ switch( $_GET['aktion'] ){
 						<div data-role="fieldcontain">
 							<label for="macrovalue">Commands: (<a href="#popup-TVMacroHelp"  data-inline="true" data-rel="popup" data-position-to="window">Erklärung</a>)</label>
 							<input data-clear-btn="true" name="macrovalue" id="macrovalue" value="<?php echo $macro['value']; ?>" type="text">					
+						</div>
+						<div data-role="fieldcontain">	
+							<?
+							
+							$YesNo = $macro['isChannel'];
+							if ($YesNo == 'Yes'){
+								$ValueYes = "selected=\"selected\"";
+								$ValueNo = "";
+							}else {
+								$ValueYes = "";
+								$ValueNo = "selected=\"selected\"";
+							}
+							?>
+							<label for="flipChannel">TV Kanal:</label>
+							<select name="flipChannel" id="flipChannel" data-role="slider">
+								<option value="No" <?php echo $ValueNo; ?>>No</option>
+								<option value="Yes" <?php echo $ValueYes; ?>>Yes</option>
+							</select>
+							
+						</div>
+						<div data-role="fieldcontain">
+							<?					
+							// open this directory 
+							$myDirectory = opendir("icons/channel/");
+							// get each entry
+							while($entryName = readdir($myDirectory)) {
+								$dirArray[] = $entryName;
+							}
+							// close directory
+							closedir($myDirectory);
+							//	count elements in array
+							$indexCount	= count($dirArray);
+							// sort 'em
+							//sort($dirArray);							
+							list($foldername, $subfoldername, $filename) = explode('/', $macro['ChannelIcon']);							
+							?>
+							<label for="ChannelIcon" class="select">Icon:</label>
+								<select name="ChannelIcon" id="ChannelIcon" data-native-menu="false">
+									<option value=""></option>
+									<?php
+									
+									for($index=0; $index < $indexCount; $index++) {
+										if (substr("$dirArray[$index]", 0, 1) != "."){ // don't list hidden files
+											if($dirArray[$index] == $filename){
+											?>
+												<option value="<?php echo $dirArray[$index] ?>" selected="selected"><?php echo $dirArray[$index] ?></option>
+											<?php
+											}else{
+											?>
+												<option value="<?php echo $dirArray[$index] ?>"><?php echo $dirArray[$index] ?></option>
+											<?php
+											}
+										}
+									}
+									?>							
+								</select>
+								
 						</div>
 						<div class="ui-body ui-body-c">
 							<fieldset class="ui-grid-a">
@@ -1297,12 +1354,12 @@ switch( $_GET['aktion'] ){
 				$sql = query( "DELETE FROM tvmacros WHERE id = '" . $_GET['id'] . "'" );	
 			}
 			if( $_POST['submit'] ){
+				$sql = query( "UPDATE tvmacros SET name = '" . $_POST['macroname'] . "', value = '" . $_POST['macrovalue'] . "', isChannel = '" . $_POST['flipChannel'] . "', ChannelIcon = 'icons/channel/" . $_POST['ChannelIcon'] . "' WHERE id='" . $_GET['id'] . "'" );	
 				?>
 				<div id="cont1">
 				<p>Das Macro wurde geändert</p>
 				</div>
 				<?php
-				$sql = query( "UPDATE tvmacros SET name = '" . $_POST['macroname'] . "', value = '" . $_POST['macrovalue'] . "'" );	
 			}
 		}
 		break;					
@@ -1789,8 +1846,12 @@ switch( $_GET['aktion'] ){
 			<p class="center">Macro wurde hinzugefügt</p>
 		</div>
 																									
-		<?php	
-		$sql = query( "INSERT INTO tvmacros VALUES( '', '" . $_POST['macroname'] . "', '" . $_POST['macrovalue'] . "')" );
+		<?php
+		if ($_POST['ChannelIcon']!= ''){
+			$Icon = "icons/channel/" . $_POST['ChannelIcon'];
+		}
+		//icons/channel/
+		$sql = query( "INSERT INTO tvmacros VALUES( '', '" . $_POST['macroname'] . "', '" . $_POST['macrovalue'] . "', '" . $_POST['flipChannel'] . "', '" . $Icon . "')" );
 		}else{
 		?>
 		<div id="cont">
@@ -1803,6 +1864,45 @@ switch( $_GET['aktion'] ){
 					<div data-role="fieldcontain">
 						<label for="macrovalue">Commands: (<a href="#popup-TVMacroHelp"  data-inline="true" data-rel="popup" data-position-to="window">Erklärung</a>)</label>
      					<input data-clear-btn="true" name="macrovalue" id="macrovalue" value="" type="text">
+					</div>
+					<div data-role="fieldcontain">	
+						<label for="flipChannel">TV Kanal:</label>
+						<select name="flipChannel" id="flipChannel" data-role="slider">
+							<option value="No">No</option>
+							<option value="Yes" selected="selected">Yes</option>
+						</select>	
+					</div>	
+					<div data-role="fieldcontain">
+					<?
+					// open this directory 
+					$myDirectory = opendir("icons/channel/");
+
+					// get each entry
+					while($entryName = readdir($myDirectory)) {
+						$dirArray[] = $entryName;
+					}
+
+					// close directory
+					closedir($myDirectory);
+					//	count elements in array
+					$indexCount	= count($dirArray);
+					// sort 'em
+					//sort($dirArray);
+					?>
+					<label for="ChannelIcon" class="select">Icon:</label>
+						<select name="ChannelIcon" id="ChannelIcon" data-native-menu="false">
+						<option>Icon:</option>
+    						<?php
+    									
+							for($index=0; $index < $indexCount; $index++) {
+								if (substr("$dirArray[$index]", 0, 1) != "."){ // don't list hidden files
+									?>
+										<option value="<?php echo $dirArray[$index] ?>"><?php echo $dirArray[$index] ?></option>
+									<?php
+								}
+							}
+    						?>							
+						</select>
 					</div>
 					<button type="submit" data-theme="c" name="submit" value="submit-value">Submit</button>
 				</fieldset>
@@ -1822,12 +1922,11 @@ switch( $_GET['aktion'] ){
 		{
 			$sql = query( "INSERT INTO devicemacro VALUES( '', '" . $DeviceID . "', '" . $Macros[$i] . "')" );
 		}		
-		
 		?>
 		<div class="boxWhite">
 			<p class="center">Device und Macros wurden verknüft</p>
 		</div>
-																									
+		
 		<?php
 		
 		}else{
@@ -1855,7 +1954,7 @@ switch( $_GET['aktion'] ){
 					<fieldset data-role="controlgroup">
 					<legend>Macros:</legend>
 								<?php
-    							$sql_macros = query( "SELECT id,name,value FROM tvmacros");
+    							$sql_macros = query( "SELECT id,name,value FROM tvmacros ORDER BY name ASC");
 								while( $Macro = fetch( $sql_macros ) )
 									{
 									?>
@@ -2895,10 +2994,10 @@ case 'editGroup':
 				//var_dump($macros);
 				
 				$GroupID = $_GET['group'];
-				
+				//var_dump($aktorenValues);
 				$delete = array_pop($aktorenValues);
 				$delete = array_pop($aktorenValues);
-				$delete = array_pop($aktorenValues);
+				//$delete = array_pop($aktorenValues);
 				//var_dump($aktorenValues);	
 				//print_r($aktorenValues);
 				$befehl = "UPDATE groups Set name = '" . $_POST['groupname'] . "' WHERE id = " . $GroupID; 
@@ -2906,10 +3005,11 @@ case 'editGroup':
 
 				$loeschen = "DELETE FROM groupaktor WHERE groupID = " . $GroupID;
 				$sql = mysql_query($loeschen);
-
+				//var_dump($aktorenValues);
 				//aktoren	
 				foreach($aktorenValues as $key => $value) 
 				{
+					//var_dump($key);
 					$key = explode("-", $key);
 					if ($key[0] == 'Aktor'){
 						$befehl= "INSERT INTO groupaktor VALUES( '', '" . $key[1] . "',
@@ -2920,6 +3020,7 @@ case 'editGroup':
 																		 '')";
 						$sql = query( $befehl);	
 					}
+					$key='';
 				} 
 				
 				$DevCount = count($macros);

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html> 
 <html>
 
@@ -10,9 +9,10 @@
 	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
 	<script src="./jquery/jquery.mobile-1.3.1.js"></script>
+	<!-- andere skripte -->
 	<script src="./skripte/time.js"></script>
 	<script src="./skripte/jquery.ui.touch-punch.min.js"></script>
-	<!-- <script src="slider.js"></script> -->
+
 	<?php
 
 /// calculating width of each navbar ///
@@ -36,8 +36,8 @@ $width = 100/7; /// dividing 100% space among 7 items. If data is coming form DB
 				#settings .ui-icon { background:  url(glyphish-icons/19-gear.png) 50% 50% no-repeat; }
 				#group .ui-icon { background:  url(glyphish-icons/123-id-card.png) 50% 50% no-repeat; }
 				#sensor .ui-icon { background:  url(glyphish-icons/16-line-chart.png) 50% 50% no-repeat; }
-    
-
+				#logviewer .ui-icon { background:  url(glyphish-icons/179-notepad.png) 50% 50% no-repeat; }
+				#television .ui-icon { background:  url(glyphish-icons/45-movie-1.png) 50% 50% no-repeat; }
 
 .mycss
 {
@@ -64,35 +64,43 @@ switch( $_GET['page'] )
 
 		case 'multimedia':
 		include('multimedia.php');
-		break;	
+		break;
 		
 		case 'room':
 		include('room.php');
-		break;	
+		break;
 		
 		case 'dreambox':
 		include('dreambox.php');
-		break;	
+		break;
 		
 		case 'timer':
 		include('timer.php');
-		break;	
+		break;
 		
 		case 'raspberry':
 		include('raspberry.php');
-		break;	
+		break;
 		
 		case 'group':
 		include('group.php');
-		break;			
+		break;
 		
 		case 'sensoren':
 		include('sensoren.php');
-		break;			
+		break;
+		
+		case 'logviewer':
+		include('logviewer.php');
+		break;
+		
+		case 'television':
+		include('television.php');
+		break;
 	
 		default:
 		include('dashboard.php');
-		break;	
+		break;
 	}
 	
 include("footer.php");

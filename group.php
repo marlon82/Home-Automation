@@ -198,9 +198,9 @@ while( $groups = fetch( $sql_groups ) )
 					$macro = fetch( $sql_macro );
 					?>
 					<tr>
-					<td style="padding: 5px"><? echo $device['name']; ?></td>
-					<td style="padding: 5px"><? echo $raum['name']; ?></td>
-					<td style="padding: 5px"><? echo $macro['name']; ?></td>
+						<td style="padding: 5px"><? echo $device['name']; ?></td>
+						<td style="padding: 5px"><? echo $raum['name']; ?></td>
+						<td style="padding: 5px"><? echo $macro['name']; ?></td>
 					</tr>
 			<?  	}
 				} ?>

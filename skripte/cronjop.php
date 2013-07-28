@@ -127,9 +127,12 @@ function timer(){
 					
 					//echo $start . $today['weekday'];
 					if ((($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) && ($SensorStart)) {
-						$sqla = query( "SELECT iid,name FROM aktor WHERE id = '" . $group['aktorID'] . "'" );
+						$sqla = query( "SELECT iid,id,name,room FROM aktor WHERE id = '" . $group['aktorID'] . "'" );
 						$aktor = fetch( $sqla );
+						$sqlroom = query( "SELECT * FROM rooms WHERE id = '" . $aktor['room'] . "'" );
+						$room = fetch( $sqlroom );
 						//echo "start   iid:" . $aktor['iid'];
+						$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','cronjob.php','timer','call','aufruf setAktor mit " . $aktor['name'] . " " . $room['name'] . " (ID:" .  $aktor['id'] . ", IID:" .  $aktor['iid'] . ") value: " . $group['aktorValue'] . " function:" .  $Function . "')");
 						setAktor($aktor['iid'], $group['aktorValue'], $Function);
 					}else {
 						//echo 'stop';
@@ -137,8 +140,6 @@ function timer(){
 				}
 			}else{
 			//Aktoren
-				//echo $start . $today['weekday'];
-				
 				if ($timer['SensorID'] != '')
 				{
 					echo "Timer:" . $timer['name'];
@@ -184,9 +185,12 @@ function timer(){
 					$Function = 4;
 				}
 				if ((($today['hours'] == $timer['hour']) && ($today['minutes'] == $timer['minute']) && ($start)) && ($SensorStart)) {
-					$sqla = query( "SELECT iid,name FROM aktor WHERE id = '" . $timer['aktor'] . "'" );
+					$sqla = query( "SELECT iid,id,name,room FROM aktor WHERE id = '" . $timer['aktor'] . "'" );
 					$aktor = fetch( $sqla );
+					$sqlroom = query( "SELECT * FROM rooms WHERE id = '" . $aktor['room'] . "'" );
+					$room = fetch( $sqlroom );
 					//echo "start   iid:" . $aktor['iid'];
+					$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','cronjob.php','timer','call','aufruf setAktor mit " . $aktor['name'] . " " . $room['name'] . " (ID:" .  $aktor['id'] . ") value: " . $time['value'] . " function:" .  $Function . "')");
 					setAktor($aktor['iid'], $timer['value'], $Function);
 				}else {
 					//echo 'stop';

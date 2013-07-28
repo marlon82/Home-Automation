@@ -64,9 +64,9 @@ while ($timers = fetch($sql_timer))
 {
 	echo "$(\"#flip-timer-" . $timers['id'] . "\").on(\"slidestop\", function( event, ui ) { \n";
 	//echo "alert(\"testID:" . $timers['id'] . "\")\n";
-	echo "var jqxhr = $.get(\"setFunctions.php?function=ChangeTimerState&ID=" . $timers['id'] . "\", function() {})\n";
-	echo "changeElement(\"flip-timer-" . $timers['id'] . "-schalten-css\")\n";
-	echo "});\n";	
+	echo "	var jqxhr = $.get(\"setFunctions.php?function=ChangeTimerState&ID=" . $timers['id'] . "\", function() {})\n";
+	echo "	changeElement(\"flip-timer-" . $timers['id'] . "-schalten-css\")\n";
+	echo "});\n\n";	
 }
 
 echo "});\n"; 			

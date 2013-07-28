@@ -298,35 +298,29 @@ function setUrl($url)
 	fread($handle,$filesize);
 }
 
-
-
-
-
 function ping($host, $timeout = 1) {
-
-
-  if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-    //echo 'This is a server using Windows!';
-    $online=exec("ping -n 1 $host", $output, $error); 
-  } else {
-    //echo 'This is a server not using Windows!';
-    $online=exec("ping -c 1 $host", $output, $error); 
-  }
-  //echo $online;
- if(stristr($online, 'Mittelwert') === FALSE) {   
-     if(stristr($online, 'min/avg/max') === FALSE) {
-        if(stristr($online, 'Average') === FALSE) { 
-          //echo $online;
-		  return 0;
-		  }else{
-      return 1;
-   } 
-        }else{
-      return 1;
-   } 
-   }else{
-      return 1;
-   } 
+	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+	//echo 'This is a server using Windows!';
+	$online=exec("ping -n 1 $host", $output, $error); 
+	} else {
+	//echo 'This is a server not using Windows!';
+	$online=exec("ping -c 1 $host", $output, $error); 
+	}
+	//echo $online;
+	if(stristr($online, 'Mittelwert') === FALSE) {   
+		if(stristr($online, 'min/avg/max') === FALSE) {
+			if(stristr($online, 'Average') === FALSE) { 
+			  //echo $online;
+				return 0;
+			}else{
+				return 1;
+			} 
+		}else{
+			return 1;
+		} 
+	}else{
+		return 1;
+	}
         
 }
 
@@ -338,20 +332,27 @@ function setAktor($id, $value, $funktion )
 	//echo "xs1:" . $XS1['ip'] . "  id:" . $id . "  val:" . $value;
 	//echo $funktion;
 	// URL zum Aktor setzen zusammenbauen 
+	
+	$sql = query( "SELECT * FROM aktor WHERE iid = '" . $id . "'" );
+	$row = fetch( $sql );
+	$sqlroom = query( "SELECT * FROM rooms WHERE id = '" . $row['room'] . "'" );
+	$room = fetch( $sqlroom );
+	
 	if( $funktion == false ){
 		$url = $XS1['ip'] . 'preset?switch='.$id.'&value='.$value;
 		//echo $XS1['ip'] . "preset?switch=" . $id . "&value=" . $value;
+		$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','function.php','setAktor','set','schalte " . $row['name'] . " " . $room['name'] . " mit value " . $value . " ')");
 	}else {
 		$url = $XS1['ip'] . 'control?callback=cname&cmd=set_state_actuator&number=' . $id . '&function=' . $funktion;
 		//echo $XS1['ip'] . "control?callback=cname&cmd=set_state_actuator&number=" . $id . "&function=" . $funktion;
+		$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','function.php','setAktor','set','schalte " . $row['name'] . " " . $room['name'] . " mit function " . $funktion . " ')");
 	}
 	$filesize= 10000;
 	setUrl($url);
 	//$handle = fopen($url, "r");
 
 	
-	$sql = query( "SELECT zeitEin, zeitHeute FROM aktor WHERE iid = '" . $id . "'" );
-	$row = fetch( $sql );
+	
 		
 	$zeitEin = $row['zeitEin'];
 
@@ -578,6 +579,7 @@ function samsung_send_key($tvip, $SendKey)
 			if (isset($Send_Key)) {
 				//Send remote key
 				$key = "KEY_" . $Send_Key;
+				$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','function.php','samsung_send_key','set','sende befehl " . $key . " an " . $tvip . " ')");
 				$messagepart3 = chr(0x00) . chr(0x00) . chr(0x00) . chr(strlen(base64_encode($key))) . chr(0x00) . base64_encode($key);
 				$part3 = chr(0x00) . chr(strlen($tvappstring)) . chr(0x00) . $tvappstring . chr(strlen($messagepart3)) . chr(0x00) . $messagepart3;
 				socket_write($sock,$part3,strlen($part3));
@@ -627,6 +629,7 @@ function Onkyo_send_key($device,$key){
 			// total eiscp packet to send 
 			$line="ISCP\x00\x00\x00\x10\x00\x00\x00$code\x01\x00\x00\x00".$Send_Key."\x0D";
 			fwrite($fp, $line); 
+			$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','function.php','Onkyo_send_key','set','sende befehl " . $Send_Key . " an " . $device . " ')");
 			usleep(500000);
 			return $line;
 		}
@@ -667,6 +670,7 @@ function Onkyo_get_status($device,$key){
 	else{ //if matching messages found, put received message into the session-string (of same type as sent message) and return 
 		$_SESSION[substr($status,2,3)] = $status;
 		
+		$sqllog = query( "INSERT INTO log VALUES('','" . date("Y-m-d") . "','" . date("H:i:s") . "','function.php','Onkyo_get_status','get','frage wert von " . $key . " an " . $device . " ab ')");
 		return $status;
 	} 
 }

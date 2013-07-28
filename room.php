@@ -70,9 +70,6 @@ height:20px;
  
 </style>
 
-
-
-
 <?php
 include('functions.php');
 
@@ -157,9 +154,9 @@ for ($i=1; $holen =  fetch($sql); $i++) {
 	}
 	$link = '?id=' . $holen['iid'] . '&function=' . $Function;
 	echo "$(\"#Hoch-" . $holen['iid'] . "\").bind(\"click\", function( event, ui ) { \n";
-	echo "	var singleValues = 1;\n";
+	//echo "	var singleValues = 1;\n";
 	echo "	var url = \"$link\";\n";
-	echo "	var url_komplett = \"aktor.php\" +  url + singleValues;\n";
+	echo "	var url_komplett = \"aktor.php\" +  url;\n";
 	echo "	var jqxhr = $.get(url_komplett, function() {\n";
 	echo "	})\n";
 	echo "	changeElement(\"Hoch-" . $holen['iid'] . "-schalten-css\")\n";
@@ -177,9 +174,9 @@ for ($i=1; $holen =  fetch($sql); $i++) {
 	}
 	$link = '?id=' . $holen['iid'] . '&function=' . $Function;
 	echo "$(\"#Runter-" . $holen['iid'] . "\").bind(\"click\", function( event, ui ) { \n";
-	echo "	var singleValues = 2;\n";
+	//echo "	var singleValues = 2;\n";
 	echo "	var url = \"$link\";\n";
-	echo "	var url_komplett = \"aktor.php\" +  url + singleValues;\n";
+	echo "	var url_komplett = \"aktor.php\" +  url;\n";
 	echo "	var jqxhr = $.get(url_komplett, function() {\n";
 	echo "	})\n";
 	echo "	changeElement(\"Runter-" . $holen['iid'] . "-schalten-css\")\n";
@@ -281,8 +278,6 @@ if(!$initial){
 	echo "</div>\n";
 }
 
-
-
 //#########################Aktoren auslesen und ausgeben
 $sqld = query( "SELECT id,devtypename FROM deviceTypes WHERE devtype = 'schalter'" );
 $devtype = fetch( $sqld );
@@ -374,58 +369,42 @@ $initial = true;
 			
 while( $row = fetch( $sql ) )
 {
-	if($initial){
-		$initial = false;	
-		?>
-
-		<div id="cont-inner">
-  		<ul data-role="listview" data-inset="true" data-theme="d">
-    		<li data-role="list-divider">Sensoren</li>
-    <?php
-    }
-    ?>
-	<li>
-    	<?php 
-		if($row['hcType'] == "temperatur"){
-		echo $row['name'] . " aktuell: " . $row['value'] . " °C</br></br>"  ; 
-    	$filename = "sensor_graph/" . $row['iname'] . "_day.png";
-    	?>
-    	<p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>
-
-		<?php
-		}elseif($row['hcType'] == "luftfeuchtigkeit"){
-		
-			echo $row['name'] . " aktuell: " . $row['value'] . "%</br></br>"  ; 
-			$filename = "sensor_graph/" . $row['iname'] . "_day.png";
+	if(($row['hcType'] == "temperatur") || ($row['hcType'] == "luftfeuchtigkeit")){
+		if($initial){
+			$initial = false;	
 			?>
-			<p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>
+			<div id="cont-inner">
+			<ul data-role="listview" data-inset="true" data-theme="d">
+				<li data-role="list-divider">Sensoren</li>
 		<?php
 		}
 		?>
-    </span>
-    
-    </li>
-<?php
+		<li>
+			<?php 
+			if($row['hcType'] == "temperatur"){
+			echo $row['name'] . " aktuell: " . $row['value'] . " °C</br></br>"  ; 
+			$filename = "sensor_graph/" . $row['iname'] . "_day.png";
+			?>
+			<p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>
 
-
+			<?php
+			}elseif($row['hcType'] == "luftfeuchtigkeit"){
+			
+				echo $row['name'] . " aktuell: " . $row['value'] . "%</br></br>"  ; 
+				$filename = "sensor_graph/" . $row['iname'] . "_day.png";
+				?>
+				<p><img src="<?php echo $filename; ?>" alt="Graph konnte nicht angezeigt werden"></p>
+			<?php
+			}
+			?>
+		</span>
+		
+		</li>
+	<?php
+	}
 }
 if(!$initial){
 	echo "</ul>";
 	echo "</div>";
 }
-
-
-
-
 ?>
-
-
-
-			
-
-    		
-
-
-
-
-
