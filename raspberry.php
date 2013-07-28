@@ -133,17 +133,11 @@
 		$count++;
 	}
 ?>
-<div data-role="header" data-position="fixed" data-theme="b">
-	<a href="index.php?page=dashboard" data-icon="home" rel="external">Home</a>
-	<div id="container">
-		<li class="hours"></li>
-		<li class="point">:</li>
-		<li class="min"></li>
-		<li class="point">:</li>
-		<li class="sec"></li>
-	</div>
-	<h1>RaspberryPi</h1>
-</div><!-- /header -->
+
+<?
+include("header.php");
+?>
+
 
 
 
@@ -170,8 +164,8 @@ float:left;
 #container{
 position:absolute;
 float:right;
-right:10px;
-top:15px;
+right:110px;
+top:12px;
 height:20px;
 
  }

@@ -1,0 +1,45 @@
+#$-:Image map file created by GIMP Image Map plug-in
+#$-:GIMP Image Map plug-in by Maurits Rijk
+#$-:Please do not edit lines starting with "#$"
+#$VERSION:2.3
+#$TITLE:map
+#$AUTHOR:marlon.scheid
+#$FORMAT:ncsa
+# left
+poly left 65,260 83,273 80,281 79,286 79,292 82,300 83,307 65,320 57,305 55,288 60,268 65,260
+# up
+poly up 76,252 88,265 95,264 100,261 110,264 116,269 135,255 123,245 107,243 96,242 82,247 82,248 76,252
+# rigth
+poly rigth 127,276 139,261 149,274 152,294 148,312 143,321 127,308 130,296 131,287 127,276
+# down
+poly down 86,312 96,315 104,317 110,316 117,312 134,326 126,333 109,337 96,338 86,336 73,327 86,312
+# bddvd
+rect bddvd 26,64 56,79
+# cblsat
+rect cblsat 69,62 98,80
+# game
+rect game 112,64 141,81
+# pc
+rect pc 155,64 182,80
+# aux
+rect aux 70,90 98,108
+# am
+rect am 111,91 140,107
+# fm
+rect fm 154,91 181,108
+# tvcd
+rect tvcd 70,118 98,133
+# net
+rect net 112,118 140,134
+# usb
+rect usb 154,119 182,135
+# muting
+rect muting 154,147 182,162
+# display
+rect display 112,146 140,161
+# modecustom
+rect modecustom 28,92 57,107
+# modereceiver
+rect modereceiver 27,118 56,135
+# modetv
+rect modetv 27,145 55,162

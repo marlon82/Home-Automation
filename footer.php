@@ -1,85 +1,40 @@
 <?php
-//$width = 100/7; /// dividing 100% space among 7 items. If data is coming form DB then use mysql_num_rows($resource) instead of static number "7"
 $active = $_GET['page'] 
 ?>
 
-
-<div data-role="footer" id="footer" class="nav-glyphish-example" data-position="fixed" data-theme="c" data-tap-toggle="false">
+<!--
+<div data-role="footer" data-id="Myfooter" data-position="fixed" data-theme="c" data-tap-toggle="false" class="nav-glyphish-example">
 	<div data-role="navbar" class="nav-glyphish-example">
+	-->
+<div data-role="footer" data-id="foo1" data-position="fixed" data-theme="c" data-tap-toggle="false" >
+	<div data-role="navbar"  class="nav-glyphish-example">
 		<ul>
-			<li><a href="?page=dashboard" <?php if($active == 'dashboard') { ?> class="ui-btn-active ui-state-persist" <?php } ?> id="dashboard1" data-icon="custom" rel="external">Dashboard</a></li>
-			
 			<?
-			$sql = query( "SELECT value FROM config WHERE options='GroupFooter'");
-			$config = fetch( $sql);
-			if ($config['value'] == 'Yes'){
-				?>
-				<li><a href="?page=group" <?php if($active == 'group') { ?> class="ui-btn-active ui-state-persist" <?php } ?> id="group" data-icon="custom" rel="external">Gruppen</a></li>
-				<?
+			$sql_footerconf = query( "SELECT * FROM configFooter ORDER by sortOrder ASC");
+			while( $footerconf = fetch( $sql_footerconf ) ){
+				if ($footerconf['codename'] == 'room'){ 
+					$sql = query( "SELECT id FROM rooms");
+					$Rooms = fetch( $sql );	
+					$sql2 = query( "SELECT value FROM config WHERE options='StandardRoom'");
+					$StandardRoom = fetch( $sql2 );	
+					if( $Rooms['id'] ){
+						$page = $footerconf['codename'] . "&room=" . $StandardRoom['value'];
+					}else{
+						$footerconf['visible'] == 'No';
+					}
+				}elseif ($footerconf['codename'] == 'dreambox'){
+					$page =  $footerconf['codename'] . '&id=start'; 
+				}else{
+					$page =  $footerconf['codename']; 
+				}
+				if ($footerconf['visible'] == 'Yes'){
+					?>
+					<li><a href="?page=<? echo $page; ?>" <?php if($active == $footerconf['codename']) { ?> class="ui-btn-active ui-state-persist" <?php } ?> id="<? echo  $footerconf['icon'];?>" data-icon="custom" rel="external"><? echo  $footerconf['name'];?></a></li>
+					<?
+				}
+				$page = '';
 			}
 			?>
-			
-			<?
-			$sql = query( "SELECT value FROM config WHERE options='Multimedia'");
-			$config = fetch( $sql);
-			if ($config['value'] == 'Yes'){
-				?>
-				<li><a href="?page=multimedia" <?php if($active == 'multimedia') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="tv" data-icon="custom" rel="external">Multimedia</a></li>
-				<?
-			}
-			?>
-			
-			<?
-			$sql = query( "SELECT value FROM config WHERE options='DreamBoxavail'");
-			$config = fetch( $sql);
-			if ($config['value'] == 'Yes'){
-				?>
-				<li><a href="?page=dreambox&id=start" <?php if($active == 'dreambox') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="tv" data-icon="custom" rel="external">Dreambox</a></li>
-				<?
-			}
-			?>
-			
-			<?
-			//show rooms only if rooms available
-			$sql = query( "SELECT id FROM rooms");
-			$Rooms = fetch( $sql );	
-			if( $Rooms['id'] ){
-				?>
-				<li><a href="?page=room&room=1" <?php if($active == 'room') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="haus" data-icon="custom" rel="external">Räume</a></li>
-				<?
-			}
-			?>
-			
-			<?
-			$sql = query( "SELECT value FROM config WHERE options='TimerFooter'");
-			$config = fetch( $sql);
-			if ($config['value'] == 'Yes'){
-				?>
-				<li><a href="?page=timer" <?php if($active == 'timer') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="watch" data-icon="custom" rel="external">Timer</a></li>
-				<?
-			}
-			?>
-			
-			<?
-			$sql = query( "SELECT value FROM config WHERE options='SensorFooter'");
-			$config = fetch( $sql);
-			if ($config['value'] == 'Yes'){
-				?>
-				<li><a href="?page=sensoren" <?php if($active == 'sensoren') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="sensor" data-icon="custom" rel="external">Sensoren</a></li>
-				<?
-			}
-			?>
-			
-			<?
-			$sql = query( "SELECT value FROM config WHERE options='RaspberryFooter'");
-			$config = fetch( $sql);
-			if ($config['value'] == 'Yes'){
-				?>
-				<li><a href="?page=raspberry" <?php if($active == 'raspberry') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="raspberry" data-icon="custom" rel="external">Raspberry</a></li>
-				<?
-			}
-			?>
-			<li><a href="?page=settings" <?php if($active == 'settings') { ?> class="ui-btn-active ui-state-persist" <?php } ?>  id="settings" data-icon="custom" rel="external">Einstellungen</a></li>
 		</ul>
 	</div><!-- /navbar -->
 </div><!-- /footer -->

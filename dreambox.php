@@ -81,11 +81,11 @@ var jqxhr = $.get("kanal.php?kanal=" + kanal, function() {
 include('functions.php');
 ?>
 
-<div data-role="header"  data-position="fixed" data-tap-toggle="false" data-theme="b">
-<a href="#defaultpanel" data-icon="home">Bouquet's</a>
-	<h1>Dreambox</h1>
-	<a href="#dream_fernbedienung" data-icon="home">Funktonen</a>
-</div><!-- /header -->
+
+<?
+include("header.php");
+?>
+
 	
 <div data-role="panel" id="defaultpanel" data-theme="b">
 	<div class="panel-content">
