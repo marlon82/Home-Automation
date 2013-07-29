@@ -1,9 +1,27 @@
 <div data-role="page" id="dashboard">
+<div data-role="popup" id="positionWindow" class="ui-content" data-theme="d">
+	<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+    <p>I am positioned to the window.</p>
+
+</div>
 <?php
 	header("Cache-Control: no-cache, must-revalidate");
 	header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 	header("Pragma: no-cache");
+switch( $_GET['aktion'] )
+	{
+		case 'reboot':
+		echo "<center><h1>The System is going for a reboot...</h1></center>";
+		$reboot=exec("sudo /sbin/shutdown -r now", $output, $error); 
+		break;
 
+		case 'shutdown':
+		echo "<center><h1>The System is going for shutdown...</h1></center>";
+		$shutdown=exec("sudo /sbin/shutdown -h now", $output, $error); 
+		break;
+	
+	default:
+	
 	function NumberWithCommas($in)
 	{
 		return number_format($in);
@@ -190,6 +208,20 @@ margin-top:15px;
 include('functions.php');
 ?>
 <div data-role="content" >	
+	<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider">Befehle</li>
+			<li>Reboot Pi
+				<div style="position: absolute ;right:10px;top:0px">
+    			<a href="/index.php?page=raspberry&aktion=reboot" data-role="button" rel="external" id="button-reboot" data-inline="true" data-mini="true">reboot</a>
+    			
+    		</div>
+			</li>
+			<li>Shutdown Pi
+				<div style="position: absolute ;right:10px;top:0px">
+    			<a href="/index.php?page=raspberry&aktion=shutdown" data-role="button" rel="external" id="button-shutdown" data-inline="true" data-mini="true">shutdown</a>
+    		</div>			
+			</li>
+	</ul>	
     <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider">Generelle Informationen</li>
@@ -251,6 +283,8 @@ include('functions.php');
 			</ul>		
 		</div>
 	<?
+	}
+	break;
 	}
 	?>
 </div>
