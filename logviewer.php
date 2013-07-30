@@ -96,7 +96,7 @@ refreshing in <span id="countdown"><? echo $RefreshTime/1000; ?></span> seconds
 		 </thead>
 		 <tbody>
 	<?
-	$sqll = query( "SELECT * FROM log ORDER BY id DESC" );
+	$sqll = query( "SELECT * FROM log WHERE dt='" . date("Y-m-d") . "' ORDER BY id DESC" );
 	while( $log = fetch( $sqll ) )
 	{
 		?>
