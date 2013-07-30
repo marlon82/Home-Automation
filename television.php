@@ -138,15 +138,33 @@ while( $multimedia = fetch($sqlDevicesMultimedia)) {
 		echo "		var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1ZTN\" + HexValue + \"#\", function() {})\n";
 		echo "	});\n\n\n";
 		
+		//Power On
+		echo "	$(\"#flip-Zone2-Power-" . $multimedia['id'] . "\").on(\"slidestop\", function( event, ui ) { \n";
+		echo "		var Value = $(\"#flip-Zone2-Power-" . $multimedia['id'] . "\").val();\n";
+		echo "		var Device = \"" . $multimedia['ip'] . "\";\n";
+		//echo "		alert(\"Device: \" + Device + \"     Value: \" + Value);\n";
+		echo "		var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1ZPW\" + Value + \"#\", function() {})\n";
+		echo "		changeElement(\"flip-Zone2-Power-" . $multimedia['id'] . "-schalten-css\")\n";
+		echo "	});\n\n";
+		
 		//Ex: FM 100.55 MHz(50kHz Step) Direct Tuning is [!1SLI24][!1TUNDIRECT][!1TUN1][!1TUN0][!1TUN0][!1TUN5][!1TUN5]
 		echo "	$(\"#slider-Onkyo-Z2-Frequency-" . $multimedia['id'] . "\").on(\"slidestop\", function( event, ui ) {\n";
 		echo "		var Value = $(\"#slider-Onkyo-Z2-Frequency-" . $multimedia['id'] . "\").val();\n";
+		echo "		var ValueS = Value.toString()\n";
 		echo "		var Device = \"" . $multimedia['ip'] . "\";\n";
-		echo "		alert(\"Device: \" + Device + \"     Value: \" + Value);\n";
-		echo "		//var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1SLI24#\", function() {})\n";
-		echo "		//var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1TUNDIRECT#\", function() {})\n";
-		echo "		//var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1ZTN\" + HexValue + \"#\", function() {})\n";
-		echo "	});\n\n\n";
+		echo "		var Test = ValueS.replace(/\./g, \"\");\n";
+		echo "		var ValueS = Test.toString()\n";
+		//echo "		alert(\"Device: \" + Device + \"     Test: \" + Test);\n";,
+		//echo "		alert(\"Value: \" + Test.charAt(2));\n";
+		//echo "		var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1SLI24#\", function() {})\n";
+		//echo "		var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1TUNDIRECT#\", function() {})\n";
+		echo "		var i = 10;\n";
+		echo "		for (i = 0; i < ValueS.length(); i++)\n";
+		echo "		{\n";
+		echo "			alert(\"Value: \" + ValueS.charAt(i));\n";
+		//echo "			var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1ZTN\" + ValueS.charAt(i) + \"#\", function() {})\n";
+		echo "		}\n";
+		echo "	});\n\n\n";	
 }
 
 ?>
@@ -169,24 +187,24 @@ $IP = $multimedia['ip'];
 					
 					<?//Power ?>
 						<?
+						$sqlDevices = query( "SELECT * FROM devices WHERE type = 'onkyoavrec'" );
+						$multimedia = fetch($sqlDevices);
 						$Zon2Power = Onkyo_get_status($multimedia['ip'],'!1ZPWQSTN#');
 						if ($Zon2Power == 'NA') { $Zon2Power = 'No'; }
-						echo $Zon2Power;
+						//echo $Zon2Power;
 						?>
 						<li>
 							<label for="flip-Zone2-Power-<?php echo $multimedia['id'] ?>"><STRONG>Power</STRONG></label>
 							<div style="position: absolute ;right:10px;top:0">
 								<select name="flip-Zone2-Power-<?php echo $multimedia['id'] ?>" id="flip-Zone2-Power-<?php echo $multimedia['id'] ?>" data-role="slider" data-mini="true">
-									<option value="off" <? if($Zon2Power != 'Yes'){ echo "selected=\"selected\"";}; ?>>Aus</option>
-									<option value="on" <? if($Zon2Power == 'Yes'){ echo "selected=\"selected\"";}; ?>>An</option>
+									<option value="00" <? if($Zon2Power != 'Yes'){ echo "selected=\"selected\"";}; ?>>Aus</option>
+									<option value="01" <? if($Zon2Power == 'Yes'){ echo "selected=\"selected\"";}; ?>>An</option>
 								</select>	
 							</div>
 						</li>	
 					<?//Volume ?>
 						<li>
 						<?
-						$sqlDevices = query( "SELECT * FROM devices WHERE type = 'onkyoavrec'" );
-						$multimedia = fetch($sqlDevices);
 						
 						if ($multimedia['zeitEin'] != '0'){
 							$SliderValueHex = Onkyo_get_status($multimedia['ip'],'!1ZVLQSTN#');
@@ -200,11 +218,31 @@ $IP = $multimedia['ip'];
 						<label for="slider-Onkyo-Z2-Vol-<? echo $multimedia['id']; ?>">Volume</label>
 						<input name="slider-Onkyo-Z2-Vol-<? $multimedia['id']; ?>" id="slider-Onkyo-Z2-Vol-<? echo $multimedia['id'];?>" data-highlight="true" min="0" max="100" step="1" value="<? echo $SliderValue; ?>" type="range">
 						</li>	
+					<?//Frequency ?>	
+						<li>
+						<?
+						
+						if ($multimedia['zeitEin'] != '0'){
+							$SliderValue = Onkyo_get_status($multimedia['ip'],'!1TUZQSTN#');
+							$SliderValue = substr($SliderValue, 5);
+						}else{
+							$SliderValue = '00000';
+						}
+						$SliderValueMain = substr($SliderValue, 0, 3);
+						$SliderValueSub = substr($SliderValue, 3);
+						
+						if ($SliderValueMain[0] == '0'){
+							$SliderValueMain = substr($SliderValueMain, 1);
+						}
+						$Frequency = $SliderValueMain . "." . $SliderValueSub;
+						//echo $Frequency;
+						?>
+						<label for="slider-Onkyo-Z2-Frequency-<? echo $multimedia['id']; ?>">Frequency</label>
+						<input name="slider-Onkyo-Z2-Frequency-<? $multimedia['id']; ?>" id="slider-Onkyo-Z2-Frequency-<? echo $multimedia['id'];?>" data-highlight="true" min="86" max="110" step="0.05" value="<? echo $Frequency; ?>" type="range">
+						</li>	
 						
 					<?//Treble and Bass ?>	
 						<?
-						$sqlDevices = query( "SELECT * FROM devices WHERE type = 'onkyoavrec'" );
-						$multimedia = fetch($sqlDevices);
 						
 						if ($multimedia['zeitEin'] != '0'){
 							$SliderValueHex = Onkyo_get_status($multimedia['ip'],'!1ZTNQSTN#');
@@ -223,6 +261,7 @@ $IP = $multimedia['ip'];
 						//echo $SliderValueHexBass;
 						//echo $SliderValueHexTreble;
 						?>
+						<!--
 						<li>
 						<label for="slider-Onkyo-Z2-Bass-<? echo $multimedia['id']; ?>">Bass</label>
 						<input name="slider-Onkyo-Z2-Bass-<? $multimedia['id']; ?>" id="slider-Onkyo-Z2-Bass-<? echo $multimedia['id'];?>" data-highlight="true" min="-10" max="10" step="1" value="<? echo $SliderValueHexBass; ?>" type="range">
@@ -230,32 +269,8 @@ $IP = $multimedia['ip'];
 						<li>
 						<label for="slider-Onkyo-Z2-Treble-<? echo $multimedia['id']; ?>">Treble</label>
 						<input name="slider-Onkyo-Z2-Treble-<? $multimedia['id']; ?>" id="slider-Onkyo-Z2-Treble-<? echo $multimedia['id'];?>" data-highlight="true" min="-10" max="10" step="1" value="<? echo $SliderValueHexTreble; ?>" type="range">
-						</li>	
-
-					<?//Frequency ?>	
-						<li>
-						<?
-						$sqlDevices = query( "SELECT * FROM devices WHERE type = 'onkyoavrec'" );
-						$multimedia = fetch($sqlDevices);
-						
-						if ($multimedia['zeitEin'] != '0'){
-							$SliderValue = Onkyo_get_status($multimedia['ip'],'!1TUZQSTN#');
-							$SliderValue = substr($SliderValue, 5);
-						}else{
-							$SliderValue = '00000';
-						}
-						$SliderValueMain = substr($SliderValue, 0, 3);
-						$SliderValueSub = substr($SliderValue, 3);
-						
-						if ($SliderValueMain[0] == '0'){
-							$SliderValueMain = substr($SliderValueMain, 1);
-						}
-						$Frequency = $SliderValueMain . "," . $SliderValueSub;
-						echo $Frequency;
-						?>
-						<label for="slider-Onkyo-Z2-Frequency-<? echo $multimedia['id']; ?>">Frequency</label>
-						<input name="slider-Onkyo-Z2-Frequency-<? $multimedia['id']; ?>" id="slider-Onkyo-Z2-Frequency-<? echo $multimedia['id'];?>" data-highlight="true" min="86" max="110" step="0.05" value="<? echo $Frequency; ?>" type="range">
-						</li>	
+						</li>
+						-->
 					</ul>
 				</div>
 			</div>	
@@ -353,52 +368,50 @@ $IP = $multimedia['ip'];
 					</ul>
 				</div>
 			</div>
-		</div><!-- set -->
-		<div data-role="collapsible">
-			<h2>TV Channels</h2>
-			<div class="padme">
-				<ul data-role="listview" data-autodividers="true" data-filter="true" data-inset="true">
-					<?
-					$sql = query( "SELECT id,DeviceID FROM devicemacro");
-					while( $device = fetch($sql))
-					{
-						$DevicesWithMacro[] = $device['DeviceID'];
-					}
-					$DevicesWithMacro = array_unique($DevicesWithMacro);
-					$DevicesWithMacro = array_values($DevicesWithMacro);
-					for($i=0;$i<=count($DevicesWithMacro)-1;$i++)
-					{
-						$sql_device = query( "SELECT id,name,type,ip,room,zeitEin FROM devices WHERE id ='" . $DevicesWithMacro[$i] . "'");
-						$device = fetch($sql_device);
-						$sql_devMacro = query("SELECT MacroID FROM devicemacro WHERE deviceID ='" . $device['id'] . "'");
-					
-						while ($DevMacros = fetch($sql_devMacro)){		
-							$sql_Macros = query("SELECT * FROM tvmacros WHERE id ='" . $DevMacros['MacroID'] . " ORDER BY name ASC'");
-							$Macro = fetch($sql_Macros);
-							
-							if ($Macro['isChannel'] == 'Yes') {
-								if ($device['type'] == 'samsungtv') {
-									$devLink = 'SamsungKey';
-								}elseif ($device['type'] == 'samsungbluray') {
-									$devLink = 'SamsungKey';
-								}elseif ($device['type'] == 'onkyoavrec'){ 
-									$devLink = 'OnkyoKey';
-								}elseif ($device['type'] == 'enigma2') {
-									$devLink = 'unknown';
-								}
-								if ($Macro['ChannelIcon'] != '') {
-									$Text = $Macro['name'];
-								}else{
-									$Text = $Macro['name'];
-								}
-								?><li><a href="#" data-role="button" id="button-<? echo $Macro['id']; ?>" data-inline="true" data-mini="true" onClick="<? echo $devLink . "('" . $device['ip'] . "','". $Macro['value'] . "')";?>"><img src="<?php echo $Macro['ChannelIcon'] ?>"><? echo $Text;?></a></li><?
-							}
+			<div data-role="collapsible">
+				<h2>TV Channels</h2>
+				<div class="padme">
+					<ul data-role="listview" data-autodividers="true" data-filter="true" data-inset="true">
+						<?
+						$sql = query( "SELECT id,DeviceID FROM devicemacro");
+						while( $device = fetch($sql))
+						{
+							$DevicesWithMacro[] = $device['DeviceID'];
 						}
-					}?>
-				</ul>
+						$DevicesWithMacro = array_unique($DevicesWithMacro);
+						$DevicesWithMacro = array_values($DevicesWithMacro);
+						for($i=0;$i<=count($DevicesWithMacro)-1;$i++)
+						{
+							$sql_device = query( "SELECT id,name,type,ip,room,zeitEin FROM devices WHERE id ='" . $DevicesWithMacro[$i] . "'");
+							$device = fetch($sql_device);
+							$sql_devMacro = query("SELECT MacroID FROM devicemacro WHERE deviceID ='" . $device['id'] . "'");
+						
+							while ($DevMacros = fetch($sql_devMacro)){		
+								$sql_Macros = query("SELECT * FROM tvmacros WHERE id ='" . $DevMacros['MacroID'] . " ORDER BY name ASC'");
+								$Macro = fetch($sql_Macros);
+								
+								if ($Macro['isChannel'] == 'Yes') {
+									if ($device['type'] == 'samsungtv') {
+										$devLink = 'SamsungKey';
+									}elseif ($device['type'] == 'samsungbluray') {
+										$devLink = 'SamsungKey';
+									}elseif ($device['type'] == 'onkyoavrec'){ 
+										$devLink = 'OnkyoKey';
+									}elseif ($device['type'] == 'enigma2') {
+										$devLink = 'unknown';
+									}
+									if ($Macro['ChannelIcon'] != '') {
+										$Text = $Macro['name'];
+									}else{
+										$Text = $Macro['name'];
+									}
+									?><li><a href="#" data-role="button" id="button-<? echo $Macro['id']; ?>" data-inline="true" data-mini="true" onClick="<? echo $devLink . "('" . $device['ip'] . "','". $Macro['value'] . "')";?>"><img src="<?php echo $Macro['ChannelIcon'] ?>"><? echo $Text;?></a></li><?
+								}
+							}
+						}?>
+					</ul>
+				</div>
 			</div>
-		</div>
-		<div data-role="collapsible">
 			<?
 			$sql = query( "SELECT id,DeviceID FROM devicemacro");
 			while( $device = fetch($sql))
@@ -413,57 +426,59 @@ $IP = $multimedia['ip'];
 				$device = fetch($sql_device);
 
 				?>
-				<h2>Macros <? echo $device['name'] ;?></h2>
-				<div class="padme">
-					<ul data-role="listview" data-autodividers="true" data-filter="true" data-inset="true">
-					<?
-					$sql_devMacro = query("SELECT MacroID FROM devicemacro WHERE deviceID ='" . $device['id'] . "'");
-					while ($DevMacros = fetch($sql_devMacro)){		
-						$sql_Macros = query("SELECT * FROM tvmacros WHERE id ='" . $DevMacros['MacroID'] . " ORDER BY name ASC'");
-						$Macro = fetch($sql_Macros);
-						if ($Macro['isChannel'] != 'Yes') {
-							if ($device['type'] == 'samsungtv') {
-								$devLink = 'SamsungKey';
-							}elseif ($device['type'] == 'samsungbluray') {
-								$devLink = 'SamsungKey';
-							}elseif ($device['type'] == 'onkyoavrec'){ 
-								$devLink = 'OnkyoKey';
-							}elseif ($device['type'] == 'enigma2') {
-								$devLink = 'unknown';
+				<div data-role="collapsible">
+					<h2>Macros <? echo $device['name'] ;?></h2>
+					<div class="padme">
+						<ul data-role="listview" data-autodividers="true" data-filter="true" data-inset="true">
+						<?
+						$sql_devMacro = query("SELECT MacroID FROM devicemacro WHERE deviceID ='" . $device['id'] . "'");
+						while ($DevMacros = fetch($sql_devMacro)){		
+							$sql_Macros = query("SELECT * FROM tvmacros WHERE id ='" . $DevMacros['MacroID'] . " ORDER BY name ASC'");
+							$Macro = fetch($sql_Macros);
+							if ($Macro['isChannel'] != 'Yes') {
+								if ($device['type'] == 'samsungtv') {
+									$devLink = 'SamsungKey';
+								}elseif ($device['type'] == 'samsungbluray') {
+									$devLink = 'SamsungKey';
+								}elseif ($device['type'] == 'onkyoavrec'){ 
+									$devLink = 'OnkyoKey';
+								}elseif ($device['type'] == 'enigma2') {
+									$devLink = 'unknown';
+								}
+								?>
+									<li><a href="#" data-role="button" id="button-<? echo $Macro['id']; ?>" data-inline="true" data-mini="true" onClick="<? echo $devLink . "('" . $device['ip'] . "','". $Macro['value'] . "')";?>"><? echo $Macro['name'];?></a></li>
+								<?
 							}
-							?>
-								<li><a href="#" data-role="button" id="button-<? echo $Macro['id']; ?>" data-inline="true" data-mini="true" onClick="<? echo $devLink . "('" . $device['ip'] . "','". $Macro['value'] . "')";?>"><? echo $Macro['name'];?></a></li>
-							<?
-						}
-					}	
-					?>
-					</ul>
+						}	
+						?>
+						</ul>
+					</div>
 				</div><?
 			}
 			?>
-		</div>
-		<div data-role="collapsible">
-			<h2>Channels</h2>
-			<div class="padme">
-			<?php
+			<div data-role="collapsible">
+				<h2>Channels</h2>
+				<div class="padme">
+				<?php
 
-				$sqlDevices = query( "SELECT * FROM devices WHERE type = 'samsungbluray'" );
-				$multimedia = fetch($sqlDevices);
-				$IP = $multimedia['ip'];
-				$sqlDevMacros = query( "SELECT * FROM devicemacro WHERE DeviceID = '" .$multimedia['id'] . "'" );
-				//$DevMacros = fetch($sqlDevMacros);
-				?>
-				<div data-role="navbar">
-					<ul><?
-						while ($DevMacros = fetch($sqlDevMacros)){		
-							$sql_Macros = query("SELECT * FROM tvmacros WHERE id ='" . $DevMacros['MacroID'] . " ORDER BY name ASC'");
-							$Macro = fetch($sql_Macros);
-							?><li><a href="#" data-role="button" onClick="SamsungKey('<? echo $IP; ?>','<? echo $Macro['value']; ?>')"><? echo $Macro['name']; ?></a></li>
-						<?}?>
-					</ul>
+					$sqlDevices = query( "SELECT * FROM devices WHERE type = 'samsungbluray'" );
+					$multimedia = fetch($sqlDevices);
+					$IP = $multimedia['ip'];
+					$sqlDevMacros = query( "SELECT * FROM devicemacro WHERE DeviceID = '" .$multimedia['id'] . "'" );
+					//$DevMacros = fetch($sqlDevMacros);
+					?>
+					<div data-role="navbar">
+						<ul><?
+							while ($DevMacros = fetch($sqlDevMacros)){		
+								$sql_Macros = query("SELECT * FROM tvmacros WHERE id ='" . $DevMacros['MacroID'] . " ORDER BY name ASC'");
+								$Macro = fetch($sql_Macros);
+								?><li><a href="#" data-role="button" onClick="SamsungKey('<? echo $IP; ?>','<? echo $Macro['value']; ?>')"><? echo $Macro['name']; ?></a></li>
+							<?}?>
+						</ul>
+					</div>
 				</div>
 			</div>
-		</div>
+		</div><!-- set -->
 	</div>
 
 
