@@ -47,12 +47,10 @@ margin-top:15px;
 
 <script>	
 	function SamsungKey(Device,Key) {
-		//alert("Device:"+Device+"     Key:"+Key);
 		var jqxhr = $.get("setFunctions.php?function=SamsungSendKey&Device=" + Device +"&Key=" + Key, function() {})
 	}
 		
 	function OnkyoSendKey(Device,Key) {
-		//alert("Device:"+Device+"     Key:"+Key);
 		var jqxhr = $.get("setFunctions.php?function=OnkyoSendKey&Device=" + Device +"&Key=" + Key, function() {})
 	}
 
@@ -138,14 +136,15 @@ while( $multimedia = fetch($sqlDevicesMultimedia)) {
 		echo "		var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1ZTN\" + HexValue + \"#\", function() {})\n";
 		echo "	});\n\n\n";
 		
-		//Power On
-		echo "	$(\"#flip-Zone2-Power-" . $multimedia['id'] . "\").on(\"slidestop\", function( event, ui ) { \n";
-		echo "		var Value = $(\"#flip-Zone2-Power-" . $multimedia['id'] . "\").val();\n";
+		//Onkyo
+		echo "	$(\"#flip-Onkyo-" . $multimedia['id'] . "\").on(\"slidestop\", function( event, ui ) { \n";
+		echo "		var Value = $(\"#flip-Onkyo-" . $multimedia['id'] . "\").val();\n";
 		echo "		var Device = \"" . $multimedia['ip'] . "\";\n";
 		//echo "		alert(\"Device: \" + Device + \"     Value: \" + Value);\n";
-		echo "		var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1ZPW\" + Value + \"#\", function() {})\n";
-		echo "		changeElement(\"flip-Zone2-Power-" . $multimedia['id'] . "-schalten-css\")\n";
+		echo "		var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1\" + Value + \"#\", function() {})\n";
+		echo "		changeElement(\"flip-Onkyo-" . $multimedia['id'] . "-schalten-css\")\n";
 		echo "	});\n\n";
+		
 		
 		//Ex: FM 100.55 MHz(50kHz Step) Direct Tuning is [!1SLI24][!1TUNDIRECT][!1TUN1][!1TUN0][!1TUN0][!1TUN5][!1TUN5]
 		echo "	$(\"#slider-Onkyo-Z2-Frequency-" . $multimedia['id'] . "\").on(\"slidestop\", function( event, ui ) {\n";
@@ -153,7 +152,7 @@ while( $multimedia = fetch($sqlDevicesMultimedia)) {
 		echo "		var ValueS = Value.toString()\n";
 		echo "		var Device = \"" . $multimedia['ip'] . "\";\n";
 		echo "		var Test = ValueS.replace(/\./g, \"\");\n";
-		echo "		var ValueS = Test.toString()\n";
+		//echo "		var ValueS = Test.toString()\n";
 		//echo "		alert(\"Device: \" + Device + \"     Test: \" + Test);\n";,
 		//echo "		alert(\"Value: \" + Test.charAt(2));\n";
 		//echo "		var jqxhr = $.get(\"setFunctions.php?function=OnkyoSendKey&Device=\" + Device +\"&Key=!1SLI24#\", function() {})\n";
@@ -175,6 +174,9 @@ while( $multimedia = fetch($sqlDevicesMultimedia)) {
 $sqlDevices = query( "SELECT * FROM devices WHERE type = 'samsungbluray'" );
 $multimedia = fetch($sqlDevices);
 $IP = $multimedia['ip'];
+
+$sqlDevices = query( "SELECT * FROM devices WHERE type = 'onkyoavrec'" );
+$Onkyo = fetch($sqlDevices);
 ?>
 
 <div data-role="content" >
@@ -187,43 +189,43 @@ $IP = $multimedia['ip'];
 					
 					<?//Power ?>
 						<?
-						$sqlDevices = query( "SELECT * FROM devices WHERE type = 'onkyoavrec'" );
-						$multimedia = fetch($sqlDevices);
-						$Zon2Power = Onkyo_get_status($multimedia['ip'],'!1ZPWQSTN#');
+						$Zon2Power = Onkyo_get_status($Onkyo['ip'],'!1ZPWQSTN#');
+						//echo $Zon2Power;
 						if ($Zon2Power == 'NA') { $Zon2Power = 'No'; }
+						$Zon2Power = explode('!1ZPW',$Zon2Power);
 						//echo $Zon2Power;
 						?>
 						<li>
-							<label for="flip-Zone2-Power-<?php echo $multimedia['id'] ?>"><STRONG>Power</STRONG></label>
+							<label for="flip-Onkyo-<?php echo $Onkyo['id'] ?>">Power</label>
 							<div style="position: absolute ;right:10px;top:0">
-								<select name="flip-Zone2-Power-<?php echo $multimedia['id'] ?>" id="flip-Zone2-Power-<?php echo $multimedia['id'] ?>" data-role="slider" data-mini="true">
-									<option value="00" <? if($Zon2Power != 'Yes'){ echo "selected=\"selected\"";}; ?>>Aus</option>
-									<option value="01" <? if($Zon2Power == 'Yes'){ echo "selected=\"selected\"";}; ?>>An</option>
+								<select name="flip-Onkyo-<?php echo $Onkyo['id'] ?>" id="flip-Onkyo-<?php echo $Onkyo['id'] ?>" data-role="slider" data-mini="true">
+									<option value="ZPW00" <? if($Zon2Power[1] != '01'){ echo "selected=\"selected\"";}; ?>>Aus</option>
+									<option value="ZPW01" <? if($Zon2Power[1] == '01'){ echo "selected=\"selected\"";}; ?>>An</option>
 								</select>	
 							</div>
 						</li>	
 					<?//Volume ?>
 						<li>
-						<?
-						
-						if ($multimedia['zeitEin'] != '0'){
-							$SliderValueHex = Onkyo_get_status($multimedia['ip'],'!1ZVLQSTN#');
-							$SliderValueHex = substr($SliderValueHex, 5, 2);
-						}else{
+						<?	
+						//echo $Onkyo['zeitEin'];
+						$SliderValueHex = Onkyo_get_status($Onkyo['ip'],'!1ZVLQSTN#');
+						$temp = explode('!1ZVL',$SliderValueHex);
+						$SliderValueHex = $temp[1];
+						if ($SliderValueHex == 'N/A') {
 							$SliderValueHex = '00';
-						}		
+						}	
 						$SliderValue = hexdec($SliderValueHex);
 						
 						?>
-						<label for="slider-Onkyo-Z2-Vol-<? echo $multimedia['id']; ?>">Volume</label>
-						<input name="slider-Onkyo-Z2-Vol-<? $multimedia['id']; ?>" id="slider-Onkyo-Z2-Vol-<? echo $multimedia['id'];?>" data-highlight="true" min="0" max="100" step="1" value="<? echo $SliderValue; ?>" type="range">
+						<label for="slider-Onkyo-Z2-Vol-<? echo $Onkyo['id']; ?>">Volume</label>
+						<input name="slider-Onkyo-Z2-Vol-<? $Onkyo['id']; ?>" id="slider-Onkyo-Z2-Vol-<? echo $Onkyo['id'];?>" data-highlight="true" min="0" max="100" step="1" value="<? echo $SliderValue; ?>" type="range">
 						</li>	
 					<?//Frequency ?>	
 						<li>
 						<?
 						
-						if ($multimedia['zeitEin'] != '0'){
-							$SliderValue = Onkyo_get_status($multimedia['ip'],'!1TUZQSTN#');
+						if ($Onkyo['zeitEin'] != '0'){
+							$SliderValue = Onkyo_get_status($Onkyo['ip'],'!1TUZQSTN#');
 							$SliderValue = substr($SliderValue, 5);
 						}else{
 							$SliderValue = '00000';
@@ -237,15 +239,15 @@ $IP = $multimedia['ip'];
 						$Frequency = $SliderValueMain . "." . $SliderValueSub;
 						//echo $Frequency;
 						?>
-						<label for="slider-Onkyo-Z2-Frequency-<? echo $multimedia['id']; ?>">Frequency</label>
-						<input name="slider-Onkyo-Z2-Frequency-<? $multimedia['id']; ?>" id="slider-Onkyo-Z2-Frequency-<? echo $multimedia['id'];?>" data-highlight="true" min="86" max="110" step="0.05" value="<? echo $Frequency; ?>" type="range">
+						<label for="slider-Onkyo-Z2-Frequency-<? echo $Onkyo['id']; ?>">Frequency</label>
+						<input name="slider-Onkyo-Z2-Frequency-<? $Onkyo['id']; ?>" id="slider-Onkyo-Z2-Frequency-<? echo $Onkyo['id'];?>" data-highlight="true" min="86" max="110" step="0.05" value="<? echo $Frequency; ?>" type="range">
 						</li>	
 						
 					<?//Treble and Bass ?>	
 						<?
 						
-						if ($multimedia['zeitEin'] != '0'){
-							$SliderValueHex = Onkyo_get_status($multimedia['ip'],'!1ZTNQSTN#');
+						if ($Onkyo['zeitEin'] != '0'){
+							$SliderValueHex = Onkyo_get_status($Onkyo['ip'],'!1ZTNQSTN#');
 							//echo $SliderValueHex;
 							$SliderValueHexBass = substr($SliderValueHex, strpos($SliderValueHex, 'B') + 1, strpos($SliderValueHex, 'T'));
 							$SliderValueHexTreble = substr($SliderValueHex, strrpos($SliderValueHex, 'T') + 1, strlen($SliderValueHex) - (strrpos($SliderValueHex, 'T') + 1));
@@ -263,12 +265,12 @@ $IP = $multimedia['ip'];
 						?>
 						<!--
 						<li>
-						<label for="slider-Onkyo-Z2-Bass-<? echo $multimedia['id']; ?>">Bass</label>
-						<input name="slider-Onkyo-Z2-Bass-<? $multimedia['id']; ?>" id="slider-Onkyo-Z2-Bass-<? echo $multimedia['id'];?>" data-highlight="true" min="-10" max="10" step="1" value="<? echo $SliderValueHexBass; ?>" type="range">
+						<label for="slider-Onkyo-Z2-Bass-<? echo $Onkyo['id']; ?>">Bass</label>
+						<input name="slider-Onkyo-Z2-Bass-<? $Onkyo['id']; ?>" id="slider-Onkyo-Z2-Bass-<? echo $Onkyo['id'];?>" data-highlight="true" min="-10" max="10" step="1" value="<? echo $SliderValueHexBass; ?>" type="range">
 						</li>
 						<li>
-						<label for="slider-Onkyo-Z2-Treble-<? echo $multimedia['id']; ?>">Treble</label>
-						<input name="slider-Onkyo-Z2-Treble-<? $multimedia['id']; ?>" id="slider-Onkyo-Z2-Treble-<? echo $multimedia['id'];?>" data-highlight="true" min="-10" max="10" step="1" value="<? echo $SliderValueHexTreble; ?>" type="range">
+						<label for="slider-Onkyo-Z2-Treble-<? echo $Onkyo['id']; ?>">Treble</label>
+						<input name="slider-Onkyo-Z2-Treble-<? $Onkyo['id']; ?>" id="slider-Onkyo-Z2-Treble-<? echo $Onkyo['id'];?>" data-highlight="true" min="-10" max="10" step="1" value="<? echo $SliderValueHexTreble; ?>" type="range">
 						</li>
 						-->
 					</ul>
@@ -277,15 +279,29 @@ $IP = $multimedia['ip'];
 			<div data-role="collapsible">
 				<h2>Sound Settings</h2>
 				<div class="padme">
-					<ul data-role="listview" data-inset="true">					
+					<ul data-role="listview" data-inset="true">	
+					<?//Power ?>
+						<?
+						$Power = Onkyo_get_status($Onkyo['ip'],'!1PWRQSTN#');
+						if ($Power == 'NA') { $Power = 'No'; }
+						$Power = explode('!1PWR',$Power);
+						//echo $Power[1];
+						//echo $Power;
+						?>
+						<li>
+							<label for="flip-Onkyo-<?php echo $Onkyo['id'] ?>">Power</label>
+							<div style="position: absolute ;right:10px;top:0">
+								<select name="flip-Onkyo-<?php echo $Onkyo['id'] ?>" id="flip-Onkyo-<?php echo $Onkyo['id'] ?>" data-role="slider" data-mini="true">
+									<option value="PWR00" <? if($Power[1] != '01'){ echo "selected=\"selected\"";}; ?>>Aus</option>
+									<option value="PWR01" <? if($Power[1] == '01'){ echo "selected=\"selected\"";}; ?>>An</option>
+								</select>	
+							</div>
+						</li>						
 					<?//Volume ?>
 						<li>
 						<?
-						$sqlDevices = query( "SELECT * FROM devices WHERE type = 'onkyoavrec'" );
-						$multimedia = fetch($sqlDevices);
-						
-						if ($multimedia['zeitEin'] != '0'){
-							$SliderValueHex = Onkyo_get_status($multimedia['ip'],'!1MVLQSTN#');
+						if ($Onkyo['zeitEin'] != '0'){
+							$SliderValueHex = Onkyo_get_status($Onkyo['ip'],'!1MVLQSTN#');
 							$SliderValueHex = substr($SliderValueHex, 5, 2);
 						}else{
 							$SliderValueHex = '00';
@@ -293,17 +309,15 @@ $IP = $multimedia['ip'];
 						$SliderValue = hexdec($SliderValueHex);
 						
 						?>
-						<label for="slider-Onkyo-Vol-<? echo $multimedia['id']; ?>">Volume</label>
-						<input name="slider-Onkyo-Vol-<? $multimedia['id']; ?>" id="slider-Onkyo-Vol-<? echo $multimedia['id'];?>" data-highlight="true" min="0" max="100" step="1" value="<? echo $SliderValue; ?>" type="range">
+						<label for="slider-Onkyo-Vol-<? echo $Onkyo['id']; ?>">Volume</label>
+						<input name="slider-Onkyo-Vol-<? $Onkyo['id']; ?>" id="slider-Onkyo-Vol-<? echo $Onkyo['id'];?>" data-highlight="true" min="0" max="100" step="1" value="<? echo $SliderValue; ?>" type="range">
 						</li>	
 						
 					<?//Treble and Bass ?>	
 						<?
-						$sqlDevices = query( "SELECT * FROM devices WHERE type = 'onkyoavrec'" );
-						$multimedia = fetch($sqlDevices);
 						
-						if ($multimedia['zeitEin'] != '0'){
-							$SliderValueHex = Onkyo_get_status($multimedia['ip'],'!1TFRQSTN#');
+						if ($Onkyo['zeitEin'] != '0'){
+							$SliderValueHex = Onkyo_get_status($Onkyo['ip'],'!1TFRQSTN#');
 							$SliderValueHexBass = substr($SliderValueHex, strpos($SliderValueHex, 'B') + 1, strpos($SliderValueHex, 'T'));
 							$SliderValueHexTreble = substr($SliderValueHex, strrpos($SliderValueHex, 'T') + 1, strlen($SliderValueHex) - (strrpos($SliderValueHex, 'T') + 1));
 							
@@ -319,22 +333,20 @@ $IP = $multimedia['ip'];
 						//echo $SliderValueHexTreble;
 						?>
 						<li>
-						<label for="slider-Onkyo-Bass-<? echo $multimedia['id']; ?>">Bass</label>
-						<input name="slider-Onkyo-Bass-<? $multimedia['id']; ?>" id="slider-Onkyo-Bass-<? echo $multimedia['id'];?>" data-highlight="true" min="-10" max="10" step="1" value="<? echo $SliderValueHexBass; ?>" type="range">
+						<label for="slider-Onkyo-Bass-<? echo $Onkyo['id']; ?>">Bass</label>
+						<input name="slider-Onkyo-Bass-<? $Onkyo['id']; ?>" id="slider-Onkyo-Bass-<? echo $Onkyo['id'];?>" data-highlight="true" min="-10" max="10" step="1" value="<? echo $SliderValueHexBass; ?>" type="range">
 						</li>
 						<li>
-						<label for="slider-Onkyo-Treble-<? echo $multimedia['id']; ?>">Treble</label>
-						<input name="slider-Onkyo-Treble-<? $multimedia['id']; ?>" id="slider-Onkyo-Treble-<? echo $multimedia['id'];?>" data-highlight="true" min="-10" max="10" step="1" value="<? echo $SliderValueHexTreble; ?>" type="range">
+						<label for="slider-Onkyo-Treble-<? echo $Onkyo['id']; ?>">Treble</label>
+						<input name="slider-Onkyo-Treble-<? $Onkyo['id']; ?>" id="slider-Onkyo-Treble-<? echo $Onkyo['id'];?>" data-highlight="true" min="-10" max="10" step="1" value="<? echo $SliderValueHexTreble; ?>" type="range">
 						</li>			
 						
 					<?//Subwoofer ?>
 						<li>
 						<?
-						$sqlDevices = query( "SELECT * FROM devices WHERE type = 'onkyoavrec'" );
-						$multimedia = fetch($sqlDevices);
 						
-						if ($multimedia['zeitEin'] != '0'){
-							$SliderValueHex = Onkyo_get_status($multimedia['ip'],'!1SWLQSTN#');
+						if ($Onkyo['zeitEin'] != '0'){
+							$SliderValueHex = Onkyo_get_status($Onkyo['ip'],'!1SWLQSTN#');
 							$SliderValueHex = substr($SliderValueHex, 5, 2);
 						}else{
 							$SliderValueHex = '00';
@@ -342,18 +354,16 @@ $IP = $multimedia['ip'];
 						$SliderValue = hexdec($SliderValueHex);
 						
 						?>
-						<label for="slider-Onkyo-Sub-<? echo $multimedia['id']; ?>">Subwoofer</label>
-						<input name="slider-Onkyo-Sub-<? $multimedia['id']; ?>" id="slider-Onkyo-Sub-<? echo $multimedia['id'];?>" data-highlight="true" min="-15" max="+12" step="1" value="<? echo $SliderValue; ?>" type="range">
+						<label for="slider-Onkyo-Sub-<? echo $Onkyo['id']; ?>">Subwoofer</label>
+						<input name="slider-Onkyo-Sub-<? $Onkyo['id']; ?>" id="slider-Onkyo-Sub-<? echo $Onkyo['id'];?>" data-highlight="true" min="-15" max="+12" step="1" value="<? echo $SliderValue; ?>" type="range">
 						</li>
 						
 					<?//Center ?>
 						<li>
 						<?
-						$sqlDevices = query( "SELECT * FROM devices WHERE type = 'onkyoavrec'" );
-						$multimedia = fetch($sqlDevices);
 						
-						if ($multimedia['zeitEin'] != '0'){
-							$SliderValueHex = Onkyo_get_status($multimedia['ip'],'!1CTLQSTN#');
+						if ($Onkyo['zeitEin'] != '0'){
+							$SliderValueHex = Onkyo_get_status($Onkyo['ip'],'!1CTLQSTN#');
 							$SliderValueHex = substr($SliderValueHex, 5, 2);
 						}else{
 							$SliderValueHex = '00';
@@ -361,8 +371,8 @@ $IP = $multimedia['ip'];
 						$SliderValue = hexdec($SliderValueHex);
 						
 						?>
-						<label for="slider-Onkyo-Center-<? echo $multimedia['id']; ?>">Center</label>
-						<input name="slider-Onkyo-Center-<? $multimedia['id']; ?>" id="slider-Onkyo-Center-<? echo $multimedia['id'];?>" data-highlight="true" min="-12" max="+12" step="1" value="<? echo $SliderValue; ?>" type="range">
+						<label for="slider-Onkyo-Center-<? echo $Onkyo['id']; ?>">Center</label>
+						<input name="slider-Onkyo-Center-<? $Onkyo['id']; ?>" id="slider-Onkyo-Center-<? echo $Onkyo['id'];?>" data-highlight="true" min="-12" max="+12" step="1" value="<? echo $SliderValue; ?>" type="range">
 						</li>
 						
 					</ul>

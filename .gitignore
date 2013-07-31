@@ -4,3 +4,4 @@ test.php
 *.pdf
 view-source*
 sensor_graph\*.png
+backup\*.sql
