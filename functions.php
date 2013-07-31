@@ -1,5 +1,5 @@
 <?php
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 include("config.php");
 /*
  * Created on 19.02.2012
@@ -38,7 +38,132 @@ while( $config = fetch( $sql_config ) )
 setlocale(LC_ALL,'de_DE@euro', 'de_DE',  'de', 'ge');
 date_default_timezone_set('Europe/Berlin');
 
-function current_channel_info(){
+function backup_tables($host,$user,$pass,$name,$tables)
+{
+    //$link = mysql_connect($host,$user,$pass);
+    //mysql_select_db($name,$link);
+    $return = "";
+	//echo 'table: ' . $tables;
+    // Get all of the tables
+
+    if($tables == '*') {
+		$Komplett = 'True';
+		$FileName = 'complete';
+        $tables = array();
+        $result = mysql_query("SHOW TABLES");
+        while($row = mysql_fetch_row($result)) {
+            $tables[] = $row[0];
+        }
+    } else {
+		$Komplett = 'False';
+		$FileName = $tables;
+        //if (is_array($tables)) {
+		$temptables = $tables;
+        $tables = array();
+        $tables = explode(',', $temptables);
+        //}
+    }
+	//echo "Tables:";
+	//var_dump($tables);
+    // Cycle through each provided table
+    foreach($tables as $table) {		
+		$result = mysql_query("SELECT * FROM " . $table);
+     
+		$num_fields = mysql_num_fields($result);
+		
+        // First part of the output – remove the table
+        $return .= 'DROP TABLE ' . $table . ';<|||||||>';
+ 
+        // Second part of the output – create table
+        $row2 = mysql_fetch_row(mysql_query("SHOW CREATE TABLE " . $table));
+        $return .= "\n\n" . $row2[1] . ";<|||||||>\n\n";
+ 
+        // Third part of the output – insert values into new table
+        for ($i = 0; $i < $num_fields; $i++) {
+            while($row = mysql_fetch_row($result)) {
+                $return.= 'INSERT INTO '.$table.' VALUES(';
+                for($j=0; $j<$num_fields; $j++) {
+                    $row[$j] = addslashes($row[$j]);
+                    $row[$j] = ereg_replace("\n","\\n",$row[$j]);
+                    if (isset($row[$j])) {
+                        $return .= '"' . $row[$j] . '"';
+                    } else {
+                        $return .= '""';
+                    }
+                    if ($j<($num_fields-1)) {
+                        $return.= ',';
+                    }
+                }
+                $return.= ");<|||||||>\n";
+            }
+        }
+        $return.="\n\n\n";
+    }
+    // Generate the filename for the sql file
+    $filess = 'backup/dbbck_'.$FileName.'_'. date("ymd_His") . '.sql';
+ 
+    // Save the sql file
+    $handle = fopen($filess,'w+');
+    fwrite($handle,$return);
+    fclose($handle);
+	
+	
+    // Print the message
+    echo "<h4>	The backup has been created successfully (" . $filess . ").</h4><br>\n";
+	//echo $return;
+ 
+    // Close MySQL Connection
+    mysql_close();
+}
+
+function restore_tables($filename)
+{
+    // Restore the backup
+ 
+	// Load and explode the sql file
+	mysql_select_db("$DBName");
+	$f = fopen($filename,"r+");
+	$sqlFile = fread($f,filesize($filename));
+	$sqlArray = explode(';<|||||||>',$sqlFile);
+
+	// Process the sql file by statements
+	foreach ($sqlArray as $stmt) {
+		if (strlen($stmt)>3){
+			$result = mysql_query($stmt);
+		}
+	}
+ 
+    // Print message (error or success)
+    if ($sqlErrorCode == 0){
+        print("Database restored successfully!<br>\n");
+        print("Backup used: " . $filename);
+    } else {
+        print("An error occurred while restoring backup!<br><br>\n");
+        print("Error code: $sqlErrorCode<br>\n");
+        print("Error text: $sqlErrorText<br>\n");
+        print("Statement:<br/> $sqlStmt<br>");
+    }
+}
+
+function query( $qry )
+{
+  $sql = mysql_query( $qry )or die(mysql_error());
+  /*if( mysql_error() )
+  {
+    $debug = debug_backtrace();
+    //mysql_error_handler(mysql_error(), $debug[0]['function'], $debug[0]['line'], $debug[0]['file']);
+  }*/
+  return $sql;
+}
+
+function fetch( $query )
+{
+  $fetch = mysql_fetch_array( $query );
+  return $fetch;
+}
+
+function current_channel_info()
+{
 	global $dreamIP;
 	$xml = simplexml_load_file("http://".$dreamIP."/web/subservices");
 	//var_dump($xml);
@@ -54,19 +179,20 @@ function current_channel_info(){
 	get_epgdetails("$ref");
 }
 
-
-function set_channel($sref){
+function set_channel($sref)
+{
 	global $dreamIP;
 	$xml = simplexml_load_file("http://".$dreamIP."/web/zap?sRef=".$sref);
 	var_dump($xml);
 }
 
-function enigma2_send_key($deviceIP, $key){
+function enigma2_send_key($deviceIP, $key)
+{
 
 }
 
-
-function get_epgdetails($sref){
+function get_epgdetails($sref)
+{
 	global $dreamIP;
 	setlocale(LC_ALL,'de_DE@euro', 'de_DE',  'de', 'ge');
 	date_default_timezone_set('Europe/Berlin');
@@ -90,8 +216,8 @@ function get_epgdetails($sref){
 
 }
 
-
-function get_epg_now($cref){
+function get_epg_now($cref)
+{
 	global $dreamIP;
 	$xml = simplexml_load_file("http://".$dreamIP."/web/epgservicenow?sRef=".$cref);
 	//var_dump($xml);
@@ -110,7 +236,8 @@ function get_epg_now($cref){
 	return($data_array);
 }
 
-function get_channels($ref){
+function get_channels($ref)
+{
 	global $dreamIP;
 	//echo $ref;
 	$channel_list_url = "http://".$dreamIP."/web/getservices?sRef=".$ref;
@@ -124,7 +251,8 @@ function get_channels($ref){
 	return($data_array);
 }
 
-function get_epg_nownext($ref){
+function get_epg_nownext($ref)
+{
 	global $dreamIP;
 	setlocale(LC_ALL,'de_DE@euro', 'de_DE',  'de', 'ge');
 	date_default_timezone_set('Europe/Berlin');
@@ -144,9 +272,8 @@ function get_epg_nownext($ref){
 	return($data_array);
 }
 
-
-
-function get_bouquets(){
+function get_bouquets()
+{
 	global $dreamIP;
 	
 	//echo ($dreamIP."/web/epgservice?sRef=".$sref);
@@ -173,7 +300,8 @@ function get_bouquets(){
 	return($data_array);
 }
 
-function GenGraph ($datay1,$datax1,$filename,$min,$max) {
+function GenGraph ($datay1,$datax1,$filename,$min,$max)
+{
 //GenGraph(Werte y-Achse,Werte x-Achse, filename, min y-Achse, max y-Achse);
 
 require_once ('jpgraph/jpgraph.php');
@@ -220,29 +348,14 @@ $graph->Stroke($filename);
    // $graph->Stroke("./foler/file.jpg");
 }
 
-function getProgress($start_date, $current_time, $duration) {
+function getProgress($start_date, $current_time, $duration)
+{
 	//(current_time - begin_time) / duration * 100
 	$diff = ($current_time - $start_date) / $duration * 100;
 	$diff_int = round($diff);
     return ($diff_int);
 }
 
-function query( $qry )
-{
-  $sql = mysql_query( $qry )or die(mysql_error());
-  /*if( mysql_error() )
-  {
-    $debug = debug_backtrace();
-    //mysql_error_handler(mysql_error(), $debug[0]['function'], $debug[0]['line'], $debug[0]['file']);
-  }*/
-  return $sql;
-}
-
-function fetch( $query )
-{
-  $fetch = mysql_fetch_array( $query );
-  return $fetch;
-}
 function ReadXS1($aktion, $id) 
 {
 	global $XS1;
@@ -298,7 +411,8 @@ function setUrl($url)
 	fread($handle,$filesize);
 }
 
-function ping($host, $timeout = 1) {
+function ping($host, $timeout = 1)
+{
 	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 	//echo 'This is a server using Windows!';
 	$online=exec("ping -n 1 $host", $output, $error); 
@@ -607,7 +721,8 @@ function samsung_send_key($tvip, $SendKey)
     //echo "\n\n";
 }
 
-function Onkyo_send_key($device,$key){
+function Onkyo_send_key($device,$key)
+{
 	$port = "60128";
 	$fp = stream_socket_client("tcp://".$device.":".$port, $errno, $errstr, 5);
 	if (!$fp) {
@@ -636,7 +751,8 @@ function Onkyo_send_key($device,$key){
 	}
 }
 
-function Onkyo_get_status($device,$key){
+function Onkyo_get_status($device,$key)
+{
 
 	$port = "60128";
 	$fp = stream_socket_client("tcp://".$device.":".$port, $errno, $errstr, 5);

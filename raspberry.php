@@ -208,20 +208,7 @@ margin-top:15px;
 include('functions.php');
 ?>
 <div data-role="content" >	
-	<ul data-role="listview" data-inset="true">
-			<li data-role="list-divider">Befehle</li>
-			<li>Reboot Pi
-				<div style="position: absolute ;right:10px;top:0px">
-    			<a href="/index.php?page=raspberry&aktion=reboot" data-role="button" rel="external" id="button-reboot" data-inline="true" data-mini="true">reboot</a>
-    			
-    		</div>
-			</li>
-			<li>Shutdown Pi
-				<div style="position: absolute ;right:10px;top:0px">
-    			<a href="/index.php?page=raspberry&aktion=shutdown" data-role="button" rel="external" id="button-shutdown" data-inline="true" data-mini="true">shutdown</a>
-    		</div>			
-			</li>
-	</ul>	
+
     <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
   		<ul data-role="listview" data-inset="true">
 			<li data-role="list-divider">Generelle Informationen</li>
@@ -264,6 +251,22 @@ include('functions.php');
 			<li>Total<span style="float:right"><? echo $total_swap; ?> kB</span></li>
 			<li>Used (<? echo $percent_swap; ?>%)<span style="float:right"><? echo $used_swap; ?> kB</span></li>
 			<li>Free (<? echo $percent_swap_free; ?>%)<span style="float:right"><? echo $free_swap; ?> kB</span></li>
+		</ul>		
+    </div>	
+    <div style="float: left; border-radius:10px; height:300px; width:32%; margin-left:10px; margin-bottom:12px">
+		<ul data-role="listview" data-inset="true">
+			<li data-role="list-divider">Befehle</li>
+			<li>Reboot Pi
+				<div style="position: absolute ;right:10px;top:0px">
+    			<a href="/index.php?page=raspberry&aktion=reboot" data-role="button" rel="external" id="button-reboot" data-inline="true" data-mini="true">reboot</a>
+    			
+    		</div>
+			</li>
+			<li>Shutdown Pi
+				<div style="position: absolute ;right:10px;top:0px">
+    			<a href="/index.php?page=raspberry&aktion=shutdown" data-role="button" rel="external" id="button-shutdown" data-inline="true" data-mini="true">shutdown</a>
+    		</div>			
+			</li>
 		</ul>		
     </div>	
 	<?
