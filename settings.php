@@ -73,7 +73,7 @@ $('#aktor').change(function(e) {
 
 $(function() {
 		$("#sortable ul").sortable({ opacity: 0.6, cursor: 'move', update: function() {
-			var order = $(this).sortable("serialize") + '&action=updateRecordsListings?table=groupaktor'; 
+			var order = $(this).sortable("serialize") + '&action=updateRecordsListings&table=groupaktor'; 
 			//alert(order);
 			$.post("setFunctions.php", order, function(theResponse){
 				$("#sorted").html(theResponse);
@@ -89,7 +89,7 @@ $(function() {
 
 $(function() {
 		$("#sortableFooter ul").sortable({ opacity: 0.6, cursor: 'move', update: function() {
-			var order = $(this).sortable("serialize") + '&action=updateRecordsListings?table=configFooter'; 
+			var order = $(this).sortable("serialize") + '&action=updateRecordsListings&table=configFooter'; 
 			//alert(order);
 			$.post("setFunctions.php", order, function(theResponse){
 				$("#sortedFooter").html(theResponse);
@@ -100,7 +100,49 @@ $(function() {
 	$( "#sortableFooter ul" ).bind( "sortstop", function(event, ui) {
       $('#sortableFooter ul').listview('refresh');
     });
+});
+<?php
+// List the files
+$dir = opendir ("./backup");
+$count = 0;
+while (false !== ($file = readdir($dir))) {
+	// Print the filenames that have .sql extension
+	if (strpos($file,'.sql',1)) {
+		echo "$(function() {\n";
+		echo "	$(\"#button-restore-Backup-" . $count . "\").bind(\"click\", function( event, ui ) {\n";
+		echo "		var url = \"&action=restoreBackup&filename=".$file."\";\n";
+		echo "		$.post(\"setFunctions.php\", url, function(theResponse){\n";
+		echo "				$(\"#Backupresponse\").html(theResponse);\n";
+		echo "			}); \n";
+		echo "	});\n";
+		echo "});\n\n";
+		$count = $count + 1;
+	}
+}
+?>
+	
+$(function() {
+	$("#button-create-Backup-All").bind("click", function( event, ui ) {
+		var url = "&action=createBackup&table=*";
+		$.post("setFunctions.php", url, function(theResponse){
+				$("#Backupresponse").html(theResponse);
+			}); 
 	});
+});
+<?
+$result = mysql_query("show tables from " . $DBName); // run the query and assign the result to $result
+while($table = mysql_fetch_array($result)) // go through each row that was returned in $result
+{
+	echo "$(function() {\n";
+	echo "	$(\"#button-create-Backup-" . $table[0] ."\").bind(\"click\", function( event, ui ) {\n";
+	echo "		var url = \"&action=createBackup&table=" . $table[0] ."\";\n";
+	echo "		$.post(\"setFunctions.php\", url, function(theResponse){\n";
+	echo "				$(\"#Backupresponse\").html(theResponse);\n";
+	echo "			});\n";
+	echo "	});\n";
+	echo "});\n\n";
+}
+?>
 
 });
 
@@ -153,6 +195,7 @@ include("header.php");
     	<ul data-role="listview">
 			<li <?php if($_GET['aktion'] == 'editConfig') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editConfig">bearbeiten</a></li>
 			<li <?php if($_GET['aktion'] == 'editFooterOrder') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=editFooterOrder">Footer</a></li>
+			<li <?php if($_GET['aktion'] == 'BackupRestore') { ?> class="ui-btn-active" <?php } ?>><a href="?page=settings&aktion=BackupRestore">Backup/Restore</a></li>
     	</ul>
 		</div>
 		<div data-role="collapsible"  <?php if($_GET['aktion'] == ('readAktor' ) || ($_GET['aktion'] == 'addAktor') || ($_GET['aktion'] == 'editAktor')) { ?> data-collapsed="false" <?php } ?> data-theme="d" data-content-theme="d">
@@ -227,8 +270,82 @@ include('functions.php');
 ?>
 <?
 switch( $_GET['aktion'] ){
+	case 'BackupRestore':
+		?>        
+		<div id="cont">
+			<div style="float: left; border-radius:10px; height:300px; width:45%; margin-left:10px; margin-top:15px; margin-bottom:300px">
+				<ul data-role="listview" data-inset="true" data-theme="d">
+					<li>
+						<label for="flip-create-Backup">Komplette Datenbank (<?echo $DBName ?>)</label>
+						<div style="position: absolute ;right:10px;top:0px">
+							<a href="#" data-role="button" id="button-create-Backup-All" data-inline="true" data-mini="true">backup</a>
+						</div>							
+					</li>
+					<?
+					$result = mysql_query("show tables from " . $DBName); // run the query and assign the result to $result
+					while($table = mysql_fetch_array($result)) // go through each row that was returned in $result
+					{ 
+						?>
+						<li>
+							<label for="flip-create-Backup-<?echo $table[0]?>"><?echo $table[0]?></label>
+							<div style="position: absolute ;right:10px;top:0px">
+								<a href="#" data-role="button" id="button-create-Backup-<?echo $table[0]?>" data-inline="true" data-mini="true">backup</a>
+							</div>							
+						</li>
+						<?
+					}
+					?>
+				</ul>			   
+			</div>
+			<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:300px">
+				<ul data-role="listview" data-inset="true" data-theme="d">
+					<li>
+						<label for="flip-create-Backup">Ergebniss</label>
+						<div data-role="content" data-theme="c" id="Backupresponse">
+							<p>&nbsp;</p>	
+						</div>
+					</li>
+					<li>
+						<label for="vorhandene-Backups">Backups</label>
+						<table data-role="table" id="table-custom-2" class="ui-body-d ui-shadow table-stripe ui-responsive" data-column-popup-theme="a">
+						 <thead>
+						   <tr class="ui-bar-d">
+							 <th>filename</th>
+							 <th data-priority="1">link</th>
+							 <th data-priority="1">action</th>
+						   </tr>
+						 </thead>
+						 <tbody>
+						<?php
+							// List the files
+							$dir = opendir ("./backup");
+							$count = 0;
+							while (false !== ($file = readdir($dir))) {
+						 
+								// Print the filenames that have .sql extension
+								if (strpos($file,'.sql',1)) {
+						 
+									// Print the cells
+									?>
+									   <tr>
+										 <th><? echo $file ?></th>
+										 <th><? echo "<a href=backup/".$file." data-ajax=\"false\" >download</a>" ?></th>
+										 <th><a href="#" data-role="button" id="button-restore-Backup-<?echo $count?>" data-inline="true" data-mini="true">restore</a></th>
+									   </tr>
+									<?
+									$count = $count + 1;
+								}
+							}
+						?>
+						 </tbody>
+					   </table>
+				</ul>
+			</div>
+		 </div>   
+		<?php
+		break;
+		
 	case 'readSensor':
-		//include('settings.php');
 		?>        
 		<div id="cont">
 			<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:130px">
