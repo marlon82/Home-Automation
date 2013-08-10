@@ -145,7 +145,8 @@ function delete_tables($filename){
 	print("deleted file: " . $filename);
 }
 
-function query( $qry ){
+function query( $qry )
+{
   $sql = mysql_query( $qry )or die(mysql_error());
   /*if( mysql_error() )
   {
@@ -155,12 +156,14 @@ function query( $qry ){
   return $sql;
 }
 
-function fetch( $query ){
+function fetch( $query )
+{
   $fetch = mysql_fetch_array( $query );
   return $fetch;
 }
 
-function current_channel_info(){
+function current_channel_info()
+{
 	global $dreamIP;
 	$xml = simplexml_load_file("http://".$dreamIP."/web/subservices");
 	//var_dump($xml);
@@ -176,17 +179,20 @@ function current_channel_info(){
 	get_epgdetails("$ref");
 }
 
-function set_channel($sref){
+function set_channel($sref)
+{
 	global $dreamIP;
 	$xml = simplexml_load_file("http://".$dreamIP."/web/zap?sRef=".$sref);
 	var_dump($xml);
 }
 
-function enigma2_send_key($deviceIP, $key){
+function enigma2_send_key($deviceIP, $key)
+{
 
 }
 
-function get_epgdetails($sref){
+function get_epgdetails($sref)
+{
 	global $dreamIP;
 	setlocale(LC_ALL,'de_DE@euro', 'de_DE',  'de', 'ge');
 	date_default_timezone_set('Europe/Berlin');
@@ -210,7 +216,8 @@ function get_epgdetails($sref){
 
 }
 
-function get_epg_now($cref){
+function get_epg_now($cref)
+{
 	global $dreamIP;
 	$xml = simplexml_load_file("http://".$dreamIP."/web/epgservicenow?sRef=".$cref);
 	//var_dump($xml);
@@ -229,7 +236,8 @@ function get_epg_now($cref){
 	return($data_array);
 }
 
-function get_channels($ref){
+function get_channels($ref)
+{
 	global $dreamIP;
 	//echo $ref;
 	$channel_list_url = "http://".$dreamIP."/web/getservices?sRef=".$ref;
@@ -243,7 +251,8 @@ function get_channels($ref){
 	return($data_array);
 }
 
-function get_epg_nownext($ref){
+function get_epg_nownext($ref)
+{
 	global $dreamIP;
 	setlocale(LC_ALL,'de_DE@euro', 'de_DE',  'de', 'ge');
 	date_default_timezone_set('Europe/Berlin');
@@ -263,7 +272,8 @@ function get_epg_nownext($ref){
 	return($data_array);
 }
 
-function get_bouquets(){
+function get_bouquets()
+{
 	global $dreamIP;
 	
 	//echo ($dreamIP."/web/epgservice?sRef=".$sref);

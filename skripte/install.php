@@ -53,6 +53,12 @@ if (!$handle = fopen($file, "w")) {
 	fwrite($handle, "\$db['username'] =  " ."'" . $_POST['databaseUser'] . "' ;\n");
 	fwrite($handle, "\$db['password'] =  " ."'" . $_POST['databasePassword'] . "' ;\n");
 	fwrite($handle, "\$db['db'] =  " ."'" . $_POST['databaseName'] . "' ;\n");
+	fwrite($handle, "// Settings for Backup/restore function;\n");
+	fwrite($handle, "\$DBhost =  " . "'\$db['host']' ;\n");
+	fwrite($handle, "\$DBuser =  " . "'\$db['username']' ;\n");
+	fwrite($handle, "\$DBpass =  " . "'\$db['password']' ;\n");
+	fwrite($handle, "\$DBName =  " . "'\$db['db']' ;\n");
+	fwrite($handle, "// MySQL connection;\n");
 	fwrite($handle, "\$connect = mysql_connect(\$db['host'], \$db['username'], \$db['password'] );\n");
 	fwrite($handle, "\$select_db = mysql_select_db( \$db['db'], \$connect );\n");
 	fwrite($handle, "\$db = false;\n");
