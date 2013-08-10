@@ -38,13 +38,8 @@ while( $config = fetch( $sql_config ) )
 setlocale(LC_ALL,'de_DE@euro', 'de_DE',  'de', 'ge');
 date_default_timezone_set('Europe/Berlin');
 
-function backup_tables($host,$user,$pass,$name,$tables)
-{
-    //$link = mysql_connect($host,$user,$pass);
-    //mysql_select_db($name,$link);
+function backup_tables($tables){
     $return = "";
-	//echo 'table: ' . $tables;
-    // Get all of the tables
 
     if($tables == '*') {
 		$Komplett = 'True';
@@ -116,13 +111,12 @@ function backup_tables($host,$user,$pass,$name,$tables)
     mysql_close();
 }
 
-function restore_tables($filename)
-{
+function restore_tables($filename){
     // Restore the backup
  
 	// Load and explode the sql file
 	mysql_select_db("$DBName");
-	$f = fopen($filename,"r+");
+	$f = fopen("backup/".$filename,"r+");
 	$sqlFile = fread($f,filesize($filename));
 	$sqlArray = explode(';<|||||||>',$sqlFile);
 
@@ -143,6 +137,12 @@ function restore_tables($filename)
         print("Error text: $sqlErrorText<br>\n");
         print("Statement:<br/> $sqlStmt<br>");
     }
+}
+
+function delete_tables($filename){
+	unlink("backup/".$filename);
+	print("Database deleted successfully!<br>\n");
+	print("deleted file: " . $filename);
 }
 
 function query( $qry )
