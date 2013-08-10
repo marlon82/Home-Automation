@@ -40,7 +40,6 @@ while($row = fetch( $sql )){
     
 }
 
-
 function timer(){
 
 	$sql = query( "SELECT id,name,aktor,value,hour,minute,enabled,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,isGroup,SensorID,SensorValue FROM timer ORDER BY  `timer`.`id` ASC ");
@@ -233,7 +232,6 @@ function update_sensoren(){
 	}
 }
 
-
 function update_sensoren_min(){
 
 	$sql = query( "SELECT id, iid, hcType FROM sensoren");
@@ -261,7 +259,6 @@ function update_energie_sensoren_5min(){
 		}									
 	}
 }
-
 
 function update_sensoren_graph_today(){
 
@@ -510,46 +507,50 @@ global $verbrauch;
 switch( $_GET['func'] ){
 	
 	case '1min':
-	update_sensoren_min();
-	timer();
-	break;
+		update_sensoren_min();
+		timer();
+		break;
 	
 	case '5min':
-	update_geraete();
-	update_energie_sensoren_5min;
-	break;
+		update_geraete();
+		update_energie_sensoren_5min;
+		break;
 
 	case 'timer':
-	timer();
-	break;
+		timer();
+		break;
 
 	case '1h':
-	update_sensoren();
-	update_sensoren_graph_today();
-	update_sensoren_graph_week();
-	update_sensoren_graph_month();
-	break;
+		update_sensoren();
+		update_sensoren_graph_today();
+		update_sensoren_graph_week();
+		update_sensoren_graph_month();
+		break;
 
 	case 'genGraphDay':
-	update_sensoren_graph_today();
-	break;	
+		update_sensoren_graph_today();
+		break;
 
 	case 'genGraphWeek':
-	update_sensoren_graph_week();
-	break;	
+		update_sensoren_graph_week();
+		break;
 
 	case 'genGraphMonth':
-	update_sensoren_graph_month();
-	break;	
+		update_sensoren_graph_month();
+		break;
 	
 	case 'midnight':
-	calculate_sun_rise_set();
-	calculate_strom();
-	break;
+		calculate_sun_rise_set();
+		calculate_strom();
+		break;
 	
 	case 'test':
-	update_geraete();
-	break;		
+		update_geraete();
+		break;
+	
+	case 'backup':
+		backup_tables($_GET['table']);
+		break;
 		
 		default:
 		break;

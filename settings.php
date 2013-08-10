@@ -48,6 +48,7 @@ height:20px;
 $(document).ready(function() {
 
 
+
 //
 $('#suninfo').change(function(e) {
     var state = ($(this).val() == 'off') ? 'enable' : 'disable';
@@ -101,6 +102,7 @@ $(function() {
       $('#sortableFooter ul').listview('refresh');
     });
 });
+
 <?php
 // List the files
 $dir = opendir ("./backup");
@@ -114,6 +116,16 @@ while (false !== ($file = readdir($dir))) {
 		echo "		$.post(\"setFunctions.php\", url, function(theResponse){\n";
 		echo "				$(\"#Backupresponse\").html(theResponse);\n";
 		echo "			}); \n";
+		echo "		$(\".table-custom-2\").table( \"refresh\" );\n";
+		echo "	});\n";
+		echo "});\n";
+		echo "$(function() {\n";
+		echo "	$(\"#button-delete-Backup-" . $count . "\").bind(\"click\", function( event, ui ) {\n";
+		echo "		var url = \"&action=deleteBackup&filename=".$file."\";\n";
+		echo "		$.post(\"setFunctions.php\", url, function(theResponse){\n";
+		echo "				$(\"#Backupresponse\").html(theResponse);\n";
+		echo "			}); \n";
+		echo "		$(\".table-custom-2\").table( \"refresh\" );\n";
 		echo "	});\n";
 		echo "});\n\n";
 		$count = $count + 1;
@@ -300,18 +312,17 @@ switch( $_GET['aktion'] ){
 			<div style="float: left; border-radius:10px; height:300px; width:50%; margin-left:10px; margin-top:15px; margin-bottom:300px">
 				<ul data-role="listview" data-inset="true" data-theme="d">
 					<li>
-						<label for="flip-create-Backup">Ergebniss</label>
+						<label for="flip-create-Backup"></label>
 						<div data-role="content" data-theme="c" id="Backupresponse">
 							<p>&nbsp;</p>	
 						</div>
 					</li>
 					<li>
 						<label for="vorhandene-Backups">Backups</label>
-						<table data-role="table" id="table-custom-2" class="ui-body-d ui-shadow table-stripe ui-responsive" data-column-popup-theme="a">
+						<table data-role="table" id="table-custom-2" class="ui-body-d ui-shadow table-stripe ui-responsive" data-mode="reflow" data-column-popup-theme="a">
 						 <thead>
 						   <tr class="ui-bar-d">
 							 <th>filename</th>
-							 <th data-priority="1">link</th>
 							 <th data-priority="1">action</th>
 						   </tr>
 						 </thead>
@@ -329,8 +340,7 @@ switch( $_GET['aktion'] ){
 									?>
 									   <tr>
 										 <th><? echo $file ?></th>
-										 <th><? echo "<a href=backup/".$file." data-ajax=\"false\" >download</a>" ?></th>
-										 <th><a href="#" data-role="button" id="button-restore-Backup-<?echo $count?>" data-inline="true" data-mini="true">restore</a></th>
+										 <th><a href="backup/<?echo $file?>" data-role="button" id="button-download-Backup-<?echo $count?>" data-ajax="false" data-inline="true" data-mini="true">download</a><a href="#" data-role="button" id="button-restore-Backup-<?echo $count?>" data-inline="true" data-mini="true">restore</a><a href="#" data-role="button" id="button-delete-Backup-<?echo $count?>" data-inline="true" data-mini="true">delete</a></th>
 									   </tr>
 									<?
 									$count = $count + 1;

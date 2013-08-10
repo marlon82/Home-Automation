@@ -46,13 +46,15 @@ if ($_POST) {
 			break;
 
 		case 'createBackup':
-			//echo $_POST['table'];
-			backup_tables($DBhost,$DBuser,$DBpass,$DBName,$_POST['table']);
+			backup_tables($_POST['table']);
 			break;
 
 		case 'restoreBackup':
-			//echo "diese funktion ist noch im aufbau!";
 			restore_tables($_POST['filename']);
+			break;
+			
+		case 'deleteBackup':
+			delete_tables($_POST['filename']);
 			break;
 	
 	}
