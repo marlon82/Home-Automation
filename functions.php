@@ -1,14 +1,6 @@
 <?php
 error_reporting(E_ALL);
 include("config.php");
-/*
- * Created on 19.02.2012
- *
- * To change the template for this generated file go to
- * Window - Preferences - PHPeclipse - PHP - Code Templates
- */
-
-$dreamIP = '192.168.1.22';
 
 $XS1 = array();
 $XS1['ip'] = 'http://192.168.1.242/';
@@ -162,9 +154,8 @@ function fetch( $query )
   return $fetch;
 }
 
-function current_channel_info()
-{
-	global $dreamIP;
+function current_channel_info($dreamIP){
+	
 	$xml = simplexml_load_file("http://".$dreamIP."/web/subservices");
 	//var_dump($xml);
 	$ref= $xml->e2service[0]->e2servicereference;
@@ -176,24 +167,21 @@ function current_channel_info()
 	echo "<strong>Ref:</strong> ".$ref."<br/>";
 	echo "<strong>Kanal:</strong> ".$channel."<br/>";
 	echo "</p>";
-	get_epgdetails("$ref");
+	get_epgdetails($dreamIP,$ref);
 }
 
-function set_channel($sref)
-{
-	global $dreamIP;
+function set_channel($dreamIP,$sref){
+
 	$xml = simplexml_load_file("http://".$dreamIP."/web/zap?sRef=".$sref);
 	var_dump($xml);
 }
 
-function enigma2_send_key($deviceIP, $key)
-{
+function enigma2_send_key($dreamIP, $key){
 
 }
 
-function get_epgdetails($sref)
-{
-	global $dreamIP;
+function get_epgdetails($dreamIP,$sref){
+	
 	setlocale(LC_ALL,'de_DE@euro', 'de_DE',  'de', 'ge');
 	date_default_timezone_set('Europe/Berlin');
 	//echo ($dreamIP."/web/epgservice?sRef=".$sref);
@@ -216,9 +204,8 @@ function get_epgdetails($sref)
 
 }
 
-function get_epg_now($cref)
-{
-	global $dreamIP;
+function get_epg_now($dreamIP,$cref){
+	
 	$xml = simplexml_load_file("http://".$dreamIP."/web/epgservicenow?sRef=".$cref);
 	//var_dump($xml);
 	//$xml = simplexml_load_file($channel_list_url);
@@ -236,9 +223,8 @@ function get_epg_now($cref)
 	return($data_array);
 }
 
-function get_channels($ref)
-{
-	global $dreamIP;
+function get_channels($dreamIP,$ref){
+	
 	//echo $ref;
 	$channel_list_url = "http://".$dreamIP."/web/getservices?sRef=".$ref;
 	$xml = simplexml_load_file($channel_list_url);
@@ -251,14 +237,16 @@ function get_channels($ref)
 	return($data_array);
 }
 
-function get_epg_nownext($ref)
-{
-	global $dreamIP;
+function get_epg_nownext($dreamIP,$ref){
+	
 	setlocale(LC_ALL,'de_DE@euro', 'de_DE',  'de', 'ge');
 	date_default_timezone_set('Europe/Berlin');
 	//var_dump($ref);
+	$ref = html_entity_decode($ref);
 	$channel_list_url = "http://".$dreamIP."/web/epgnownext?bRef=".$ref;
 	$xml = simplexml_load_file($channel_list_url);
+	//print_r($channel_list_url);
+	//var_dump($xml);
 	$i = 0;
 	foreach($xml->e2event as $e2event){
 		$data_array[$i]["titel"] = $e2event->e2eventtitle;
@@ -269,12 +257,12 @@ function get_epg_nownext($ref)
 		$data_array[$i]["kanalname"] = $e2event->e2eventservicename;
 		$i++;
 	}
+	
 	return($data_array);
 }
 
-function get_bouquets()
-{
-	global $dreamIP;
+function get_bouquets($dreamIP){
+	
 	
 	//echo ($dreamIP."/web/epgservice?sRef=".$sref);
 	//$channel_list_url = "http://".$dreamIP."/web/getservices?sRef=";
