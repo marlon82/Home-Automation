@@ -54,10 +54,10 @@ if (!$handle = fopen($file, "w")) {
 	fwrite($handle, "\$db['password'] =  " ."'" . $_POST['databasePassword'] . "' ;\n");
 	fwrite($handle, "\$db['db'] =  " ."'" . $_POST['databaseName'] . "' ;\n");
 	fwrite($handle, "// Settings for Backup/restore function;\n");
-	fwrite($handle, "\$DBhost =  " . "'\$db['host']' ;\n");
-	fwrite($handle, "\$DBuser =  " . "'\$db['username']' ;\n");
-	fwrite($handle, "\$DBpass =  " . "'\$db['password']' ;\n");
-	fwrite($handle, "\$DBName =  " . "'\$db['db']' ;\n");
+	fwrite($handle, "\$DBhost =  \$db['host'] ;\n");
+	fwrite($handle, "\$DBuser =  \$db['username'] ;\n");
+	fwrite($handle, "\$DBpass =  \$db['password'] ;\n");
+	fwrite($handle, "\$DBName =  \$db['db'] ;\n");
 	fwrite($handle, "// MySQL connection;\n");
 	fwrite($handle, "\$connect = mysql_connect(\$db['host'], \$db['username'], \$db['password'] );\n");
 	fwrite($handle, "\$select_db = mysql_select_db( \$db['db'], \$connect );\n");
@@ -84,7 +84,7 @@ if (mysql_query($sql, $link)) {
   		}
 	}
 	echo "<h3><center>Datenbank \"" . $_POST['databaseName'] . "\" erfolgreich erzeugt</center></h3>\n";
-    echo "<center><a href=../index.php>Hier gehts weiter...</a></center>"; 
+    echo "<center><a href=../index.php rel=\"external\" >Hier gehts weiter...</a></center>"; 
 }else{
     echo 'Schemaerzeugung fehlgeschlagen:: ' . mysql_error() . "\n";
 
@@ -115,7 +115,7 @@ if (mysql_query($sql, $link)) {
 									
 					</li>
 					<li data-role="fieldcontain">			
-							<label for="databaseName">Password:</label>
+							<label for="databaseName">Datenbank Name:</label>
      						<input data-clear-btn="true" name="databaseName" id="databaseName" value="Homeautomation" type="text">
 									
 					</li>

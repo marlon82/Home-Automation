@@ -107,11 +107,11 @@ function restore_tables($filename){
     // Restore the backup
  
 	// Load and explode the sql file
-	mysql_select_db("$DBName");
-	$f = fopen("backup/".$filename,"r+");
-	$sqlFile = fread($f,filesize($filename));
+	mysql_select_db($DBName);
+	$f = fopen("backup/".$filename,"r");
+	$sqlFile = fread($f,filesize("backup/".$filename));
+	fclose ($f);
 	$sqlArray = explode(';<|||||||>',$sqlFile);
-
 	// Process the sql file by statements
 	foreach ($sqlArray as $stmt) {
 		if (strlen($stmt)>3){

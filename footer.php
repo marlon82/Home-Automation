@@ -11,6 +11,8 @@ $active = $_GET['page']
 		<ul>
 			<?
 			$sql_footerconf = query( "SELECT * FROM configFooter ORDER by sortOrder ASC");
+			$sql_dreambox = query("SELECT ip FROM devices WHERE type='enigma2'");
+			$dreambox = fetch($sql_dreambox);
 			while( $footerconf = fetch( $sql_footerconf ) ){
 				if ($footerconf['codename'] == 'room'){ 
 					$sql = query( "SELECT id FROM rooms");
@@ -23,7 +25,7 @@ $active = $_GET['page']
 						$footerconf['visible'] == 'No';
 					}
 				}elseif ($footerconf['codename'] == 'dreambox'){
-					$page =  $footerconf['codename'] . '&id=start'; 
+					$page =  $footerconf['codename'] . "&id=start&ip=" . $dreambox['ip']; 
 				}else{
 					$page =  $footerconf['codename']; 
 				}
