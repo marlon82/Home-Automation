@@ -2370,7 +2370,7 @@ switch( $_GET['aktion'] ){
 				<form action="index.php?page=settings&aktion=editFooterOrder" method="post" class="ui-body ui-body-c ui-corner-all">
 					<div data-role="content" data-theme="c">
 					<ul data-role="listview" data-inset="true" data-theme="c">
-						<li data-role="list-divider">Footer</li>
+						<li data-role="list-divider">Footer Sichtbar</li>
 							<?
 							$sql = query( "SELECT * FROM configFooter ORDER BY name ASC");
 							while( $config = fetch( $sql ) ){

@@ -99,7 +99,7 @@ if ($XS1Online){
 						echo "		var jqxhr = $.get(url_komplett, function() {\n";
 						echo "		})\n";
 						//echo "		changeElement(\"invertAktor-" . $row['iid'] . "-schalten-css\")\n";
-						echo "		setTimeout(\"location.reload(true);\",1500);\n";
+						echo "		setTimeout(\"location.reload(true);\",500);\n";
 						echo "	});\n";	
 					}					
 					$count = $count + 1;
