@@ -306,8 +306,7 @@ switch( $_GET['aktion'] ){
 					$result = mysql_query("show tables from " . $DBName); // run the query and assign the result to $result
 					while($table = mysql_fetch_array($result)) // go through each row that was returned in $result
 					{ 
-						$resultnum = mysql_query("SELECT * FROM '".$table[0]."'");
-						$fetchnum = mysql_fetch_array($resultnum);
+						$resultnum = mysql_query("SELECT * FROM ".$table[0]."");
 						$num_rows = mysql_num_rows($resultnum);
 						?>
 						<li>
