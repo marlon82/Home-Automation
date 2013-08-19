@@ -83,14 +83,22 @@ if [[ $response =~ ^(yes|y)$ ]]; then
 	read -r -p "Es müssen auch noch die Cronjobs eingerichtet werden. Wollen Sie damit fortfahren? [Y/n] " responseCron
 	responseCron = ${responseCron,,}    # tolower
 	if [[ $responseCron =~ ^(yes|y)$ ]]; then
-		echo "# Minute   Hour   Day of Month       Month          Day of Week        Command  " >> /etc/crontab
-		echo "# (0-59)  (0-23)     (1-31)    (1-12 or Jan-Dec)  (0-6 or Sun-Sat)" >> /etc/crontab
-		echo "    5       8          *             *                Sat              wget -q -O /dev/null localhost/skripte/cronjob.php?func=backup&table=*" >> /etc/crontab
-		echo "    *       *          *             *                 *               wget -q -O /dev/null localhost/skripte/cronjob.php?func=1min" >> /etc/crontab
-		echo "   */5      *          *             *                 *               wget -q -O /dev/null localhost/skripte/cronjob.php?func=5min" >> /etc/crontab
-		echo "    0       *          *             *                 *               wget -q -O /dev/null localhost/skripte/cronjob.php?func=1h" >> /etc/crontab
-		echo "    0       1          *             *                 Sat             wget -q -O /dev/null localhost/skripte/cronjob.php?func=weekly" >> /etc/crontab
-		echo "    1       0          *             *                 *               wget -q -O /dev/null localhost/skripte/cronjob.php?func=midnight" >> /etc/crontab
+		
+		echo "Bestehende crontab auslesen"
+		crontab -l >> /tmp/tempcron.txt
+		
+		echo "neue crontab werden angelegt"
+		echo "# Minute   Hour   Day of Month       Month          Day of Week        Command  " >> /tmp/tempcron.txt
+		echo "# (0-59)  (0-23)     (1-31)    (1-12 or Jan-Dec)  (0-6 or Sun-Sat)" >> /tmp/tempcron.txt
+		echo "    5       8          *             *                Sat              wget -q -O /dev/null localhost/skripte/cronjob.php?func=backup&table=*" >> /tmp/tempcron.txt
+		echo "    *       *          *             *                 *               wget -q -O /dev/null localhost/skripte/cronjob.php?func=1min" >> /tmp/tempcron.txt
+		echo "   */5      *          *             *                 *               wget -q -O /dev/null localhost/skripte/cronjob.php?func=5min" >> /tmp/tempcron.txt
+		echo "    0       *          *             *                 *               wget -q -O /dev/null localhost/skripte/cronjob.php?func=1h" >> /tmp/tempcron.txt
+		echo "    0       1          *             *                 Sat             wget -q -O /dev/null localhost/skripte/cronjob.php?func=weekly" >> /tmp/tempcron.txt
+		echo "    1       0          *             *                 *               wget -q -O /dev/null localhost/skripte/cronjob.php?func=midnight" >> /tmp/tempcron.txt
+		
+		echo "neues crontab wird installiert"
+		crontab /tmp/tempcron.txt
 	fi
 	
 	ip=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)

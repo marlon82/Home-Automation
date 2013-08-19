@@ -2360,20 +2360,19 @@ switch( $_GET['aktion'] ){
 		
 		case 'editFooterOrder':
 		if( $_POST['submit'] ){
-			
-			$sql = query( "SELECT * FROM configFooter ORDER BY name ASC");
-			$configt = fetch( $sql );
-			for($x = 1; $x < count($configt) - 2; $x++) {
+			?><div class="boxWhite"><?
+			$x=1;
+			$sql1 = query( "SELECT * FROM configFooter ORDER BY name ASC");
+			while( $config = fetch( $sql1 ) ){
 				$sql = query( "SELECT * FROM configFooter WHERE id=" . $x);
 				$config = fetch( $sql );
 				$flip = "flip" . $config['codename'];
 				//echo $config['name'];
 				$befehl = query("UPDATE configFooter SET visible = '" . $_POST[$flip] . "' WHERE name = '" . $config['name'] . "'");
-			}
-			
-			?>
-			<div class="boxWhite">
-				<p class="center">Footer Konfiguration wurde geändert</p>
+				?><p class="center">--> <? echo "UPDATE configFooter SET visible = '" . $_POST[$flip] . "' WHERE name = '" . $config['name'] . "'";?></p><?
+				$x=$x+1;
+			}			
+			?><p class="center">Footer Konfiguration wurde geändert</p>
 			</div>
 																										
 			<?php
