@@ -54,6 +54,9 @@ if [[ $response =~ ^(yes|y)$ ]]; then
 	sudo chmod -R 777 $dir/sensor_graph/
 	echo "Rechte für JpGraph angepasst!"
 
+	mkdir $dir/backup
+	echo "Backup Verzeichniss angelegt"
+	
 	echo "Lösche Temp Verzeichniss...."
 	rm -R /temp
 
