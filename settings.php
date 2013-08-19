@@ -153,6 +153,15 @@ while($table = mysql_fetch_array($result)) // go through each row that was retur
 	echo "			});\n";
 	echo "	});\n";
 	echo "});\n\n";
+	
+	echo "$(function() {\n";
+	echo "	$(\"#button-clear-Table-" . $table[0] ."\").bind(\"click\", function( event, ui ) {\n";
+	echo "		var url = \"&action=clearTable&table=" . $table[0] ."\";\n";
+	echo "		$.post(\"setFunctions.php\", url, function(theResponse){\n";
+	echo "				$(\"#Backupresponse\").html(theResponse);\n";
+	echo "			});\n";
+	echo "	});\n";
+	echo "});\n\n";
 }
 ?>
 
@@ -297,10 +306,15 @@ switch( $_GET['aktion'] ){
 					$result = mysql_query("show tables from " . $DBName); // run the query and assign the result to $result
 					while($table = mysql_fetch_array($result)) // go through each row that was returned in $result
 					{ 
+						$resultnum = mysql_query("SELECT * FROM '".$table[0]."'");
+						$fetchnum = mysql_fetch_array($resultnum);
+						$num_rows = mysql_num_rows($resultnum);
 						?>
 						<li>
-							<label for="flip-create-Backup-<?echo $table[0]?>"><?echo $table[0]?></label>
+							<label for="flip-create-Backup-<?echo $table[0]?>"><?echo $table[0];?></label>
 							<div style="position: absolute ;right:10px;top:0px">
+								<?echo "(rows: ".$num_rows.")";?>
+								<a href="#" data-role="button" id="button-clear-Table-<?echo $table[0]?>" data-inline="true" data-mini="true">clear</a>
 								<a href="#" data-role="button" id="button-create-Backup-<?echo $table[0]?>" data-inline="true" data-mini="true">backup</a>
 							</div>							
 						</li>
@@ -2347,7 +2361,7 @@ switch( $_GET['aktion'] ){
 		case 'editFooterOrder':
 		if( $_POST['submit'] ){
 			
-			$sql = query( "SELECT * FROM configFooter");
+			$sql = query( "SELECT * FROM configFooter ORDER BY name ASC");
 			$configt = fetch( $sql );
 			for($x = 1; $x < count($configt) - 2; $x++) {
 				$sql = query( "SELECT * FROM configFooter WHERE id=" . $x);

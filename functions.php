@@ -30,7 +30,7 @@ while( $config = fetch( $sql_config ) )
 setlocale(LC_ALL,'de_DE@euro', 'de_DE',  'de', 'ge');
 date_default_timezone_set('Europe/Berlin');
 
-function backup_tables($tables){
+function backup_tables($tables,$path){
     $return = "";
 
     if($tables == '*') {
@@ -87,7 +87,8 @@ function backup_tables($tables){
         $return.="\n\n\n";
     }
     // Generate the filename for the sql file
-    $filess = 'backup/dbbck_'.$FileName.'_'. date("ymd_His") . '.sql';
+	//echo getcwd() . "\n";
+    $filess = $path.'dbbck_'.$FileName.'_'. date("ymd_His") . '.sql';
  
     // Save the sql file
     $handle = fopen($filess,'w+');

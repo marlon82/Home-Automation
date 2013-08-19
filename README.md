@@ -1,4 +1,4 @@
-# Home Automation
+# HomeAutomation
 
 This is a Home Automation Web Site in conjuntion with the XS1 from ezcontrol.
 
@@ -6,31 +6,11 @@ This is a Home Automation Web Site in conjuntion with the XS1 from ezcontrol.
 
 ### 1.
 
-You need a web Server such as Apache with SQL and PHP support. 
+just download the file /skripte/install.sh to your Debian or Raspberry PI. Start the installer. Everything else will be downloaded automatically.
 
 ### 2.
 
-Create the database. Just import the files from the folder `DB_structure\`
-
-### 3.
-
-Download all files from this repository and put them onto your webserver. Open and edit the file `config.php` put in your credentials for the database connection. 
-
-### 4. 
-
-Start a Browser and navigate to your web server url. GoTo settings and change the XS1 IP.
-
-### 5.
-
-Configure your crontab...
-add the following lines to your crontab with the command `crontab -e`
-
-Maybe you must edit that lines, if the webpage is not located in html root
-
-`0 * * * * wget -q -O /dev/null localhost/skripte/cronjop.php?func=1h`
-`* * * * * wget -q -O /dev/null localhost/skripte/cronjop.php?func=1min`
-`*/5 * * * * wget -q -O /dev/null localhost/skripte/cronjop.php?func=5min`
-`0 0 * * * wget -q -O /dev/null localhost/skripte/cronjop.php?func=midnight`
+Start a Web Browser and move to your HomeAutomation URL.
 
 
 ## Database structure

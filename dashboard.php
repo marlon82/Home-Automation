@@ -129,7 +129,7 @@ while( $multimedia = fetch( $sql_Devices ) )
 		?>
 		<div data-role="panel" id="SamsungTVPanel" data-theme="b">
 			<div class="panel-content" data-theme="b">
-				<img src="icons/samsung_tv_remote.png" width="181" height="831" border="0" usemap="#Samsung TV Remote" />
+				<img src="pics/samsung_tv_remote.png" width="181" height="831" border="0" usemap="#Samsung TV Remote" />
 
 				<map name="Samsung TV Remote">
 				<!-- #$-:Image map file created by GIMP Image Map plug-in -->
@@ -196,7 +196,7 @@ while( $multimedia = fetch( $sql_Devices ) )
 		?>
 		<div data-role="panel" id="SamsungBluRayPanel" data-theme="b">
 			<div class="panel-content" data-theme="b">
-				<img src="icons\samsung_receiver_remote.png" width="146" height="689" border="0" usemap="#SamsungBluRayRemote" />
+				<img src="pics/samsung_receiver_remote.png" width="146" height="689" border="0" usemap="#SamsungBluRayRemote" />
 				<map name="SamsungBluRayRemote">
 				<!-- #$-:Image map file created by GIMP Image Map plug-in -->
 				<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
@@ -269,7 +269,7 @@ while( $multimedia = fetch( $sql_Devices ) )
 		?>
 		<div data-role="panel" id="OnkyoPanel" data-theme="b">
 			<div class="panel-content" data-theme="b">
-				<img src="icons\onkyo_remote.png" width="207" height="700" border="0" usemap="#Onkyo Remote" />
+				<img src="pics/onkyo_remote.png" width="207" height="700" border="0" usemap="#Onkyo Remote" />
 
 				<map name="Onkyo Remote">
 				<!-- #$-:Image map file created by GIMP Image Map plug-in -->
@@ -334,7 +334,7 @@ while( $multimedia = fetch( $sql_Devices ) )
 		?>
 		<div data-role="panel" id="DreamPanel" data-theme="b">
 			<div class="panel-content" data-theme="b">
-				<img src="icons\dreambox.png" width="191" height="578" border="0" usemap="#Dreambox Remote" />
+				<img src="pics/dreambox.png" width="191" height="578" border="0" usemap="#Dreambox Remote" />
 
 				<map name="Dreambox Remote">
 				<!-- #$-:Image map file created by GIMP Image Map plug-in -->

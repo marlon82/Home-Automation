@@ -76,27 +76,18 @@ if [[ $response =~ ^(yes|y)$ ]]; then
 	# Apache2 Server rechte für mkdir geben....
 	echo "%www-data ALL=NOPASSWD: /bin/mkdir" >> /etc/sudoers
 	echo "User \"www-data\" in /etc/sudoers für /bin/mkdir eingetragen"
-
-	# m h  dom mon dow   command
-0 * * * * wget -q -O /dev/null localhost/cd/skripte/cronjop.php?func=1h
-* * * * * wget -q -O /dev/null localhost/cd/skripte/cronjop.php?func=1min
-1 0 * * * wget -q -O /dev/null localhost/cd/skripte/cronjop.php?func=midnight
-*/5 * * * * wget -q -O /dev/null localhost/cd/skripte/cronjop.php?func=5min 
-# Minute   Hour   Day of Month       Month          Day of Week        Command    
-# (0-59)  (0-23)     (1-31)    (1-12 or Jan-Dec)  (0-6 or Sun-Sat)                
-    5       8          *             *                Sat              wget -q -O /dev/null localhost/cd/skripte/cronjop.php?func=backup&table=*
-	
 	
 	read -r -p "Es müssen auch noch die Cronjobs eingerichtet werden. Wollen Sie damit fortfahren? [Y/n] " responseCron
 	responseCron = ${responseCron,,}    # tolower
 	if [[ $responseCron =~ ^(yes|y)$ ]]; then
 		echo "# Minute   Hour   Day of Month       Month          Day of Week        Command  " >> /etc/crontab
 		echo "# (0-59)  (0-23)     (1-31)    (1-12 or Jan-Dec)  (0-6 or Sun-Sat)" >> /etc/crontab
-		echo "    5       8          *             *                Sat              wget -q -O /dev/null localhost/cd/skripte/cronjop.php?func=backup&table=*" >> /etc/crontab
-		echo "    *       *          *             *                 *               wget -q -O /dev/null localhost/cd/skripte/cronjop.php?func=1min" >> /etc/crontab
-		echo "   */5      *          *             *                 *               wget -q -O /dev/null localhost/cd/skripte/cronjop.php?func=5min" >> /etc/crontab
-		echo "    0       *          *             *                 *               wget -q -O /dev/null localhost/cd/skripte/cronjop.php?func=1h" >> /etc/crontab
-		echo "    1       0          *             *                 *               wget -q -O /dev/null localhost/cd/skripte/cronjop.php?func=midnight" >> /etc/crontab
+		echo "    5       8          *             *                Sat              wget -q -O /dev/null localhost/skripte/cronjob.php?func=backup&table=*" >> /etc/crontab
+		echo "    *       *          *             *                 *               wget -q -O /dev/null localhost/skripte/cronjob.php?func=1min" >> /etc/crontab
+		echo "   */5      *          *             *                 *               wget -q -O /dev/null localhost/skripte/cronjob.php?func=5min" >> /etc/crontab
+		echo "    0       *          *             *                 *               wget -q -O /dev/null localhost/skripte/cronjob.php?func=1h" >> /etc/crontab
+		echo "    0       1          *             *                 Sat             wget -q -O /dev/null localhost/skripte/cronjob.php?func=weekly" >> /etc/crontab
+		echo "    1       0          *             *                 *               wget -q -O /dev/null localhost/skripte/cronjob.php?func=midnight" >> /etc/crontab
 	fi
 	
 	ip=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)

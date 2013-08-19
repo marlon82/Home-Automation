@@ -516,40 +516,23 @@ switch( $_GET['func'] ){
 		update_energie_sensoren_5min;
 		break;
 
-	case 'timer':
-		timer();
-		break;
-
 	case '1h':
 		update_sensoren();
 		update_sensoren_graph_today();
-		update_sensoren_graph_week();
-		update_sensoren_graph_month();
-		break;
-
-	case 'genGraphDay':
-		update_sensoren_graph_today();
-		break;
-
-	case 'genGraphWeek':
-		update_sensoren_graph_week();
-		break;
-
-	case 'genGraphMonth':
-		update_sensoren_graph_month();
 		break;
 	
 	case 'midnight':
 		calculate_sun_rise_set();
 		calculate_strom();
+		update_sensoren_graph_week();
 		break;
-	
-	case 'test':
-		update_geraete();
+			
+	case 'weekly':
+		update_sensoren_graph_month();
 		break;
 	
 	case 'backup':
-		backup_tables($_GET['table']);
+		backup_tables($_GET['table'],'../backup/');
 		break;
 		
 		default:

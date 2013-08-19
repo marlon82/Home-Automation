@@ -46,7 +46,7 @@ if ($_POST) {
 			break;
 
 		case 'createBackup':
-			backup_tables($_POST['table']);
+			backup_tables($_POST['table'],'backup/');
 			break;
 
 		case 'restoreBackup':
@@ -55,6 +55,22 @@ if ($_POST) {
 			
 		case 'deleteBackup':
 			delete_tables($_POST['filename']);
+			break;
+			
+		case 'clearTable':
+			$Table = $_POST['table'];
+			switch ($Table){
+				case 'config': 			$ClearTable = 0;break;
+				case 'configFooter': 	$ClearTable = 0;break;
+				case 'deviceTypes':	 	$ClearTable = 0;break;
+				default:				$ClearTable = 1;break;
+			}
+			if ($ClearTable == 1) {
+				$sql = query('TRUNCATE TABLE `' . $_POST['table'] . '`');
+				echo('Die Tabelle `' . $Table . '` wurde geleert!');
+			}else{
+				echo('Die Tabelle `' . $Table . '` kann nicht geleert werden, diese ist eine System Tabelle!');
+			}
 			break;
 	
 	}
