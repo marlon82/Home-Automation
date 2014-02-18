@@ -210,14 +210,49 @@ function calculate_sun_rise_set(){
 	//echo "Sunset: " . date("H:i:s", $sun_info['sunset']) . "\n";
 	
 	//update sunrise
-	$sql = query( "SELECT id,suninfo,name FROM timer WHERE suninfo='sunset' OR suninfo='sunrise'");
+	$sql = query( "SELECT * FROM timer WHERE suninfo='sunset' OR suninfo='sunrise'");
 	while( $row = fetch( $sql ) )
 	{
-		//echo $row['suninfo'] . $row['name'] ;
-		if ( $row['suninfo'] == 'sunrise') { $sqlset = query( "UPDATE timer SET time = '" . date("H:i", $sun_info['sunrise']) . "', hour ='" . date("H", $sun_info['sunrise']) . "', minute ='" . date("i", $sun_info['sunrise']) . "' WHERE id = '" . $row['id'] . "'" ); }
-		if ( $row['suninfo'] == 'sunset') { $sqlset = query( "UPDATE timer SET time = '" . date("H:i", $sun_info['sunset']) . "', hour ='" . date("H", $sun_info['sunset']) . "', minute ='" . date("i", $sun_info['sunset']) . "' WHERE id = '" . $row['id'] . "'" ); }
+		
+		if ( $row['suninfo'] == 'sunrise') { 
+			$time = date("H:i", $sun_info['sunrise']);
+			$newminutes = date("i", $sun_info['sunrise']);
+			$newhours = date("H", $sun_info['sunrise']);
+		}
+		if ( $row['suninfo'] == 'sunset') { 
+			$time = date("H:i", $sun_info['sunset']);
+			$newminutes = date("i", $sun_info['sunset']);
+			$newhours = date("H", $sun_info['sunset']);
+		}
+		//calculate offset
+		
+		$offset = $row['offset'];
+		if($offset > 0)
+		{
+			$newminutes = $newminutes + $offset;
+			while ($newminutes>=60){
+				$newhours = $newhours + 1;
+				$newminutes = $newminutes - 60;
+			}
+		}elseif($offset < 0){
+			$newminutes = $newminutes + $offset;
+			while ($newminutes<0){
+				$newhours = $newhours - 1;
+				$newminutes = $newminutes + 60;
+			}
+		}
+		if (strlen($newminutes) == 1){
+			$newminutes = "0".$newminutes;
+		}
+		if (strlen($newhours) == 1){
+			$newhours = "0".$newhours;
+		}	
+		echo "set new offset Time:".$time."  Hour:".$newhours."  Minutes:".$newminutes;
+		$sqlset = query( "UPDATE timer SET time = '" . $time . "', hour ='" . $newhours . "', minute ='" . $newminutes . "' WHERE id = '" . $row['id'] . "'" ); 
+		
 	}
 }
+
 
 function update_sensoren(){
 
