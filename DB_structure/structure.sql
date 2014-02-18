@@ -232,6 +232,7 @@ CREATE TABLE IF NOT EXISTS `timer` (
   `suninfo` varchar(11) NOT NULL,
   `SensorID` int(11) DEFAULT NULL,
   `SensorValue` varchar(11) DEFAULT NULL,
+  `offset` int(3) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
