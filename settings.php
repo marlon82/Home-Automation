@@ -306,8 +306,7 @@ switch( $_GET['aktion'] ){
 					$result = mysql_query("show tables from " . $DBName); // run the query and assign the result to $result
 					while($table = mysql_fetch_array($result)) // go through each row that was returned in $result
 					{ 
-						$resultnum = mysql_query("SELECT * FROM '".$table[0]."'");
-						$fetchnum = mysql_fetch_array($resultnum);
+						$resultnum = mysql_query("SELECT * FROM ".$table[0]."");
 						$num_rows = mysql_num_rows($resultnum);
 						?>
 						<li>
@@ -1644,7 +1643,7 @@ switch( $_GET['aktion'] ){
 			<ul data-role="listview" data-inset="true" data-theme="d">
 				<li data-role="list-divider">Timer</li>
 			<?php
-			$sql = query( "SELECT id,name,enabled,aktor,time,isGroup FROM timer");
+			$sql = query( "SELECT * FROM timer");
 																
 				while( $row = fetch( $sql ) )
 				{
@@ -1659,13 +1658,46 @@ switch( $_GET['aktion'] ){
 						$devtype = fetch( $sqldt );
 						$name = $row1['name'] . " / " . $devtype['devtypename'];
 					}
+					
+					
+					//calculate offset
+					list($hour, $minute) = explode(':', $row['time']);
+					$newminutes = $minute;
+					$newhours = $hour;
+					if($row['offset'] > 0)
+					{
+						$newminutes = $minute + $row['offset'];
+						while ($newminutes>=60){
+							$newhours = $newhours + 1;
+							$newminutes = $newminutes - 60;
+						}
+					}elseif($row['offset'] < 0){
+						$newminutes = $minute + $row['offset'];
+						while ($newminutes<0){
+							$newhours = $newhours - 1;
+							$newminutes = $newminutes + 60;
+						}
+					}
+					if (strlen($newminutes) == 1){
+						$newminutes = "0".$newminutes;
+					}
+					if (strlen($newhours) == 1){
+						$newhours = "0".$newhours;
+					}
+					
+					if ($row['offset']!=0){
+						$OffsetMessage=" / with offset of ".$row['offset']." minutes";
+					}else{
+						$OffsetMessage="";					
+					}
+					
 					if ($row['enabled'] == 'Yes'){
 					?>																						
-						<li><a href="?page=settings&aktion=editTimer&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"><FONT COLOR="#01DF01"> <? echo "(" . $row['time'] . " / " . $name . ")"; ?></FONT></span></a></li>																			
+						<li><a href="?page=settings&aktion=editTimer&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"><FONT COLOR="#01DF01"> <? echo "(" . $newhours . ":". $newminutes. $OffsetMessage . " / " . $name . ")"; ?></FONT></span></a></li>																			
 					<?php
 					}else {
 					?>																						
-						<li><a href="?page=settings&aktion=editTimer&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"><FONT COLOR="#FF0000"> <? echo "(" . $row['time'] . " / " . $name . ")"; ?></FONT></span></a></li>																			
+						<li><a href="?page=settings&aktion=editTimer&step=2&id=<?php echo $row['id']; ?>"><?php echo $row['name'] ?> <span style="float:right;position:absolute;right:40px;"><FONT COLOR="#FF0000"> <? echo "(" . $newhours . ":". $newminutes. $OffsetMessage . " / " . $name . ")"; ?></FONT></span></a></li>																			
 					<?php
 					}
 					
@@ -1677,7 +1709,7 @@ switch( $_GET['aktion'] ){
 			<?php
 		}
 		if($_GET['step'] == 2){
-		$sql = query( "SELECT id, name, aktor, time, hour, minute, enabled, value, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, isGroup, suninfo, SensorID, SensorValue FROM timer WHERE id = '" . $_GET['id'] . "'" );
+		$sql = query( "SELECT * FROM timer WHERE id = '" . $_GET['id'] . "'" );
 		$row = fetch( $sql );
 		?>
 		<div id="cont">
@@ -1744,7 +1776,7 @@ switch( $_GET['aktion'] ){
 							<input name="slider-value" id="slider-value" data-highlight="true" min="0" max="100" value="<?php echo $row['value'] ?>" type="range">		
 						</li>
 						<li data-role="fieldcontain">
-						<label for="suninfo" class="select">Suninfo:</label>
+						<label for="suninfo" class="select">Sonneninfo:</label>
 							<?
 							if ($row['suninfo'] == 'off') { $setOff = "selected=\"selected\""; }
 							if ($row['suninfo'] == 'sunrise') { $setSunrise = "selected=\"selected\""; }
@@ -1761,6 +1793,12 @@ switch( $_GET['aktion'] ){
 							<label for="time">Time:</label>
 							<input data-clear-btn="true" name="time" id="time" value="<?php echo $row['time'] ?>" type="time">
 						</li>
+						
+						<li data-role="fieldcontain">	
+							<label for="slideroffset">Offset Sunrise:</label>
+							<input name="slideroffset" id="slideroffset" data-highlight="true" min="-360" max="360" step="5" value="<?php echo $row['offset']; ?>" type="range">		
+						</li>
+						
 						<li data-role="fieldcontain">	
 							<?
 							if ($row['Monday'] == 'Yes'){
@@ -1907,10 +1945,36 @@ switch( $_GET['aktion'] ){
 			$id = $_GET['id'];
 			list($hour, $minute) = explode(':', $_POST['time']);
 			list($type, $typeID) = explode('.', $_POST['aktor']);
+			
+			//calculate offset
+			$newminutes = $minute;
+			$newhours = $hour;
+			$offset = $_POST['slideroffset'];
+			if($offset > 0)
+			{
+				$newminutes = $newminutes + $offset;
+				while ($newminutes>=60){
+					$newhours = $newhours + 1;
+					$newminutes = $newminutes - 60;
+				}
+			}elseif($offset < 0){
+				$newminutes = $newminutes + $offset;
+				while ($newminutes<0){
+					$newhours = $newhours - 1;
+					$newminutes = $newminutes + 60;
+				}
+			}
+			if (strlen($newminutes) == 1){
+				$newminutes = "0".$newminutes;
+			}
+			if (strlen($newhours) == 1){
+				$newhours = "0".$newhours;
+			}			
+			
 			if ($type == 'group' ) {
 				$isGroup = 'Yes';
 			}	
-			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $typeID . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $hour . "' , minute = '" . $minute . "', Monday = '" . $_POST['checkbox-h-Montag'] . "', Tuesday = '" . $_POST['checkbox-h-Dienstag'] . "', Wednesday = '" . $_POST['checkbox-h-Mittwoch'] . "', Thursday = '" . $_POST['checkbox-h-Donnerstag'] . "', Friday = '" . $_POST['checkbox-h-Freitag'] . "', Saturday = '" . $_POST['checkbox-h-Samstag'] . "', Sunday = '" . $_POST['checkbox-h-Sonntag'] . "', isGroup = '" . $isGroup . "', suninfo = '" . $_POST['suninfo'] ."', SensorID = '" . $_POST['TimerSensorID'] ."', SensorValue = '" . $_POST['SensorValue'] ."' WHERE id = '" . $id . "'" );
+			$sql = query( "UPDATE timer SET name = '" . $_POST['timername'] . "', aktor = '" . $typeID . "', value = '" . $_POST['slider-value'] . "', time = '" . $_POST['time'] . "', enabled = '" . $_POST['flipAktiv'] . "' , hour = '" . $newhours . "' , minute = '" . $newminutes . "', Monday = '" . $_POST['checkbox-h-Montag'] . "', Tuesday = '" . $_POST['checkbox-h-Dienstag'] . "', Wednesday = '" . $_POST['checkbox-h-Mittwoch'] . "', Thursday = '" . $_POST['checkbox-h-Donnerstag'] . "', Friday = '" . $_POST['checkbox-h-Freitag'] . "', Saturday = '" . $_POST['checkbox-h-Samstag'] . "', Sunday = '" . $_POST['checkbox-h-Sonntag'] . "', isGroup = '" . $isGroup . "', suninfo = '" . $_POST['suninfo'] ."', SensorID = '" . $_POST['TimerSensorID'] ."', SensorValue = '" . $_POST['SensorValue'] ."', offset = '" . $offset ."' WHERE id = '" . $id . "'" );
 			?>
 			<div id="cont1">
 			<p>Der Timer wurde geändert</p>
@@ -2360,20 +2424,19 @@ switch( $_GET['aktion'] ){
 		
 		case 'editFooterOrder':
 		if( $_POST['submit'] ){
-			
-			$sql = query( "SELECT * FROM configFooter ORDER BY name ASC");
-			$configt = fetch( $sql );
-			for($x = 1; $x < count($configt) - 2; $x++) {
+			?><div class="boxWhite"><?
+			$x=1;
+			$sql1 = query( "SELECT * FROM configFooter ORDER BY name ASC");
+			while( $config = fetch( $sql1 ) ){
 				$sql = query( "SELECT * FROM configFooter WHERE id=" . $x);
 				$config = fetch( $sql );
 				$flip = "flip" . $config['codename'];
 				//echo $config['name'];
 				$befehl = query("UPDATE configFooter SET visible = '" . $_POST[$flip] . "' WHERE name = '" . $config['name'] . "'");
-			}
-			
-			?>
-			<div class="boxWhite">
-				<p class="center">Footer Konfiguration wurde geändert</p>
+				?><p class="center">--> <? echo "UPDATE configFooter SET visible = '" . $_POST[$flip] . "' WHERE name = '" . $config['name'] . "'";?></p><?
+				$x=$x+1;
+			}			
+			?><p class="center">Footer Konfiguration wurde geändert</p>
 			</div>
 																										
 			<?php
@@ -2548,12 +2611,37 @@ switch( $_GET['aktion'] ){
 			$time = $_POST['time'];
 		}
 		
+		//calculate offset
+		$newminutes = $minute;
+		$newhours = $hour;
+		$offset = $_POST['slideroffset'];
+		if($offset > 0)
+		{
+			$newminutes = $newminutes + $offset;
+			while ($newminutes>=60){
+				$newhours = $newhours + 1;
+				$newminutes = $newminutes - 60;
+			}
+		}elseif($offset < 0){
+			$newminutes = $newminutes + $offset;
+			while ($newminutes<0){
+				$newhours = $newhours - 1;
+				$newminutes = $newminutes + 60;
+			}
+		}
+		if (strlen($newminutes) == 1){
+			$newminutes = "0".$newminutes;
+		}
+		if (strlen($newhours) == 1){
+			$newhours = "0".$newhours;
+		}	
+		
 		$sql = query( "INSERT INTO timer VALUES( '', '" . $_POST['timername'] . "',
 													 '" . $typeID  . "',
 													 '" . $_POST['slider-value']  . "',
 													 '" . $time . "',
-													 '" . $hour . "',
-													 '" . $minute . "',	
+													 '" . $newhours . "',
+													 '" . $newminutes . "',	
 													 '" . $_POST['flipAktiv'] . "',
 													 '" . $_POST['checkbox-h-Montag'] . "',
 													 '" . $_POST['checkbox-h-Dienstag'] . "',
@@ -2565,7 +2653,8 @@ switch( $_GET['aktion'] ){
 													 '" . $isGroup . "',			
 													 '" . $_POST['suninfo'] . "',			
 													 '" . $_POST['TimerSensorID'] . "',			
-													 '" . $_POST['SensorValue'] . "')" );			
+													 '" . $_POST['SensorValue'] . "',	
+													 '" . $offset . "')" );			
 		?>
 		<div class="boxWhite">
 			<p class="center">Timer wurde hinzugefügt</p>
@@ -2621,7 +2710,7 @@ switch( $_GET['aktion'] ){
 						<input name="slider-value" id="slider-value" data-highlight="true" min="0" max="100" step="5" value="0" type="range">		
 					</li>
 					<li data-role="fieldcontain">
-					<label for="suninfo" class="select">Suninfo:</label>
+					<label for="suninfo" class="select">Sonneninfo:</label>
 							<select name="suninfo" id="suninfo" data-native-menu="false">
     							<option value="off" selected="selected">off</option>
     							<option value="sunrise">Sonnenaufgang</option>
@@ -2635,6 +2724,10 @@ switch( $_GET['aktion'] ){
 					</li>
 					<li data-role="fieldcontain">	
 					
+					<li data-role="fieldcontain">	
+						<label for="slideroffset">Offset Sunrise:</label>
+						<input name="slideroffset" id="slideroffset" data-highlight="true" min="-360" max="360" step="5" value="0" type="range">		
+					</li>
 					<fieldset data-role="controlgroup" data-type="horizontal">
 						<legend>Wochentage:</legend>
 							<label for="checkbox-h-Montag">Montag</label>
